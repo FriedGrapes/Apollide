@@ -42,6 +42,7 @@ extern "C" {
 #include "amf/amf_encoder.h"
 #include "amf/amf_lifecycle.h"
 #include "globals.h"
+#include "src/apollide/cursor_channel.h"
 #include "input.h"
 #include "input_geometry_policy.h"
 #include "logging.h"
@@ -3435,7 +3436,7 @@ namespace video {
         return true;
       };
 
-      auto status = disp->capture(push_captured_image_callback, pull_free_image_callback, &display_cursor);
+      auto status = disp->capture(push_captured_image_callback, pull_free_image_callback, apollide::cursor::video_cursor_flag());
 
       if (artificial_reinit && status != platf::capture_e::error) {
         BOOST_LOG(debug) << "Capture restart: source=explicit-display-switch";
@@ -6292,7 +6293,7 @@ namespace video {
         return true;
       };
 
-      auto status = disp->capture(push_captured_image_callback, pull_free_image_callback, &display_cursor);
+      auto status = disp->capture(push_captured_image_callback, pull_free_image_callback, apollide::cursor::video_cursor_flag());
       // capture() terminalizes this display's geometry before returning. Make
       // the terminal mapping visible to every active synchronous session before
       // tearing down their encoder state or returning to the caller.
