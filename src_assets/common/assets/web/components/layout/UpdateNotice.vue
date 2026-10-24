@@ -11,6 +11,7 @@ import {
   dismissedUpdate,
   dismissUpdate,
   prereleasesEnabled,
+  UPDATE_RELEASES_URL,
 } from '@/utils/updates';
 
 const system = useSystemStore();
@@ -91,9 +92,9 @@ function dismiss(): void {
     >
       <a
         :href="
-          available.url?.startsWith('https://github.com/Nonary/Vibepollo/releases/')
+          available.url?.startsWith(`${UPDATE_RELEASES_URL}/`)
             ? available.url
-            : 'https://github.com/Nonary/Vibepollo/releases'
+            : UPDATE_RELEASES_URL
         "
         target="_blank"
         rel="noopener noreferrer"
