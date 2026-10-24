@@ -268,6 +268,8 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/src/apollide/auto_update.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/scroll_route.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/scroll_route.cpp"
+        "${CMAKE_SOURCE_DIR}/src/apollide/update_link.h"
+        "${CMAKE_SOURCE_DIR}/src/apollide/update_link.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing.h"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing_policy.h"
