@@ -26,8 +26,9 @@ endif()
 
 # Allow forks / CI to override which GitHub repo is used for update checks.
 # Cache variables can be provided via -DSUNSHINE_REPO_OWNER=... or -DSUNSHINE_REPO_NAME=...
-set(SUNSHINE_REPO_OWNER "Nonary" CACHE STRING "GitHub repo owner for update checks")
-set(SUNSHINE_REPO_NAME "vibepollo" CACHE STRING "GitHub repo name for update checks")
+# Apollide: update checks follow the Apollide fork, not upstream Vibepollo
+set(SUNSHINE_REPO_OWNER "FriedGrapes" CACHE STRING "GitHub repo owner for update checks")
+set(SUNSHINE_REPO_NAME "Apollide" CACHE STRING "GitHub repo name for update checks")
 
 # Allow environment variables to override the cache values (useful in CI)
 if(DEFINED ENV{SUNSHINE_REPO_OWNER})

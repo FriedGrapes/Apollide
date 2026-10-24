@@ -7,6 +7,7 @@ import {
   fetchUpdateReleases,
   dismissUpdate,
   dismissedUpdate,
+  UPDATE_RELEASES_URL,
   type UpdateRelease,
 } from '../utils/updates.ts';
 
@@ -119,6 +120,30 @@ test('published versioned setup and Arch package names retain stable notificatio
   };
   assert.equal(selectAvailableUpdate('1.18.4', [arch], false, 'linux', 'x86_64')?.tag, '2.0.0');
   assert.equal(selectAvailableUpdate('1.18.4', [arch], false, 'linux', 'aarch64'), null);
+});
+test('Apollide releases with Apollide_v<version>.msi notify from the Apollide fork', async () => {
+  const apollide = (tag: string) => ({
+    ...release(tag),
+    assets: [{ name: `Apollide_v${tag}.msi`, state: 'uploaded', size: 100 }],
+  });
+  assert.equal(selectAvailableUpdate('0.1.0', [apollide('0.2.0')], false)?.tag, '0.2.0');
+  assert.equal(selectAvailableUpdate('0.2.0', [apollide('0.2.0'), apollide('0.1.0')], false), null);
+  // Another release's MSI name never makes a release complete
+  const wrong = { ...release('0.3.0'), assets: [{ name: 'Apollide_v0.2.0.msi', state: 'uploaded', size: 100 }] };
+  assert.equal(selectAvailableUpdate('0.2.0', [wrong], false), null);
+  assert.equal(UPDATE_RELEASES_URL, 'https://github.com/FriedGrapes/Apollide/releases');
+  const previous = globalThis.fetch;
+  try {
+    const calls: string[] = [];
+    globalThis.fetch = (async (url: string | URL | Request) => {
+      calls.push(String(url));
+      return new Response(JSON.stringify([apollide('0.2.0')]));
+    }) as typeof fetch;
+    await fetchUpdateReleases(new AbortController().signal);
+    assert.match(calls[0]!, /^https:\/\/api\.github\.com\/repos\/FriedGrapes\/Apollide\/releases\?/);
+  } finally {
+    globalThis.fetch = previous;
+  }
 });
 test('draft, incomplete, malformed and incompatible packages never notify', () => {
   const incomplete = daily('2026-10-11');
