@@ -127,14 +127,14 @@ test('API boolean strings keep disabled preferences disabled', () => {
 });
 
 test('every runtime override has an editor or belongs to the adapter pair', async () => {
-  const { clientOverrideableKeys } = await import('../configs/settingsSchema.ts');
+  const { clientOverrideableKeys, apollideNotBuiltKeys } = await import('../configs/settingsSchema.ts');
   for (const key of clientOverrideableKeys)
-    assert.ok(key === 'adapter_pnp_id' || settingsFields.has(key), key);
+    assert.ok(key === 'adapter_pnp_id' || settingsFields.has(key) || apollideNotBuiltKeys.includes(key), key);
 });
 
 test('legacy global configuration is covered by v2 fields or a dedicated integration destination', async () => {
   const { readFileSync } = await import('node:fs');
-  const { settingsDestinations } = await import('../configs/settingsSchema.ts');
+  const { settingsDestinations, apollideNotBuiltKeys } = await import('../configs/settingsSchema.ts');
   const source = readFileSync(
     new URL('../../web-legacy/stores/config.ts', import.meta.url),
     'utf8',
@@ -144,6 +144,7 @@ test('legacy global configuration is covered by v2 fields or a dedicated integra
     assert.ok(
       key === 'adapter_pnp_id' ||
         settingsFields.has(key) ||
+        apollideNotBuiltKeys.includes(key) ||
         settingsDestinations.some((destination) => destination.keys.includes(key)),
       key,
     );

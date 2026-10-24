@@ -3,7 +3,6 @@ import OverviewView from '@/views/OverviewView.vue';
 
 const ApplicationView = () => import('@/views/ApplicationView.vue');
 const ApiTokensView = () => import('@/views/ApiTokensView.vue');
-const BrowserStreamView = () => import('@/views/BrowserStreamView.vue');
 const DevicesView = () => import('@/views/DevicesView.vue');
 const IntegrationsView = () => import('@/views/IntegrationsView.vue');
 const LibraryView = () => import('@/views/LibraryView.vue');
@@ -23,15 +22,14 @@ const router = createRouter({
       component: OverviewView,
       meta: { titleKey: 'ui.nav.overview' },
     },
+    // Apollide: browser streaming (WebRTC) is not built, so its page is not offered
     {
       path: '/stream',
-      name: 'browser-stream',
-      component: BrowserStreamView,
-      meta: { titleKey: 'ui.nav.browser_stream' },
+      redirect: '/',
     },
     {
       path: '/webrtc',
-      redirect: '/stream',
+      redirect: '/',
     },
     {
       path: '/library',
