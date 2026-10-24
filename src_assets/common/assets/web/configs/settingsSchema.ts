@@ -108,7 +108,6 @@ export const clientOverrideableKeys = new Set([
   'minimum_fps_target',
   'fec_percentage',
   'video_max_batch_size_kb',
-  'pyrowave_critical_fec_percentage',
   'qp',
   'min_threads',
   'hevc_mode',
@@ -345,6 +344,9 @@ const integrationPath = (
   ...extra,
 });
 
+// Apollide: features left out of our build; their settings are not offered
+export const apollideNotBuiltKeys = ['pyrowave', 'pyrowave_critical_fec_percentage'];
+
 const everydayDisplayFields = (): SettingsField[] => [
   select('virtual_display_mode', virtualDisplayOptions, {
     labelKey: 'ui.settings.fields.virtual_display_mode.label',
@@ -541,18 +543,7 @@ export const settingsCategories: SettingsCategory[] = [
           }),
         ],
       },
-      {
-        id: 'everyday_pyrowave',
-        platform: ['windows', 'linux'],
-        link: '/settings?category=video#setting-pyrowave_critical_fec_percentage',
-        linkLabelKey: 'ui.settings.links.pyrowave',
-        fields: [
-          boolean('pyrowave', {
-            platform: ['windows', 'linux'],
-            descriptionKey: 'ui.settings.everyday_help.pyrowave',
-          }),
-        ],
-      },
+      // Apollide: PyroWave is not built, so its settings are not offered
       {
         id: 'everyday_remote_monitor',
         collapsed: true,
@@ -962,7 +953,6 @@ export const settingsCategories: SettingsCategory[] = [
             option('2', 'ui.settings.options.codec.eight_bit'),
             option('3', 'ui.settings.options.codec.hdr_ten_bit'),
           ]),
-          boolean('pyrowave', { platform: ['windows', 'linux'] }),
         ],
       },
       {
@@ -974,12 +964,6 @@ export const settingsCategories: SettingsCategory[] = [
           number('qp', { min: 0, max: 51, step: 1 }),
           number('fec_percentage', { min: 1, max: 255, step: 1 }),
           number('video_max_batch_size_kb', { min: 1, step: 1 }),
-          number('pyrowave_critical_fec_percentage', {
-            min: 0,
-            max: 255,
-            step: 1,
-            platform: ['windows', 'linux'],
-          }),
         ],
       },
       ...advancedEncoderGroups,
@@ -1141,6 +1125,28 @@ export const settingsCategories: SettingsCategory[] = [
     ],
   },
 ];
+// Apollide: Everyday is ordered for streaming to Artemide — the screen, picture quality and
+// smoothness first; recovery next; troubleshooting and power-user groups stay folded at the end.
+const apollideEverydayOrder = [
+  'everyday_display',
+  'everyday_encoding',
+  'everyday_smoothness',
+  'everyday_recovery',
+  'everyday_resolution',
+  'everyday_compatibility',
+  'everyday_remote_monitor',
+  'everyday_integrations',
+  'everyday_automation',
+];
+{
+  const everyday = settingsCategories.find((category) => category.id === 'everyday')!;
+  const rank = (id: string) => {
+    const index = apollideEverydayOrder.indexOf(id);
+    return index < 0 ? apollideEverydayOrder.length : index;
+  };
+  everyday.groups.sort((a, b) => rank(a.id) - rank(b.id));
+  everyday.groups.find((group) => group.id === 'everyday_encoding')!.collapsed = false;
+}
 
 export const settingsDefaults: Record<string, unknown> = {
   ...extendedDefaults,
