@@ -1302,7 +1302,7 @@ function libraryRequest(
       <template #actions>
         <AppButton
           icon="integrations"
-          label="Setup Game Library Integration"
+          label="게임 라이브러리 연동 설정"
           @click="librarySetupOpen = true"
         />
         <AppButton
