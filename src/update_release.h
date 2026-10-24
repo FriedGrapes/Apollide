@@ -42,8 +42,10 @@ namespace release_selection {
 #ifdef _WIN32
     auto version = release["tag_name"].get<std::string>();
     if (version.starts_with('v')) version.erase(0, 1);
+    // Apollide: releases carry Apollide_v<version>.msi
     const bool package = asset(release, "VibepolloSetup.exe") || (!nightly &&
-      (asset(release, "VibepolloSetup-v" + version + ".exe") || asset(release, "VibepolloSetup-" + version + ".exe")));
+      (asset(release, "VibepolloSetup-v" + version + ".exe") || asset(release, "VibepolloSetup-" + version + ".exe") ||
+       asset(release, "Apollide_v" + version + ".msi")));
 #elif defined(__APPLE__)
 #if defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     const bool package = macos_package(release, true);
