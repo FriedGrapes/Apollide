@@ -18,7 +18,8 @@ export interface LoadChangelogResult {
 }
 
 const CHANGELOG_ASSET_URL = './assets/changelog.json';
-const GITHUB_RELEASES_URL = 'https://api.github.com/repos/Nonary/Vibepollo/releases';
+// Apollide: release notes come from the Apollide fork
+const GITHUB_RELEASES_URL = 'https://api.github.com/repos/FriedGrapes/Apollide/releases';
 
 function isChangelogEntry(value: unknown): value is ChangelogEntry {
   return !!value && typeof value === 'object' && typeof (value as ChangelogEntry).tag === 'string';
