@@ -35,6 +35,7 @@
 #include "shutdown_signal.h"
 #include "system_tray.h"
 #include "update.h"
+#include "src/apollide/auto_update.h"
 #include "upnp.h"
 #include "version_compare.h"
 #include "uuid.h"
@@ -687,6 +688,8 @@ int main(int argc, char *argv[]) {
     system_tray::end_tray();
   });
 #endif
+  // Apollide: say so when the previous run installed this version by itself
+  apollide::auto_update::announce_if_updated();
   // Schedule periodic update checks if configured
   if (config::sunshine.update_check_interval_seconds > 0) {
     // Trigger an immediate update check on startup so users don't wait
