@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { apiGet } from '@/api/client';
+import { apiGet, apiPost } from '@/api/client';
 import { AppButton, InlineAlert } from '@/components/ui';
 import { useSystemStore } from '@/stores/system';
 import type { ChangelogEntry } from '@/utils/changelog';
@@ -76,6 +76,17 @@ onBeforeUnmount(() => {
   clearTimeout(timer);
   controller?.abort();
 });
+// Apollide: install the waiting release now; the service restarts and the page reconnects by itself
+const installing = ref(false);
+async function installNow(): Promise<void> {
+  installing.value = true;
+  try {
+    const result = await apiPost<{ status?: boolean }>('/api/apollide/update-host', {});
+    if (!result?.status) installing.value = false;
+  } catch {
+    installing.value = false;
+  }
+}
 function dismiss(): void {
   if (available.value) dismissUpdate(localStorage, available.value.tag);
   available.value = null;
@@ -100,7 +111,13 @@ function dismiss(): void {
         rel="noopener noreferrer"
         >{{ t('ui.maintenance.releases.open') }}</a
       >
-      <AppButton label="Dismiss this update" variant="secondary" @click="dismiss" />
+      <AppButton
+        label="지금 업데이트"
+        :busy="installing"
+        busy-label="업데이트하는 중… 잠시 뒤 다시 켜져요"
+        @click="installNow"
+      />
+      <AppButton label="나중에" variant="secondary" @click="dismiss" />
     </InlineAlert>
     <InlineAlert v-if="failed" tone="warning" :title="t('ui.maintenance.releases.unavailable')">
       <AppButton
