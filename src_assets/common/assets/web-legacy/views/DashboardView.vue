@@ -577,9 +577,10 @@ const availableVersion = computed(() => {
 });
 const availableReleaseUrl = computed(() => {
   const url = availableUpdate.value?.url;
-  return url?.startsWith('https://github.com/Nonary/Vibepollo/releases/')
+  // Apollide: updates come from the Apollide fork
+  return url?.startsWith('https://github.com/FriedGrapes/Apollide/releases/')
     ? url
-    : 'https://github.com/Nonary/Vibepollo/releases';
+    : 'https://github.com/FriedGrapes/Apollide/releases';
 });
 const notifyPreReleases = ref(true);
 const installedUpdateVersion = ref('');
