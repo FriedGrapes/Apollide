@@ -1,0 +1,109 @@
+---
+# Apollide: build the Windows MSI for every apollide/<version> branch that tools/apollide.py publishes.
+# Reuses Vibepollo's own Windows build (ci-windows.yml) unchanged; no signing secrets in this fork.
+# The product version is the Apollide version from the branch name (apollide/0.2.0 -> 0.2.0).
+# A plain X.Y.Z branch also becomes a GitHub release with Apollide_vX.Y.Z.msi, which the host's
+# update check (FriedGrapes/Apollide) offers; test branches like apollide/0.2.0-a1 only build.
+name: Apollide Windows
+permissions: {}
+
+on:
+  push:
+    branches:
+      - 'apollide/**'
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  version:
+    name: Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      release: ${{ steps.resolve.outputs.release }}
+    steps:
+      - name: Resolve Apollide version from the branch
+        id: resolve
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          name="${REF_NAME#apollide/}"
+          if [[ ! "$name" =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
+            echo "::error::branch must be apollide/X.Y.Z or apollide/X.Y.Z-<test>: $REF_NAME"
+            exit 1
+          fi
+          version="${BASH_REMATCH[1]}"
+          release=false
+          if [[ -z "${BASH_REMATCH[2]}" ]]; then release=true; fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "Apollide $version (release: $release)"
+
+  build-windows:
+    name: Windows
+    needs: version
+    permissions:
+      actions: read
+      contents: read
+    uses: ./.github/workflows/ci-windows.yml
+    with:
+      use_self_hosted: false
+      build_only: true
+      build_tests: false
+      release_commit: ${{ github.sha }}
+      release_version: ${{ needs.version.outputs.version }}
+      release_artifact_retention_days: 14
+      symbol_product_name: Vibepollo
+      symbol_release_prefix: apollide
+      publish_symbols: false
+      require_truehdr_runtime: true
+
+  release:
+    name: Release
+    needs: [version, build-windows]
+    if: needs.version.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download MSI
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: Vibepollo.msi
+          path: dl/msi
+
+      - name: Download portable ZIP
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: ci-portable-Windows
+          path: dl/portable
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.version.outputs.version }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          msi="$(find dl/msi -name '*.msi' | head -n 1)"
+          zip="$(find dl/portable -name '*.zip' | head -n 1)"
+          if [[ -z "$msi" || -z "$zip" ]]; then echo "::error::missing MSI or portable ZIP"; exit 1; fi
+          cp -- "$msi" "Apollide_v${VERSION}.msi"
+          cp -- "$zip" "Apollide_v${VERSION}-portable.zip"
+          sha256sum "Apollide_v${VERSION}.msi" "Apollide_v${VERSION}-portable.zip" > SHA256SUMS
+          # tools/apollide.py publish puts the release notes in the commit message body
+          notes=""
+          if [[ "$COMMIT_MESSAGE" == *$'\n'* ]]; then notes="${COMMIT_MESSAGE#*$'\n'}"; fi
+          if [[ -z "${notes//[[:space:]]/}" ]]; then notes="Apollide ${VERSION}"; fi
+          printf '%s\n' "$notes" > notes.md
+          assets=("Apollide_v${VERSION}.msi" "Apollide_v${VERSION}-portable.zip" SHA256SUMS)
+          if gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$VERSION" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$VERSION" "${assets[@]}" --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" --title "Apollide ${VERSION}" --notes-file notes.md
+          fi
