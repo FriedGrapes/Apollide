@@ -27,6 +27,7 @@
 #include "system_tray.h"
 #include "utility.h"
 #include "version_compare.h"
+#include "src/apollide/auto_update.h"
 #include "update_release.h"
 #include <mutex>
 
@@ -204,6 +205,8 @@ namespace update {
         return result;
       };
       state.latest_release = info(stable);
+      // Apollide: newer stable releases install by themselves while nobody streams
+      apollide::auto_update::consider(state.latest_release);
       state.latest_prerelease = (!any.is_null() && any.value("prerelease", false)) ? info(any) : release_info_t {};
       state.last_check_time = std::chrono::steady_clock::now();
 
