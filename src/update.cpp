@@ -155,12 +155,15 @@ namespace update {
       state.notified_versions.push_back(version);
       url = state.last_notified_url;
     }
-    const std::string title = prerelease ? "New update available (Pre-release)" : "New update available (Stable)";
-    // The C tray backend has no per-notification context, and Windows routes
-    // older toast clicks through its latest global callback. Keep the exact
-    // release link in the text; the Web UI provides its clickable counterpart.
-    const std::string body = "Version " + version + (url.empty() ? "" : "\n" + url);
-    system_tray::tray_notify(title.c_str(), body.c_str());
+    // Apollide: one click on the notification installs the waiting release now (auto_update.h).
+    // Older toast clicks reach the same callback, which always installs the newest waiting release.
+    (void) prerelease;
+    (void) url;  // the web UI links the release page
+    const std::string title = "Apollide " + version + " 새 버전";
+    const std::string body = "눌러서 지금 업데이트 (아무도 접속하지 않으면 10분 뒤 스스로 설치해요)";
+    system_tray::tray_notify(title.c_str(), body.c_str(), [] {
+      apollide::auto_update::install_now();
+    });
     // Do not hold the notification lock while acquiring nvhttp's client lock.
     nvhttp::save_state();
 #endif
