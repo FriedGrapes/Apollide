@@ -47,6 +47,7 @@ extern "C" {
 #include "display_helper_integration.h"
 #include "globals.h"
 #include "src/apollide/cursor_channel.h"
+#include "src/apollide/update_link.h"
 #include "hardware_metrics_session.h"
 #include "host_stats.h"
 #include "haptics_gain.h"
@@ -1549,7 +1550,12 @@ namespace stream {
    * @brief Apollide: send pending cursor shape/visibility packets to a client that draws its own cursor.
    */
   void send_apollide_cursor(session_t *session) {
-    for (const auto &plaintext : apollide::cursor::take_messages(session)) {
+    auto messages = apollide::cursor::take_messages(session);
+    // Apollide: update-link messages ride along (update_link.h)
+    for (auto &message : apollide::link::take_messages(session, session->device_uuid)) {
+      messages.push_back(std::move(message));
+    }
+    for (const auto &plaintext : messages) {
       static std::array<std::uint8_t, sizeof(control_encrypted_t) + crypto::cipher::round_to_pkcs7_padded(70000) + crypto::cipher::tag_size> encrypted_payload;
       if (plaintext.size() > 65000) {
         continue;
@@ -1751,6 +1757,14 @@ namespace stream {
     // Apollide: the client draws its own cursor and wants the host cursor shape instead of a blended cursor
     server->map(apollide::cursor::kRequestMessage, [](session_t *session, const std::string_view &payload) {
       apollide::cursor::on_client_request(session, payload);
+    });
+
+    // Apollide: Artemide reports its version and can ask the host to update now (update_link.h)
+    server->map(apollide::link::kClientHello, [](session_t *session, const std::string_view &payload) {
+      apollide::link::on_client_hello(session, session->device_uuid, session->device_name, payload);
+    });
+    server->map(apollide::link::kUpdateHostNow, [](session_t *session, const std::string_view &) {
+      apollide::link::on_update_host_now(session->device_name);
     });
 
     server->map(packetTypes[IDX_SET_CLIPBOARD], [server](session_t *session, const std::string_view &payload) {
@@ -1975,6 +1989,7 @@ namespace stream {
             }
 
             apollide::cursor::forget(session);
+            apollide::link::forget(session);
             session->controlEnd.raise(true);
             continue;
           }
@@ -2074,6 +2089,7 @@ namespace stream {
       input::reset(session->input);
       session->shutdown_event->raise(true);
       apollide::cursor::forget(session);
+      apollide::link::forget(session);
       session->controlEnd.raise(true);
     }
 
