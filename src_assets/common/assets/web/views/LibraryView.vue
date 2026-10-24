@@ -582,7 +582,7 @@ function libraryRequest(
       <template #actions>
         <AppButton
           icon="integrations"
-          :label="libraryConfigured ? 'Library manager settings' : 'Setup Game Library Integration'"
+          :label="libraryConfigured ? '라이브러리 관리 설정' : '게임 라이브러리 연동 설정'"
           @click="librarySetupOpen = true"
         />
         <RouterLink class="button button--secondary" to="/integrations"
