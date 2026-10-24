@@ -26,6 +26,7 @@
 #include "src/globals.h"
 #include "src/logging.h"
 #include "src/platform/common.h"
+#include "src/apollide/scroll_route.h"
 #include "vhf_gamepad.h"
 #include "dualsense_usbip_gamepad.h"
 #include "dualsense_usbip_gamepad_policy.h"
@@ -1132,6 +1133,14 @@ namespace platf {
     // If this is a special request to cancel all touches, do that and return
     if (touch.eventType == LI_TOUCH_EVENT_CANCEL_ALL) {
       cancel_all_active_touches(raw);
+      return;
+    }
+
+    // Apollide: touchpad scrolling over classic windows becomes wheel input (scroll_route.h)
+    if (apollide::scroll::route(touch.pointerId, touch.eventType,
+                                std::lround(touch.x * touch_port.width + touch_port.offset_x),
+                                std::lround(touch.y * touch_port.height + touch_port.offset_y),
+                                touch_port.height)) {
       return;
     }
 
