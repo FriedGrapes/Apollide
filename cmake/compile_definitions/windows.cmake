@@ -264,6 +264,8 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/src/platform/windows/display_wgc.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/cursor_channel.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/cursor_channel.cpp"
+        "${CMAKE_SOURCE_DIR}/src/apollide/auto_update.h"
+        "${CMAKE_SOURCE_DIR}/src/apollide/auto_update.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing.h"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing_policy.h"
