@@ -49,6 +49,8 @@
 #include "config.h"
 #include "host_stream_control.h"
 #include "update.h"
+#include "src/apollide/auto_update.h"
+#include "src/apollide/update_link.h"
 #include "confighttp.h"
 #include "crypto.h"
 #include "file_handler.h"
@@ -5789,6 +5791,42 @@ namespace confighttp {
    *
    * @api_examples{/api/restart| POST| null}
    */
+  /**
+   * @brief Apollide: host and Artemide client update state for the web UI (update_link.h).
+   */
+  void getApollideLink(resp_https_t response, req_https_t request) {
+    if (!authenticate(response, request)) {
+      return;
+    }
+    send_response(response, apollide::link::snapshot());
+  }
+
+  /**
+   * @brief Apollide: install the waiting host release now.
+   */
+  void postApollideUpdateHost(resp_https_t response, req_https_t request) {
+    if (!validateContentType(response, request, "application/json") || !authenticate(response, request)) {
+      return;
+    }
+    print_req(request);
+    send_response(response, nlohmann::json {{"status", apollide::auto_update::install_now()}});
+  }
+
+  /**
+   * @brief Apollide: ask an Artemide client to update itself ({"uuid": ...}).
+   */
+  void postApollideUpdateClient(resp_https_t response, req_https_t request) {
+    if (!validateContentType(response, request, "application/json") || !authenticate(response, request)) {
+      return;
+    }
+    print_req(request);
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    const auto body = nlohmann::json::parse(ss.str(), nullptr, false);
+    const auto uuid = body.is_object() ? body.value("uuid", "") : std::string {};
+    send_response(response, nlohmann::json {{"status", !uuid.empty() && apollide::link::request_client_update(uuid)}});
+  }
+
   void restart(resp_https_t response, req_https_t request) {
     if (!validateContentType(response, request, "application/json") || !authenticate(response, request)) {
       return;
@@ -6403,6 +6441,9 @@ namespace confighttp {
     register_blocking_api_route("^/api/updates/nightly-metadata$", "GET", getNightlyUpdateMetadata);
     register_api_route("^/api/configLocale$", "GET", getLocale);
     register_api_route("^/api/restart$", "POST", restart);
+    register_api_route("^/api/apollide/link$", "GET", getApollideLink);
+    register_api_route("^/api/apollide/update-host$", "POST", postApollideUpdateHost);
+    register_api_route("^/api/apollide/update-client$", "POST", postApollideUpdateClient);
     register_api_route("^/api/quit$", "POST", quit);
 #ifdef _WIN32
     register_api_route("^/api/service/startup$", "GET", getServiceStartup);
