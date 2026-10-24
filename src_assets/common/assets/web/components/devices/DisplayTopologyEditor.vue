@@ -156,28 +156,28 @@ onMounted(load);
 <template>
   <section class="topology-editor vs-surface" :class="{ 'topology-editor--compact': compact }" :aria-labelledby="headingId">
     <div class="topology-editor__heading">
-      <div><h3 :id="headingId">Client display arrangement</h3><p>Saved directions apply to extended application streams and Remote Monitor on their next activation. Verify only preserves the current Windows arrangement; choose an automatic display preparation option to apply a saved direction.</p></div>
-      <StatusBadge v-if="data?.capacity" :label="`${data.capacity.used} of ${data.capacity.max} client identities`" tone="neutral" compact />
+      <div><h3 :id="headingId">클라이언트 화면 배치</h3><p>저장한 방향은 화면을 넓혀 쓰는 앱 스트리밍과 원격 모니터를 다음에 켤 때 적용돼요. '확인만'은 지금 윈도우 배치를 그대로 둬요. 저장한 방향을 쓰려면 화면 준비 방식을 자동으로 골라 주세요.</p></div>
+      <StatusBadge v-if="data?.capacity" :label="`클라이언트 ${data.capacity.used} / ${data.capacity.max}`" tone="neutral" compact />
     </div>
     <InlineAlert v-if="error || validationError" tone="danger">{{ error || validationError }}</InlineAlert>
     <InlineAlert v-for="warning in data?.warnings ?? []" :key="warning" tone="warning">{{ warning }}</InlineAlert>
-    <label v-if="focusClients.length" class="topology-client-picker">Client display<select v-model="selected" @change="choose(selected)"><option disabled value="">Choose a paired client</option><option v-for="client in focusClients" :key="client.uuid" :value="client.uuid">{{ client.name || client.uuid }}</option></select></label>
-    <div class="topology-canvas" role="group" aria-label="Display topology. Select a display rectangle to edit its placement.">
+    <label v-if="focusClients.length" class="topology-client-picker">클라이언트 화면<select v-model="selected" @change="choose(selected)"><option disabled value="">짝 맺은 클라이언트 고르기</option><option v-for="client in focusClients" :key="client.uuid" :value="client.uuid">{{ client.name || client.uuid }}</option></select></label>
+    <div class="topology-canvas" role="group" aria-label="화면 배치도. 화면 상자를 골라 위치를 바꿀 수 있어요.">
       <button v-for="node in previewNodes" :key="node.id" type="button" class="topology-node" :class="[`topology-node--${node.kind}`, { 'is-selected': selected === node.id, 'is-inactive': !node.active }]" :style="scaled(node)" :aria-pressed="selected === node.id" @click="node.kind === 'client' && choose(node.id)" @pointerdown="startDrag($event, node)" @pointermove="moveDrag($event, node)" @pointerup="finishDrag($event, node)" @pointercancel="cancelDrag($event, node)" @lostpointercapture="cancelDrag($event, node)" @keydown.left.prevent="keyboardPlace('left', node)" @keydown.right.prevent="keyboardPlace('right', node)" @keydown.up.prevent="keyboardPlace('above', node)" @keydown.down.prevent="keyboardPlace('below', node)">
-        <strong>{{ node.kind === 'physical' ? 'Physical' : 'Client' }} · {{ node.label || node.id }}</strong><span>{{ node.mode.width }} × {{ node.mode.height }} @ {{ node.mode.refresh_hz }} Hz</span><span v-if="node.primary">Primary</span><span v-else-if="node.kind === 'client' && !node.active">Inactive preview</span>
+        <strong>{{ node.kind === 'physical' ? '실제 모니터' : '클라이언트' }} · {{ node.label || node.id }}</strong><span>{{ node.mode.width }} × {{ node.mode.height }} @ {{ node.mode.refresh_hz }} Hz</span><span v-if="node.primary">주 화면</span><span v-else-if="node.kind === 'client' && !node.active">꺼진 상태 미리보기</span>
       </button>
     </div>
-    <label v-if="selected" class="topology-client-picker">Arrangement<select v-model="selectedArrangement"><option value="automatic">Use application layout / automatic</option><option value="preserve">Preserve / manual (Windows layout)</option><option value="left">Left of</option><option value="right">Right of</option><option value="above">Above</option><option value="below">Below</option></select></label>
-    <p v-if="selected && (selectedArrangement === 'preserve' || selectedArrangement === 'automatic')">Application streams keep their Windows positions unless their layout requests isolation. Explicit Preserve / manual also overrides isolation. Remote Monitor uses automatic placement when no direction is saved.</p>
+    <label v-if="selected" class="topology-client-picker">배치<select v-model="selectedArrangement"><option value="automatic">앱 배치 따르기 / 자동</option><option value="preserve">그대로 두기 / 직접(윈도우 배치)</option><option value="left">왼쪽</option><option value="right">오른쪽</option><option value="above">위</option><option value="below">아래</option></select></label>
+    <p v-if="selected && (selectedArrangement === 'preserve' || selectedArrangement === 'automatic')">앱 스트리밍은 따로 떼어 두라는 설정이 없으면 윈도우의 화면 위치를 그대로 써요. '그대로 두기 / 직접'을 고르면 떼어 두기보다 먼저 적용돼요. 원격 모니터는 저장한 방향이 없으면 자동으로 놓여요.</p>
     <div v-if="selectedPlacement && !selectedPlacement.preserve" class="topology-controls">
-      <label>Display<select v-model="selected"><option v-for="client in focusClients" :key="client.uuid" :value="client.uuid">{{ client.name || client.uuid }}</option></select></label>
-      <label>Anchor<select v-model="selectedPlacement.anchor_id" @change="selectedPlacement.anchor_kind = (anchors.find((anchor) => anchor.id === selectedPlacement?.anchor_id)?.kind ?? 'physical')"><option v-for="anchor in anchors" :key="anchor.id" :value="anchor.id">{{ anchor.kind === 'physical' ? 'Physical: ' : 'Client: ' }}{{ anchor.label || anchor.id }}</option></select></label>
-      <label>Align<select v-model="selectedPlacement.alignment"><option value="start">Start</option><option value="center">Center</option><option value="end">End</option></select></label>
-      <label>Gap (px)<input v-model.number="selectedPlacement.gap_px" min="0" max="100000" step="1" type="number" /></label>
-      <label class="topology-primary"><input v-model="selectedPlacement.primary" type="checkbox" /> Use as primary while active</label>
+      <label>화면<select v-model="selected"><option v-for="client in focusClients" :key="client.uuid" :value="client.uuid">{{ client.name || client.uuid }}</option></select></label>
+      <label>기준 화면<select v-model="selectedPlacement.anchor_id" @change="selectedPlacement.anchor_kind = (anchors.find((anchor) => anchor.id === selectedPlacement?.anchor_id)?.kind ?? 'physical')"><option v-for="anchor in anchors" :key="anchor.id" :value="anchor.id">{{ anchor.kind === 'physical' ? 'Physical: ' : 'Client: ' }}{{ anchor.label || anchor.id }}</option></select></label>
+      <label>정렬<select v-model="selectedPlacement.alignment"><option value="start">시작 쪽</option><option value="center">가운데</option><option value="end">끝 쪽</option></select></label>
+      <label>간격(픽셀)<input v-model.number="selectedPlacement.gap_px" min="0" max="100000" step="1" type="number" /></label>
+      <label class="topology-primary"><input v-model="selectedPlacement.primary" type="checkbox" /> 켜져 있는 동안 주 화면으로 쓰기</label>
     </div>
     <div class="topology-status" v-for="client in focusClients" :key="`status-${client.uuid}`"><strong>{{ client.name || client.uuid }}</strong><StatusBadge :label="data?.runtime?.[client.uuid]?.lifecycle ?? 'inactive'" :tone="data?.runtime?.[client.uuid]?.retryable ? 'warning' : 'neutral'" compact /><span v-if="data?.runtime?.[client.uuid]?.warning">{{ data?.runtime?.[client.uuid]?.warning }}</span><span v-if="data?.runtime?.[client.uuid]?.plaintext_rtsp_warning">{{ data?.runtime?.[client.uuid]?.plaintext_rtsp_warning }}</span></div>
-    <div class="topology-actions"><AppButton variant="tertiary" label="Revert" :disabled="saving" @click="revert" /><AppButton variant="primary" label="Save layout" :disabled="Boolean(validationError)" :busy="saving" @click="save" /></div>
+    <div class="topology-actions"><AppButton variant="tertiary" label="되돌리기" :disabled="saving" @click="revert" /><AppButton variant="primary" label="배치 저장" :disabled="Boolean(validationError)" :busy="saving" @click="save" /></div>
   </section>
 </template>
 
