@@ -46,6 +46,7 @@ extern "C" {
 #include "display_device.h"
 #include "display_helper_integration.h"
 #include "globals.h"
+#include "src/apollide/cursor_channel.h"
 #include "hardware_metrics_session.h"
 #include "host_stats.h"
 #include "haptics_gain.h"
@@ -1544,6 +1545,23 @@ namespace stream {
     return 0;
   }
 
+  /**
+   * @brief Apollide: send pending cursor shape/visibility packets to a client that draws its own cursor.
+   */
+  void send_apollide_cursor(session_t *session) {
+    for (const auto &plaintext : apollide::cursor::take_messages(session)) {
+      static std::array<std::uint8_t, sizeof(control_encrypted_t) + crypto::cipher::round_to_pkcs7_padded(70000) + crypto::cipher::tag_size> encrypted_payload;
+      if (plaintext.size() > 65000) {
+        continue;
+      }
+      auto payload = encode_control(session, std::string_view(reinterpret_cast<const char *>(plaintext.data()), plaintext.size()), encrypted_payload);
+      if (payload.empty() || session->broadcast_ref->control_server.send(payload, session->control.peer)) {
+        BOOST_LOG(warning) << "Apollide cursor: couldn't send cursor update"sv;
+        return;
+      }
+    }
+  }
+
   void controlBroadcastThread(control_server_t *server) {
     server->map(packetTypes[IDX_PERIODIC_PING], [](session_t *session, const std::string_view &payload) {
       BOOST_LOG(verbose) << "type [IDX_PERIODIC_PING]"sv;
@@ -1728,6 +1746,11 @@ namespace stream {
       } else {
         BOOST_LOG(error) << "Invalid server command index: " << static_cast<int>(*cmdIndex);
       }
+    });
+
+    // Apollide: the client draws its own cursor and wants the host cursor shape instead of a blended cursor
+    server->map(apollide::cursor::kRequestMessage, [](session_t *session, const std::string_view &payload) {
+      apollide::cursor::on_client_request(session, payload);
     });
 
     server->map(packetTypes[IDX_SET_CLIPBOARD], [server](session_t *session, const std::string_view &payload) {
@@ -1951,6 +1974,7 @@ namespace stream {
               session->control.peer = nullptr;
             }
 
+            apollide::cursor::forget(session);
             session->controlEnd.raise(true);
             continue;
           }
@@ -2005,6 +2029,10 @@ namespace stream {
 
               send_hdr_mode(session, std::move(hdr_info));
             }
+
+            if (session->control.peer) {
+              send_apollide_cursor(session);
+            }
           }
 
           ++pos;
@@ -2031,7 +2059,7 @@ namespace stream {
       }
 
       // Haptic samples must keep flowing even when the player is not moving.
-      server->iterate(haptics_client ? 5ms : 150ms);
+      server->iterate((haptics_client || apollide::cursor::active()) ? 5ms : 150ms);
     }
 
     // Let all remaining connections know the server is shutting down
@@ -2045,6 +2073,7 @@ namespace stream {
 
       input::reset(session->input);
       session->shutdown_event->raise(true);
+      apollide::cursor::forget(session);
       session->controlEnd.raise(true);
     }
 
