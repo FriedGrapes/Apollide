@@ -45,6 +45,7 @@
 #include "app_display_policy.h"
 #include "audio.h"
 #include "config.h"
+#include "src/apollide/update_link.h"
 #include "host_stream_control.h"
 #ifdef _WIN32
   #include "platform/windows/hotkey_manager.h"
@@ -6581,6 +6582,53 @@ launch_session->exact_target_hold.reset();
 #endif
   }
 
+  /**
+   * @brief Apollide: the host's update state for a paired Artemide; it also reports its own (update_link.h).
+   */
+  void apollide_status(resp_https_t response, req_https_t request) {
+    pt::ptree tree;
+    auto g = util::fail_guard([&]() {
+      std::ostringstream data;
+      pt::write_xml(data, tree);
+      response->write(data.str());
+      response->close_connection_after_response = true;
+    });
+    const auto client = get_verified_cert(request);
+    if (!client) {
+      tree.put("root.<xmlattr>.status_code", 401);
+      return;
+    }
+    auto args = request->parse_query_string();
+    const auto reply = apollide::link::on_status_query(
+      client->uuid, client->name, get_arg(args, "clientVersion", ""), get_arg(args, "clientLatest", ""),
+      std::atoi(get_arg(args, "clientState", "0").c_str())
+    );
+    tree.put("root.<xmlattr>.status_code", 200);
+    tree.put("root.version", reply.current);
+    tree.put("root.latest", reply.latest);
+    tree.put("root.state", reply.state);
+    tree.put("root.clientUpdateRequested", reply.client_update_requested ? 1 : 0);
+  }
+
+  /**
+   * @brief Apollide: a paired Artemide starts the host update now (update_link.h).
+   */
+  void apollide_update(resp_https_t response, req_https_t request) {
+    pt::ptree tree;
+    auto g = util::fail_guard([&]() {
+      std::ostringstream data;
+      pt::write_xml(data, tree);
+      response->write(data.str());
+      response->close_connection_after_response = true;
+    });
+    const auto client = get_verified_cert(request);
+    if (!client) {
+      tree.put("root.<xmlattr>.status_code", 401);
+      return;
+    }
+    tree.put("root.<xmlattr>.status_code", apollide::link::on_update_query(client->name) ? 200 : 404);
+  }
+
   void cancel(resp_https_t response, req_https_t request) {
     print_req<SunshineHTTPS>(request);
 
@@ -7299,6 +7347,17 @@ launch_session->exact_target_hold.reset();
     https_server.resource["^/pair/?$"]["POST"] = pair<SunshineHTTPS>;
     https_server.resource["^/unpair/?$"]["GET"] = unpair<SunshineHTTPS>;
     https_server.resource["^/unpair/?$"]["POST"] = unpair<SunshineHTTPS>;
+    // Apollide: Artemide polls the host's update state and can start a host update (update_link.h)
+    https_server.resource["^/apollide/status$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
+      run_discovery_nvhttp([resp = std::move(resp), req = std::move(req)]() mutable {
+        apollide_status(std::move(resp), std::move(req));
+      });
+    };
+    https_server.resource["^/apollide/update$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
+      run_discovery_nvhttp([resp = std::move(resp), req = std::move(req)]() mutable {
+        apollide_update(std::move(resp), std::move(req));
+      });
+    };
     https_server.resource["^/applist$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
       run_discovery_nvhttp([resp = std::move(resp), req = std::move(req)]() mutable {
         applist(std::move(resp), std::move(req));
