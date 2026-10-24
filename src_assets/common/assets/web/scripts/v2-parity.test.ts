@@ -226,20 +226,19 @@ test('Everyday keeps impactful stream choices together and detailed tuning in ca
     groups.map((group) => group.id),
     [
       'everyday_display',
+      'everyday_encoding',
       'everyday_smoothness',
-      'everyday_pyrowave',
+      'everyday_recovery',
+      'everyday_resolution',
+      'everyday_compatibility',
       'everyday_remote_monitor',
       'everyday_integrations',
-      'everyday_compatibility',
-      'everyday_resolution',
-      'everyday_encoding',
-      'everyday_recovery',
       'everyday_automation',
     ],
   );
   assert.deepEqual(
     groups.filter((group) => !group.collapsed).map((group) => group.id),
-    ['everyday_display', 'everyday_smoothness', 'everyday_pyrowave'],
+    ['everyday_display', 'everyday_encoding', 'everyday_smoothness'],
   );
   const keys = groups.flatMap((group) =>
     group.fields.filter((field) => matchesPlatform(field, 'linux')).map((field) => field.key),
@@ -260,7 +259,6 @@ test('Everyday keeps impactful stream choices together and detailed tuning in ca
     'frame_limiter_auto_virtual_framegen',
     'frame_limiter_provider',
     'mangohud_preset',
-    'pyrowave',
     'virtual_display_max_clients',
     'remote_monitor_mute_audio',
     'dd_mode_remapping',
