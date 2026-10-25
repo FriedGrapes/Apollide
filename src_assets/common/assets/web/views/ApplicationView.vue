@@ -9,7 +9,7 @@ import { groupLibraryGames, providerLabels } from '@/utils/libraryGames';
 import {
   isRemoteMonitorApplication,
   preserveRemoteMonitorRouting,
-} from '../../web-legacy/utils/remoteMonitorPolicy';
+} from '@/utils/remoteMonitorPolicy';
 import { ApiError, apiGet, apiPost } from '@/api/client';
 import AppCompatibilitySettings from '@/components/app-edit/AppCompatibilitySettings.vue';
 import { parseAppExtras } from '@/utils/appCompatibility';

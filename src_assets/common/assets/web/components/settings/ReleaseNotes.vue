@@ -39,7 +39,8 @@ async function load(remote = false) {
     loading.value = false;
   }
 }
-onMounted(() => void load());
+// Apollide: release notes come from our GitHub releases (no bundled upstream changelog)
+onMounted(() => void load(true));
 </script>
 <template>
   <section class="release-notes">
