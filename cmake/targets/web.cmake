@@ -1,5 +1,7 @@
 set(SUNSHINE_WEB_SOURCE_DIR "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/web")
-set(SUNSHINE_LEGACY_WEB_SOURCE_DIR "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/web-legacy")
+# Apollide: the legacy web UI is not shipped. Only the files the host itself serves or shows
+# (tray icons, favicon, logo) are copied to the web root from web-root/.
+set(SUNSHINE_LEGACY_WEB_SOURCE_DIR "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/web-root")
 set(SUNSHINE_WEB_ROOT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assets/web")
 set(SUNSHINE_WEB_OUTPUT_DIR "${SUNSHINE_WEB_ROOT_OUTPUT_DIR}/v2")
 set(SUNSHINE_LEGACY_WEB_OUTPUT_DIR "${SUNSHINE_WEB_ROOT_OUTPUT_DIR}")
@@ -41,14 +43,9 @@ if(SUNSHINE_NPM_EXECUTABLE)
     add_custom_command(
         OUTPUT
             "${SUNSHINE_WEB_STAMP}"
-            "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}/index.html"
             "${SUNSHINE_WEB_OUTPUT_DIR}/index.html"
-        COMMAND "${CMAKE_COMMAND}" -E chdir "${SUNSHINE_LEGACY_WEB_SOURCE_DIR}"
-                "${SUNSHINE_NPM_EXECUTABLE}" ci --ignore-scripts --no-audit --no-fund --prefer-offline
-        COMMAND "${CMAKE_COMMAND}" -E chdir "${SUNSHINE_LEGACY_WEB_SOURCE_DIR}"
-                "${CMAKE_COMMAND}" -E env
-                "SUNSHINE_LEGACY_WEB_OUTPUT_DIR=${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}"
-                "${SUNSHINE_NPM_EXECUTABLE}" run build
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory
+                "${SUNSHINE_LEGACY_WEB_SOURCE_DIR}" "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}"
         COMMAND "${SUNSHINE_NPM_EXECUTABLE}" ci --ignore-scripts --no-audit --no-fund --prefer-offline
         COMMAND "${CMAKE_COMMAND}" -E env
                 "SUNSHINE_WEB_OUTPUT_DIR=${SUNSHINE_WEB_OUTPUT_DIR}"
@@ -61,7 +58,6 @@ if(SUNSHINE_NPM_EXECUTABLE)
     )
     add_custom_target(web_ui DEPENDS
         "${SUNSHINE_WEB_STAMP}"
-        "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}/index.html"
         "${SUNSHINE_WEB_OUTPUT_DIR}/index.html")
 else()
     add_custom_target(web_ui

@@ -113,7 +113,7 @@ function(sunshine_prepare_windows_portable)
             message(FATAL_ERROR "Required portable runtime file is empty: ${_required}")
         endif()
     endforeach()
-    foreach(_web_assets IN ITEMS assets/web/assets assets/web/v2/assets)
+    foreach(_web_assets IN ITEMS assets/web/v2/assets)  # Apollide: no legacy bundle at assets/web/assets
         file(GLOB _scripts "${PORTABLE_STAGE}/${_web_assets}/*.js")
         if(NOT _scripts)
             message(FATAL_ERROR "Portable Web UI bundle missing: ${_web_assets}")
