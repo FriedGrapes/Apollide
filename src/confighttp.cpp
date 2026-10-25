@@ -1615,13 +1615,44 @@ namespace confighttp {
       return;
     }
 
+    // Apollide: the legacy web UI is not shipped. Its page addresses (bookmarks, the tray's
+    // "/clients", older links) open the matching v2 page instead.
+    if (!is_v2_route) {
+      static constexpr std::array<std::pair<std::string_view, const char *>, 9> legacy_pages {{
+        {"/pin", "/v2/pair"},
+        {"/clients", "/v2/devices"},
+        {"/apps", "/v2/library"},
+        {"/featured", "/v2/library"},
+        {"/config", "/v2/settings"},
+        {"/password", "/v2/maintenance"},
+        {"/troubleshooting", "/v2/maintenance"},
+        {"/api-tokens", "/v2/api-tokens"},
+        {"/logs", "/v2/logs"},
+      }};
+      std::string_view page = path_view;
+      if (page.ends_with(".html")) {
+        page.remove_suffix(5);
+      }
+      while (page.size() > 1 && page.ends_with('/')) {
+        page.remove_suffix(1);
+      }
+      const char *target = "/v2/";
+      for (const auto &[legacy, v2] : legacy_pages) {
+        if (page == legacy) {
+          target = v2;
+        }
+      }
+      send_redirect(std::move(response), std::move(request), target);
+      return;
+    }
+
     // Missing files should remain 404s. Extension-free paths are client-side
     // navigation routes and receive the single application shell.
     if (fs::path {path}.has_extension()) {
       not_found(response, request);
       return;
     }
-    serve_web_file(std::move(response), std::move(request), is_v2_route ? "v2/index.html" : "index.html");
+    serve_web_file(std::move(response), std::move(request), "v2/index.html");
   }
 
   /**
@@ -6617,10 +6648,8 @@ namespace confighttp {
       return;
     }
     print_req(request);
-    std::string content = file_handler::read_file(WEB_DIR "api-tokens.html");
-    SimpleWeb::CaseInsensitiveMultimap headers;
-    headers.emplace("Content-Type", "text/html; charset=utf-8");
-    response->write(content, headers);
+    // Apollide: the legacy token page is not shipped; v2 has the same page
+    send_redirect(std::move(response), std::move(request), "/v2/api-tokens");
   }
 
   /**
