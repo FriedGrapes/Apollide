@@ -268,6 +268,8 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/src/apollide/auto_update.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/scroll_route.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/scroll_route.cpp"
+        "${CMAKE_SOURCE_DIR}/src/apollide/virtual_ptp.h"
+        "${CMAKE_SOURCE_DIR}/src/apollide/virtual_ptp.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/update_link.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/update_link.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/windows/present_timing.h"
@@ -352,6 +354,7 @@ list(PREPEND PLATFORM_LIBRARIES
         D3DCompiler
         dwmapi
         dxgi
+        hid  # Apollide: virtual precision touchpad (src/apollide/virtual_ptp.cpp)
         iphlpapi
         ksuser
         libssp.a
