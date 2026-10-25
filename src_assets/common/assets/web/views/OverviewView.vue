@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import LinuxCaptureStatus from '@/components/settings/LinuxCaptureStatus.vue';
 import VirtualDisplayRecovery from '@/components/VirtualDisplayRecovery.vue';
 import ApollideDevices from '@/components/ApollideDevices.vue';
+import ApollideNotify from '@/components/ApollideNotify.vue';
 import { ApiError, apiGet } from '@/api/client';
 import {
   AppButton,
@@ -516,6 +517,7 @@ onBeforeUnmount(() => {
         </section>
       </div>
       <ApollideDevices />
+      <ApollideNotify />
       <LinuxCaptureStatus
         v-if="system.metadata?.platform === 'linux'"
         :metadata="system.metadata"
