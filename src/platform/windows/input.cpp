@@ -1140,7 +1140,7 @@ namespace platf {
     if (apollide::scroll::route(touch.pointerId, touch.eventType,
                                 std::lround(touch.x * touch_port.width + touch_port.offset_x),
                                 std::lround(touch.y * touch_port.height + touch_port.offset_y),
-                                touch_port.height)) {
+                                touch_port.height, touch.x, touch.y)) {
       return;
     }
 
