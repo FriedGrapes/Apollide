@@ -51,6 +51,7 @@
 #include "update.h"
 #include "src/apollide/auto_update.h"
 #include "src/apollide/update_link.h"
+#include "src/apollide/notify_relay.h"
 #include "confighttp.h"
 #include "crypto.h"
 #include "file_handler.h"
@@ -5858,6 +5859,33 @@ namespace confighttp {
     send_response(response, nlohmann::json {{"status", !uuid.empty() && apollide::link::request_client_update(uuid)}});
   }
 
+  /**
+   * @brief Apollide: the 'send notifications to the Surface' switch and its state (notify_relay.h).
+   */
+  void getApollideNotify(resp_https_t response, req_https_t request) {
+    if (!authenticate(response, request)) {
+      return;
+    }
+    send_response(response, apollide::notify::settings());
+  }
+
+  /**
+   * @brief Apollide: turn notification forwarding on or off ({"enabled": bool}).
+   */
+  void postApollideNotify(resp_https_t response, req_https_t request) {
+    if (!validateContentType(response, request, "application/json") || !authenticate(response, request)) {
+      return;
+    }
+    print_req(request);
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    const auto body = nlohmann::json::parse(ss.str(), nullptr, false);
+    if (body.is_object() && body.contains("enabled") && body["enabled"].is_boolean()) {
+      apollide::notify::set_enabled(body["enabled"].get<bool>());
+    }
+    send_response(response, apollide::notify::settings());
+  }
+
   void restart(resp_https_t response, req_https_t request) {
     if (!validateContentType(response, request, "application/json") || !authenticate(response, request)) {
       return;
@@ -6475,6 +6503,8 @@ namespace confighttp {
     register_api_route("^/api/apollide/link$", "GET", getApollideLink);
     register_api_route("^/api/apollide/update-host$", "POST", postApollideUpdateHost);
     register_api_route("^/api/apollide/update-client$", "POST", postApollideUpdateClient);
+    register_api_route("^/api/apollide/notify$", "GET", getApollideNotify);
+    register_api_route("^/api/apollide/notify$", "POST", postApollideNotify);
     register_api_route("^/api/quit$", "POST", quit);
 #ifdef _WIN32
     register_api_route("^/api/service/startup$", "GET", getServiceStartup);
