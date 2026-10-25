@@ -72,7 +72,7 @@ set(SUNSHINE_PORTABLE_REQUIRED_FILES
     assets/apps.json
     assets/desktop.png
     assets/steam.png
-    assets/web/index.html
+    assets/web/images/apollo.ico
     assets/web/v2/index.html
     assets/shaders/directx/cursor_vs.hlsl
     plugins/playnite/SunshinePlaynite/extension.yaml
