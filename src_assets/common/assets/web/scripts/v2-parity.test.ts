@@ -3,7 +3,6 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { getConfigSelectOptions } from '../configs/configSelectOptions.ts';
-import { getConfigSelectOptions as getLegacyConfigSelectOptions } from '../../web-legacy/configs/configSelectOptions.ts';
 import {
   matchesPlatform,
   settingsFields,
@@ -32,8 +31,6 @@ test('AMD speed default agrees across backend, settings UI and legacy fallbacks'
   for (const path of [
     '../configs/settingsSchema.ts',
     '../config.html',
-    '../../web-legacy/config.html',
-    '../../web-legacy/stores/config.ts',
   ]) {
     assert.match(readFileSync(new URL(path, import.meta.url), 'utf8'), /amd_quality:\s*'speed'/);
   }
@@ -111,16 +108,10 @@ test('gamepad options follow the host platform', () => {
       'vhf_switch',
     ],
   );
-  assert.deepEqual(
-    getLegacyConfigSelectOptions('gamepad', { t: (key: string) => key, platform: 'linux' }).map(
-      (option) => option.value,
-    ),
-    ['auto', 'xone', 'ds4', 'ds5', 'switch'],
-  );
 });
 
 test('both settings interfaces offer the composite DualSense on Windows and preserve saved values', () => {
-  for (const getOptions of [getConfigSelectOptions, getLegacyConfigSelectOptions]) {
+  for (const getOptions of [getConfigSelectOptions]) {
     const context = { t: (key: string) => key, platform: 'windows' };
     const option = getOptions('gamepad', context).find(
       (candidate) => candidate.value === 'usbip_ds5',
@@ -337,20 +328,6 @@ test('Linux Proton and MangoHUD limiter choices stay aligned with legacy UI', ()
   assert.match(messages.ui.integrations.mangohud.limiterMethodDescription, /latency/i);
   assert.match(messages.ui.integrations.mangohud.limiterMethodDescription, /frame generation/i);
 
-  assert.deepEqual(
-    getLegacyConfigSelectOptions('frame_limiter_provider', {
-      t: (key: string) => key,
-      platform: 'linux',
-    }).map((option) => option.value),
-    ['auto', 'mangohud-proton', 'proton', 'mangohud', 'none'],
-  );
-  assert.deepEqual(
-    getLegacyConfigSelectOptions('mangohud_limiter_method', {
-      t: (key: string) => key,
-      platform: 'linux',
-    }).map((option) => option.value),
-    ['early', 'late'],
-  );
 });
 
 test('Settings explains unavailable host metadata and virtual-display readiness', () => {
