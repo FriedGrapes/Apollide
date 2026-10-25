@@ -44,6 +44,9 @@ if(SUNSHINE_NPM_EXECUTABLE)
         OUTPUT
             "${SUNSHINE_WEB_STAMP}"
             "${SUNSHINE_WEB_OUTPUT_DIR}/index.html"
+        # Apollide: drop what an earlier legacy build left in the web root, so it is not packaged
+        COMMAND "${CMAKE_COMMAND}" -E rm -rf
+                "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}/assets" "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}/index.html"
         COMMAND "${CMAKE_COMMAND}" -E copy_directory
                 "${SUNSHINE_LEGACY_WEB_SOURCE_DIR}" "${SUNSHINE_LEGACY_WEB_OUTPUT_DIR}"
         COMMAND "${SUNSHINE_NPM_EXECUTABLE}" ci --ignore-scripts --no-audit --no-fund --prefer-offline
