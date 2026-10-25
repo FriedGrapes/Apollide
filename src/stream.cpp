@@ -48,6 +48,7 @@ extern "C" {
 #include "globals.h"
 #include "src/apollide/cursor_channel.h"
 #include "src/apollide/update_link.h"
+#include "src/apollide/notify_relay.h"
 #include "hardware_metrics_session.h"
 #include "host_stats.h"
 #include "haptics_gain.h"
@@ -1555,6 +1556,10 @@ namespace stream {
     for (auto &message : apollide::link::take_messages(session, session->device_uuid)) {
       messages.push_back(std::move(message));
     }
+    // Apollide: H1 notifications for clients that subscribed (notify_relay.h)
+    for (auto &message : apollide::notify::take_messages(session)) {
+      messages.push_back(std::move(message));
+    }
     for (const auto &plaintext : messages) {
       static std::array<std::uint8_t, sizeof(control_encrypted_t) + crypto::cipher::round_to_pkcs7_padded(70000) + crypto::cipher::tag_size> encrypted_payload;
       if (plaintext.size() > 65000) {
@@ -1765,6 +1770,10 @@ namespace stream {
     });
     server->map(apollide::link::kUpdateHostNow, [](session_t *session, const std::string_view &) {
       apollide::link::on_update_host_now(session->device_name);
+    });
+    // Apollide: Artemide asks for H1's notifications (notify_relay.h)
+    server->map(apollide::notify::kNotifySubscribe, [](session_t *session, const std::string_view &payload) {
+      apollide::notify::on_subscribe(session, payload);
     });
 
     server->map(packetTypes[IDX_SET_CLIPBOARD], [server](session_t *session, const std::string_view &payload) {
@@ -1990,6 +1999,7 @@ namespace stream {
 
             apollide::cursor::forget(session);
             apollide::link::forget(session);
+            apollide::notify::forget(session);
             session->controlEnd.raise(true);
             continue;
           }
@@ -2090,6 +2100,7 @@ namespace stream {
       session->shutdown_event->raise(true);
       apollide::cursor::forget(session);
       apollide::link::forget(session);
+      apollide::notify::forget(session);
       session->controlEnd.raise(true);
     }
 
