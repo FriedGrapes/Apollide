@@ -22,12 +22,13 @@ set(CPACK_STRIP_FILES YES)
 install(DIRECTORY "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/"
         DESTINATION "${SUNSHINE_ASSETS_DIR}"
         PATTERN "web" EXCLUDE
-        PATTERN "web-legacy" EXCLUDE)
+        PATTERN "web-legacy" EXCLUDE
+        PATTERN "web-root" EXCLUDE)
 
 # copy assets to build directory, for running without install
 file(GLOB_RECURSE ALL_ASSETS
         RELATIVE "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/" "${SUNSHINE_SOURCE_ASSETS_DIR}/common/assets/*")
-list(FILTER ALL_ASSETS EXCLUDE REGEX "^web(-legacy)?/.*$")  # Filter out browser source directories
+list(FILTER ALL_ASSETS EXCLUDE REGEX "^web(-legacy|-root)?/.*$")  # Filter out browser source directories
 foreach(asset ${ALL_ASSETS})  # Copy assets to build directory, excluding browser source directories
     # Keep subdirectories such as remote-session/, where the host looks for them.
     get_filename_component(asset_dir "${asset}" DIRECTORY)
@@ -39,8 +40,8 @@ endforeach()
 # tree. Fail packaging when it has not been built so an installer can never
 # silently ship an API-only configuration endpoint.
 install(CODE "
-    if(NOT EXISTS \"${CMAKE_CURRENT_BINARY_DIR}/assets/web/index.html\")
-        message(FATAL_ERROR \"Vibepollo legacy Web UI is missing. Build the web_ui target before packaging.\")
+    if(NOT EXISTS \"${CMAKE_CURRENT_BINARY_DIR}/assets/web/images/apollo.ico\")
+        message(FATAL_ERROR \"Apollide web root icons are missing. Build the web_ui target before packaging.\")
     endif()
     if(NOT EXISTS \"${CMAKE_CURRENT_BINARY_DIR}/assets/web/v2/index.html\")
         message(FATAL_ERROR \"Vibepollo v2 Web UI is missing. Build the web_ui target before packaging.\")
