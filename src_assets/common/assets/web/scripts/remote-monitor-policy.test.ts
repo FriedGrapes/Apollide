@@ -4,7 +4,7 @@ import test from 'node:test';
 import {
   isRemoteMonitorApplication,
   preserveRemoteMonitorRouting,
-} from '../../web-legacy/utils/remoteMonitorPolicy.ts';
+} from '../utils/remoteMonitorPolicy.ts';
 
 const monitorUuid = '9a1c5a25-58fe-40e0-b9aa-7d3f00000005';
 
