@@ -1,1 +1,2 @@
-export * from '../../web-legacy/utils/libraryGames';
+// Apollide: the legacy web UI is not shipped, so the model lives here
+export * from './libraryGamesModel';
