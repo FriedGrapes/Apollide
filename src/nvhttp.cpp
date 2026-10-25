@@ -46,6 +46,7 @@
 #include "audio.h"
 #include "config.h"
 #include "src/apollide/update_link.h"
+#include "src/apollide/notify_relay.h"
 #include "host_stream_control.h"
 #ifdef _WIN32
   #include "platform/windows/hotkey_manager.h"
@@ -6629,6 +6630,49 @@ launch_session->exact_target_hold.reset();
     tree.put("root.<xmlattr>.status_code", apollide::link::on_update_query(client->name) ? 200 : 404);
   }
 
+  /**
+   * @brief Apollide: H1 notifications a paired Artemide has not seen yet (notify_relay.h).
+   */
+  void apollide_notifications(resp_https_t response, req_https_t request) {
+    pt::ptree tree;
+    auto g = util::fail_guard([&]() {
+      std::ostringstream data;
+      pt::write_xml(data, tree);
+      response->write(data.str());
+      response->close_connection_after_response = true;
+    });
+    const auto client = get_verified_cert(request);
+    if (!client) {
+      tree.put("root.<xmlattr>.status_code", 401);
+      return;
+    }
+    auto args = request->parse_query_string();
+    const auto boot = get_arg(args, "boot", "");
+    const auto after = get_arg(args, "after", "");
+    const auto reply = apollide::notify::query(
+      !boot.empty() && !after.empty(),
+      static_cast<std::uint32_t>(std::strtoul(boot.c_str(), nullptr, 10)),
+      static_cast<std::uint32_t>(std::strtoul(after.c_str(), nullptr, 10))
+    );
+    tree.put("root.<xmlattr>.status_code", 200);
+    tree.put("root.boot", reply.boot);
+    tree.put("root.last", reply.last);
+    tree.put("root.forwarding", reply.forwarding ? 1 : 0);
+    tree.put("root.helper", static_cast<int>(reply.helper));
+    const auto now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    for (const auto &item : reply.items) {
+      pt::ptree n;
+      n.put("seq", item.seq);
+      n.put("age", std::max<std::int64_t>(0, now - item.arrived_ms));
+      n.put("appId", item.n.app_id);
+      n.put("app", item.n.app);
+      n.put("title", item.n.title);
+      n.put("body", item.n.body);
+      n.put("icon", apollide::notify::base64(item.n.icon));
+      tree.add_child("root.notification", n);
+    }
+  }
+
   void cancel(resp_https_t response, req_https_t request) {
     print_req<SunshineHTTPS>(request);
 
@@ -7356,6 +7400,12 @@ launch_session->exact_target_hold.reset();
     https_server.resource["^/apollide/update$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
       run_discovery_nvhttp([resp = std::move(resp), req = std::move(req)]() mutable {
         apollide_update(std::move(resp), std::move(req));
+      });
+    };
+    // Apollide: the Surface's background helper picks up H1 notifications (notify_relay.h)
+    https_server.resource["^/apollide/notifications$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
+      run_discovery_nvhttp([resp = std::move(resp), req = std::move(req)]() mutable {
+        apollide_notifications(std::move(resp), std::move(req));
       });
     };
     https_server.resource["^/applist$"]["GET"] = [run_discovery_nvhttp](auto resp, auto req) {
