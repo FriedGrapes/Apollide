@@ -47,6 +47,7 @@
 #include "config.h"
 #include "src/apollide/update_link.h"
 #include "src/apollide/notify_relay.h"
+#include "src/apollide/resume_mode.h"
 #include "host_stream_control.h"
 #ifdef _WIN32
   #include "platform/windows/hotkey_manager.h"
@@ -6323,6 +6324,29 @@ launch_session->exact_target_hold.reset();
       tree.put("root.<xmlattr>.status_code", 409);
       tree.put("root.<xmlattr>.status_message", "Virtual display client limit reached");
       return;
+    }
+    // Apollide: a client resuming a paused session gets its own mode on the display that is
+    // already there. The Surface and the Mac ask for different modes; without this the next
+    // client inherited the previous one's mode until the app was closed. The app and its
+    // windows stay put, and a display someone is watching is never changed.
+    {
+      std::optional<std::string> resume_output = retained_game_output;
+      if (!resume_output) {
+        resume_output = pending_output_override;
+      }
+      if (!resume_output) {
+        resume_output = config::runtime_output_name_override();
+      }
+      if (resume_output) {
+        (void) apollide::resume_mode::match_virtual_output(
+          *resume_output,
+          launch_session->width,
+          launch_session->height,
+          launch_session->fps,
+          no_active_sessions,
+          is_input_only
+        );
+      }
     }
 #elif defined(__linux__)
     platf::linux_display::prepared_display_t prepared;
