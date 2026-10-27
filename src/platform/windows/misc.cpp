@@ -55,6 +55,7 @@
 
 // local includes
 #include "misc.h"
+#include "src/apollide/clipboard_open.h"
 #include "src/screen_saver_state.h"
 #include "src/platform/common_services.h"
 #include "nvprefs/nvprefs_interface.h"
@@ -3222,7 +3223,7 @@ static std::string ensureCrLf(const std::string &utf8Str) {
 }
 
 static std::wstring getClipboardData() {
-  if (!OpenClipboard(nullptr)) {
+  if (!apollide::clipboard::open_with_retry()) {
     BOOST_LOG(warning) << "Failed to open clipboard.";
     return L"";
   }
@@ -3250,7 +3251,7 @@ static std::wstring getClipboardData() {
 }
 
 static int setClipboardData(const std::wstring &utf16Str) {
-  if (!OpenClipboard(nullptr)) {
+  if (!apollide::clipboard::open_with_retry()) {
     BOOST_LOG(warning) << "Failed to open clipboard.";
     return 1;
   }
