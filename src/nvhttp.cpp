@@ -5934,6 +5934,13 @@ launch_session->exact_target_hold.reset();
     // seconds (display apply, verification, encoder probe). has_stream_session_activity()
     // already counts pending launches, so every mutating decision below degrades to a
     // plain join on its own.
+    // Apollide: one person uses H1 from whichever device is in hand, so a resume takes the
+    // picture over. Another device still watching is disconnected first (the app keeps running),
+    // and the resume below goes on as an unshared one with this device's own display mode.
+    (void) apollide::resume_mode::take_over_from_other_viewers(
+      request_client_identity.uuid,
+      config::input.enable_input_only_mode && current_appid == proc::input_only_app_id
+    );
     const bool no_active_sessions = !has_stream_session_activity();
     const auto active_game = proc::proc.active_session_guard();
     const bool secondary_game_client = remote_session::is_secondary_game_client(
