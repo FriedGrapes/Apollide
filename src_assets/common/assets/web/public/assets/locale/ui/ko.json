@@ -1,0 +1,3435 @@
+{
+  "ui": {
+    "settings": {
+      "all_settings": "모든 설정",
+      "categories": {
+        "audio": {
+          "description": "호스트 소리 캡처와 가상 오디오 장치 연결.",
+          "label": "오디오"
+        },
+        "display": {
+          "description": "가상 화면, 실제 모니터 선택, 해상도, 주사율, HDR.",
+          "label": "화면"
+        },
+        "everyday": {
+          "description": "Apollide의 가상 화면, 더 부드러운 게임 캡처, 원격 모니터, 스트리밍 자동화를 설정해요. 세밀한 조정은 다른 분류에서 하세요.",
+          "label": "기본 설정"
+        },
+        "files": {
+          "description": "보통 설치 프로그램이나 서비스가 관리하는 경로.",
+          "label": "파일과 인증서"
+        },
+        "host": {
+          "description": "이름, 이 PC에서의 동작, 기록 보관, 실시간 지표.",
+          "label": "호스트와 진단"
+        },
+        "input": {
+          "description": "키보드, 마우스, 게임패드, 펜, 터치, 키 반복 동작.",
+          "label": "입력"
+        },
+        "network": {
+          "description": "접속받을 네트워크, 원격 접속, 포트, 암호화, 믿을 수 있는 주소.",
+          "label": "네트워크와 보안"
+        },
+        "pacing": {
+          "description": "화면 캡처 방식, 프레임 제한, 프레임 간격 맞추기 연동.",
+          "label": "고급 캡처와 프레임 간격"
+        },
+        "video": {
+          "description": "인코더 선택, 코덱 지원, 비트레이트, 끊김 대비.",
+          "label": "영상과 화질"
+        }
+      },
+      "categories_label": "설정 분류",
+      "game_libraries": "게임 라이브러리 연동",
+      "dependency_inactive": "“{setting}”이(가) 꺼져 있거나 다른 방식이라 지금은 쓰이지 않아요.",
+      "description": "내 스트리밍 방식에 맞게 이 호스트를 설정해요.",
+      "command_editor": {
+        "empty": "아직 명령이 없어요. 추가를 눌러 만드세요.",
+        "remove": "명령 {number} 지우기"
+      },
+      "discard": "되돌리기",
+      "display_recovery": {
+        "action": "화면 상태 지우기",
+        "description": "화면 복원이 자꾸 엉뚱한 모니터로 가면, 저장된 화면 상태를 지워 보세요.",
+        "title": "화면 복구"
+      },
+      "errors": {
+        "load": "설정을 불러오지 못했어요.",
+        "reset_display": "화면 상태를 초기화하지 못했어요.",
+        "save": "설정을 저장하지 못했어요.",
+        "title": "설정을 열 수 없어요"
+      },
+      "expert": {
+        "description": "이 호스트 설정에 이미 있지만 따로 조절 화면이 없는 항목이에요.",
+        "direct_title": "직접 설정",
+        "empty": "검색과 맞는 전문가 항목이 없어요.",
+        "label": "전문가",
+        "title": "전문가 설정",
+        "warning": "이 값은 Apollide에 그대로 전달돼요. 원래 형식을 지켜 주세요.",
+        "warning_title": "전문가 설정"
+      },
+      "fields": {
+        "audio_sink": {
+          "description": "비워 두면 호스트의 소리 출력 장치를 자동으로 골라요."
+        },
+        "bind_address": {
+          "description": "비워 두면 모든 네트워크에서 접속을 받아요."
+        },
+        "csrf_allowed_origins": {
+          "description": "믿을 수 있는 HTTPS 주소만 쉼표로 나눠 넣으세요."
+        },
+        "dd_configuration_option": {
+          "description": "스트리밍 전에 고른 화면을 어떻게 준비할지 정해요."
+        },
+        "dd_config_revert_on_disconnect": {
+          "description": "켜면 바로 원래 화면으로 돌아가요. 끄면 다시 접속할 수 있게 게임과 가상 화면을 남겨 둬요.",
+          "label": "클라이언트 접속이 끊기면 바로 복원"
+        },
+        "dd_hdr_option": {
+          "description": "고른 화면이 HDR을 지원하면 클라이언트의 HDR 요청을 따라요."
+        },
+        "dd_hdr_request_override": {
+          "description": "보통은 클라이언트를 따라요. HDR을 잘못 알리는 클라이언트나 게임이면 직접 정하세요.",
+          "label": "클라이언트가 요청한 HDR"
+        },
+        "dd_manual_refresh_rate": {
+          "description": "주사율을 Hz 단위로 넣어요(소수 가능). 다른 앱이나 스트리밍이 없을 때 새로 앱을 켜면 클라이언트 → 앱 → 전체 설정 순으로 우선해요. 이미 실행 중인(일시 정지 포함) 앱에 다시 접속하거나 공유 세션에 들어가면 호스트의 기존 설정이 유지될 수 있어요. 클라이언트의 화면 모드 지정이 있으면 이 값보다 먼저 적용돼요."
+        },
+        "dd_config_revert_delay": {
+          "description": "마지막 스트리밍이나 앱이 끝나고 이만큼(밀리초) 기다린 뒤 원래 화면 배치로 돌려요.",
+          "label": "화면 복원 대기 시간"
+        },
+        "dd_manual_resolution": {
+          "description": "가로x세로로 넣어요(예: 2560x1440). 다른 앱이나 스트리밍이 없을 때 새로 앱을 켜면 클라이언트 → 앱 → 전체 설정 순으로 우선해요. 이미 실행 중인(일시 정지 포함) 앱에 다시 접속하거나 공유 세션에 들어가면 호스트의 기존 설정이 유지될 수 있어요. 클라이언트의 화면 모드 지정과 실행 해상도 배율이 있으면 이 값보다 먼저 적용돼요."
+        },
+        "dd_mode_remapping": {
+          "description": "클라이언트가 특정 크기를 요청하면 스트리밍 화면에 다른 해상도를 써요.",
+          "label": "해상도 바꿔 쓰기"
+        },
+        "dd_paused_virtual_display_timeout_secs": {
+          "description": "접속이 끊겨도 게임이 계속 돌면, 가상 화면을 이 시간만큼 남겨 둔 뒤 지워요.",
+          "label": "끊긴 가상 화면 유지 시간",
+          "warning": "시간이 지나면 게임이 돌고 있어도 가상 화면을 지워요. 오래된 게임은 화면이 사라지면 튕길 수 있어요. 게임을 먼저 끄거나 '게임을 끌 때까지'를 고르세요."
+        },
+        "dd_refresh_rate_option": {
+          "label": "화면 주사율",
+          "description": "요청한 스트리밍 FPS에 맞추거나, 호스트 주사율을 그대로 두거나, 직접 정해요."
+        },
+        "dd_resolution_option": {
+          "label": "화면 해상도",
+          "description": "클라이언트가 요청한 해상도에 맞추거나, 호스트 화면을 그대로 두거나, 직접 정해요."
+        },
+        "dd_virtual_display_permanent_count": {
+          "description": "스트리밍하지 않을 때도 가상 모니터를 최대 4개까지 켜 둬요. 0이면 필요할 때만 만들어요.",
+          "label": "항상 켜 둘 가상 화면"
+        },
+        "dd_virtual_display_scale": {
+          "description": "@:config.virtual_display_scale_desc",
+          "label": "@:config.virtual_display_scale_label"
+        },
+        "virtual_display_outputs": {
+          "description": "개인 스트리밍용으로 남겨 둘 DRM 커넥터 이름을 쉼표로 넣어요(선택). 비우면 관리되는 출력 4개를 써요. Linux 7.1 이상에서는 Apollide가 GPU에 연결된 HDR10·10비트 출력을 제공해요. HDR은 KMS 직접 캡처를 쓰고, SDR은 KWin을 권장해요. 전용 드라이버가 없으면 가상 화면을 만들 수 없어요.",
+          "label": "Linux 개인 화면 커넥터"
+        },
+        "virtual_display_max_clients": {
+          "label": "가상 화면 클라이언트 수 제한",
+          "description": "짝 맺은 클라이언트 1~8대가 가상 화면을 가질 수 있어요(기본 4). 일반 스트리밍과 원격 모니터가 이 수를 함께 써요. Linux는 준비된 개인 출력 수로도 제한돼요. 수를 줄여도 이미 있는 화면은 쓰던 기기가 놓을 때까지 남아요."
+        },
+        "remote_monitor_mute_audio": {
+          "description": "켜면 원격 모니터 클라이언트에 화면과 입력만 보내고, 게임·바탕화면 소리는 보내지 않아요.",
+          "label": "원격 모니터 소리 끄기"
+        },
+        "remote_monitor_disconnect_on_stream_end": {
+          "description": "켜면 스트리밍이 끝날 때 추가 모니터를 지워요. 끄면 이어 하기용으로 모니터를 남겨 둬요.",
+          "label": "원격 모니터 스트리밍이 끝나면 지우기"
+        },
+        "remote_monitor_disconnect_on_client_disconnect": {
+          "description": "켜면 클라이언트 접속이 끊기거나 연결 끊기를 누르는 즉시 추가 모니터를 지워요. 이어 하기를 기다리던 중이어도 지워요.",
+          "label": "클라이언트 접속이 끊기면 지우기"
+        },
+        "remote_monitor_terminate_on_first_request": {
+          "description": "Artemide가 실행 중인 게임과 종료 단추를 보여 주려면, Apollide가 추가 클라이언트도 접속할 수 있다고 알려야 해요. 끄면 종료를 두 번 눌러야 해요. 원래 게임하던 클라이언트는 영향 없어요.",
+          "label": "첫 요청에 바로 종료"
+        },
+        "remote_monitor_confirm_app_replacement": {
+          "description": "실행 중인 앱을 바꾸려는 첫 요청은 거절하고, 60초 동안 이어 하기 가능으로 알려 Artemide가 앱 닫기 경고를 띄우게 해요. 원격 입력과 원격 모니터는 경고 없이 붙어요. 끄면 바로 앱을 바꿔요.",
+          "label": "실행 중인 앱을 바꾸기 전에 확인"
+        },
+        "capture": {
+          "description": "자동이면 Linux의 관리되는 가상 화면에 KMS를 써서 호환성이 좋고 지연이 짧아요. 직접 고른 방식은 실제·가상 화면 모두에 그대로 쓰지만, 가상 화면에는 다른 방식을 권하지 않아요.",
+          "label": "화면 캡처 방식"
+        },
+        "encoder": {
+          "description": "자동이면 설정한 그래픽 카드나, 영상 메모리가 가장 큰 외장 GPU를 골라 스트리밍 전에 인코더를 확인해요.",
+          "label": "영상 인코더"
+        },
+        "fec_percentage": {
+          "description": "영상 프레임마다 복구용 데이터를 더해요. 기본 20%면 보통의 끊김은 충분해요. 높이면 데이터를 더 써요.",
+          "label": "네트워크 복구(FEC)"
+        },
+        "dd_use_sunshine_virtual_display_driver": {
+          "description": "권장. Apollide에 들어 있는 드라이버로 클라이언트별·공유 가상 화면을 만들어요. SudoVDA로 돌아갈 때만 끄세요.",
+          "label": "Apollide 화면 드라이버 쓰기"
+        },
+        "frame_limiter_disable_vsync": {
+          "description": "수동 프레임 제한에 쓰여요. 가상 화면 자동 부드러움이 켜져 있는 동안에는 VSYNC를 잠시 꺼요."
+        },
+        "frame_limiter_enable": {
+          "description": "켜면 모든 스트리밍에 프레임 제한을 걸어요. 가상 화면은 자동 부드러움이 켜져 있으면 이미 알맞은 제한을 써요.",
+          "label": "항상 프레임 제한"
+        },
+        "frame_limiter_auto_virtual_framegen": {
+          "description": "Windows는 가상 화면을 다시 그릴 때만 새 프레임을 넘겨줘요. 화면이 스트리밍 FPS만큼만 다시 그려지면, 게임 프레임이 늦게 끝날 때 다음 갱신까지 기다려야 해서 FPS가 일정해도 움직임이 끊겨 보여요. 가상 화면 주사율을 높이면 게임이 그리는 즉시 거의 바로 캡처해요. 120 FPS 기준 최대 대기: 끔 8.3 ms, 호환(2×) 4.2 ms, 4× 2.1 ms, 1000 Hz 1 ms. 스트리밍 FPS와 데이터 양은 그대로고, 게임도 스트리밍 FPS로 제한돼요. 자동이면 클라이언트가 VRR을 요청할 때(예: Artemide의 VRR 프레임 간격) 1000 Hz, 아니면 4×를 써요. VRR은 항상 1000 Hz예요.",
+          "description_linux": "자동이면 가상 화면을 스트리밍 FPS의 4×로 두고, 실행한 게임은 고른 Linux 제한기로 스트리밍 FPS에 맞춰요. 호환은 가상 화면을 2×로 고정해요.",
+          "label": "캡처 타이밍(가상 화면 주사율)"
+        },
+        "frame_limiter_provider": {
+          "description": "수동 제한과 가상 화면 자동 부드러움에 쓰여요. Linux에서 자동이면 프레임 생성을 지원하는 Proton 제한기와 MangoHUD를 쓰고, Windows에서는 RTSS, 없으면 NVIDIA 제어판을 써요."
+        },
+        "frame_limiter_fps_limit": {
+          "description": "0이면 스트리밍 FPS를 따라요. 0이 아니면 가상 화면 자동 제한값도 이 값으로 바뀌어요."
+        },
+        "lossless_scaling_legacy_auto_detect": {
+          "description": "보통의 Lossless Scaling 단축키 방식이 안 될 때만 예전 타이머 방식 감지를 쓰세요.",
+          "label": "예전 방식으로 Lossless Scaling 감지"
+        },
+        "lossless_scaling_path": {
+          "description": "비워 두면 LosslessScaling.exe를 자동으로 찾아요. 하나로 고정하려면 찾은 설치를 고르거나 실행 파일 전체 경로를 넣으세요.",
+          "label": "Lossless Scaling 실행 파일"
+        },
+        "output_name": {
+          "description": "비워 두면 Apollide가 화면을 골라요. 직접 고르려면 정확한 장치 이름을 넣으세요."
+        },
+        "port": {
+          "description": "Artemide와 웹 설정 화면이 쓸 기본 TCP·UDP 포트예요. WAN 접속을 켜면 웹 설정 화면이 인터넷에 열려요."
+        },
+        "rtss_frame_limit_type": {
+          "description": "실제 모니터 스트리밍에 쓰는 방식이에요. 가상 화면은 아래 덮어쓰기를 켜지 않으면 NVIDIA Reflex를 써요.",
+          "label": "RTSS SyncLimiter 방식"
+        },
+        "rtss_allow_virtual_display_override": {
+          "description": "가상 화면은 DLSS 프레임 생성 때문에 지연이 크게 늘지 않도록 보통 NVIDIA Reflex를 써요. 고른 RTSS 방식을 가상 화면에도 쓰려면 켜세요. DLSS/FSR 게임은 프레임 생성 -> 게임 제공으로 표시하면 그 앱은 Reflex를 써요.",
+          "label": "가상 화면에 Reflex 외 RTSS 방식 허용",
+          "warning": "주의: Async, Front-edge Sync, Back-edge Sync 등 NVIDIA Reflex가 아닌 방식은 게임이 DLSS 프레임 생성을 쓸 때 지연이 크게 늘 수 있어요. 가상 화면 스트리밍에서 이걸 감수하는 설정이에요."
+        },
+        "rtss_install_path": {
+          "description": "비워 두면 RTSS 설치 폴더를 자동으로 찾아요. 훅 파일이 있으면 쓸 준비가 된 거예요.",
+          "label": "RTSS 설치 폴더"
+        },
+        "virtual_display_layout": {
+          "description": "스트리밍하는 동안 실제 모니터를 호스트 바탕화면에 남길지 정해요.",
+          "label": "바탕화면에 붙는 방식"
+        },
+        "wayland_hdr_compatibility": {
+          "description": "KDE Plasma Wayland에서 HDR 스트리밍 중 실행한 게임에 환경 변수를 더해요. Steam 실행 옵션 없이도 Proton·DXVK·Vulkan 게임이 HDR을 알아보게 도와줘요. HDR을 강제하지는 않아요: 10비트 SDR, HDR 강제 끔 같은 SDR 설정이 먼저예요.",
+          "label": "KDE Wayland HDR 호환 켜기"
+        },
+        "virtual_display_mode": {
+          "description": "실제 모니터를 캡처할지, 클라이언트 크기에 맞는 화면을 새로 만들지 정해요.",
+          "label": "스트리밍 화면"
+        },
+        "wgc_direct_encoder_input": {
+          "description": "켜면 Windows 캡처 프레임을 복사하지 않고 바로 인코딩해 지연이 줄어요. 끄면 예전 복사 방식을 써요.",
+          "label": "Windows 캡처 직접 입력"
+        },
+        "wgc_pacing_smoothing": {
+          "description": "Windows Graphics Capture를 쓸 때 프레임 간격이 흔들려 보이는 걸 줄여요.",
+          "label": "Windows 캡처 간격 부드럽게"
+        }
+      },
+      "integrations": {
+        "automatic_path_hint": "호스트에서 찾은 경로예요. “찾은 경로 저장”을 누르기 전에는 저장되지 않고, 그대로 두면 계속 자동으로 찾아요.",
+        "browse_computer": "내 PC",
+        "browse_description": "호스트의 파일에서 실행 파일을 골라요. 고른 뒤 설정을 저장해야 적용돼요.",
+        "browse_empty": "이 폴더에는 실행 파일이나 폴더가 없어요.",
+        "browse_entries": "호스트 파일 목록",
+        "browse_executable": "실행 파일",
+        "browse_failed": "호스트 폴더를 읽지 못했어요.",
+        "browse_folder": "폴더",
+        "browse_host": "호스트에서 찾기",
+        "browse_host_hint": "호스트에서 LosslessScaling.exe를 고르세요. 브라우저 쪽 파일은 쓰지 않아요.",
+        "browse_loading": "호스트 폴더 읽는 중…",
+        "browse_parent": "상위 폴더",
+        "browse_path": "호스트 폴더",
+        "browse_selected": "고른 실행 파일: {path}",
+        "browse_title": "Lossless Scaling 실행 파일 고르기",
+        "browse_detected": "찾은 경로 보기",
+        "checking": "확인 중…",
+        "checking_description": "호스트에 쓸 수 있는 설치가 있는지 확인하고 있어요.",
+        "choose_detected": "찾은 설치 고르기",
+        "detected_installations": "찾은 설치",
+        "explicit_path_hint": "이 경로로 고정해 저장했어요. 지우면 다시 자동으로 찾아요.",
+        "hide_detected": "찾은 경로 숨기기",
+        "needs_attention": "확인 필요",
+        "not_detected": "찾지 못함",
+        "not_found": "경로 없음",
+        "ready": "쓸 준비 됨",
+        "rescan": "다시 찾기",
+        "status_unavailable": "상태 알 수 없음",
+        "status_unavailable_description": "호스트가 설치 상태를 알려 주지 못했어요. 경로는 직접 넣을 수 있어요.",
+        "use_detected": "찾은 경로 저장",
+        "use_selected": "고른 경로 쓰기",
+        "playnite": {
+          "directory_label": "Playnite 폴더",
+          "directory_hint": "자동으로 못 찾으면 Playnite.DesktopApp.exe가 있는 호스트 폴더를 고르세요. 플러그인을 설치하기 전에 설정을 저장하세요. 경로를 지우면 다시 자동으로 찾아요.",
+          "browse_title": "Playnite 폴더 고르기",
+          "browse_selected": "고른 폴더: {path}",
+          "browse_empty": "하위 폴더가 없어요. 지금 폴더를 고를 수 있어요."
+        },
+        "lossless": {
+          "not_detected": "Lossless Scaling을 찾지 못했어요. Steam에서 설치하거나 LosslessScaling.exe의 전체 경로를 넣으세요.",
+          "path_is_directory": "고른 경로가 폴더예요. LosslessScaling.exe 파일을 고르세요.",
+          "path_missing": "설정한 Lossless Scaling 실행 파일이 없어요. 찾은 다른 설치를 고르거나 경로를 지워 다시 자동으로 찾게 하세요.",
+          "ready": "Lossless Scaling을 찾았고, 프레임 생성에 쓸 준비가 됐어요."
+        },
+        "rtss": {
+          "active": "지금 스트리밍에서 RTSS가 작동 중이에요.",
+          "auto": "RTSS가 설치돼 있어요. 자동 선택이면 프레임 간격 맞추기에 RTSS를 먼저 써요.",
+          "disabled": "RTSS가 설치돼 있지만 지금 프레임 제한이 꺼져 있어요.",
+          "hooks_missing": "RTSS는 찾았지만 훅 DLL이 없어요. 프레임 간격 맞추기를 쓰려면 RTSS를 다시 설치하세요.",
+          "not_detected": "RTSS를 찾지 못했어요. 설치하거나 설치 폴더를 넣으세요. 자동 선택이면 다른 제한기를 써요.",
+          "path_missing": "설정한 RTSS 폴더가 없어요. 다른 폴더를 고르거나 경로를 지워 다시 자동으로 찾게 하세요.",
+          "ready": "RTSS와 훅이 설치돼 있어요. 프레임 간격 맞추기를 쓸 수 있어요.",
+          "selected": "RTSS가 선택됐고 다음 스트리밍부터 써요.",
+          "saved_status_hint": "RTSS 상태는 저장된 설치를 기준으로 확인해요. 경로를 바꿨으면 저장한 뒤 다시 찾으세요. 스트리밍 중이면 나중에 적용될 수 있어요."
+        },
+        "saved_ready": "저장된 설치 준비 됨"
+      },
+      "groups": {
+        "app_focus": {
+          "title": "앱 창 앞으로 가져오기",
+          "description": "관리하는 라이브러리의 게임을 실행하면 자동으로 맨 앞으로 가져와요."
+        },
+        "audio_routing": {
+          "title": "소리 보내기"
+        },
+        "display_driver": {
+          "description": "화면 시작 문제를 찾는 중이 아니면 권장값 그대로 두세요.",
+          "title": "가상 화면 드라이버"
+        },
+        "display_recovery": {
+          "title": "복원 방식"
+        },
+        "display_target": {
+          "title": "화면 선택과 자동화"
+        },
+        "display_virtual": {
+          "description": "스트리밍 화면 기본 선택이에요. 화면별 설정은 아래에 있어요.",
+          "title": "가상 화면"
+        },
+        "display_remote_monitor": {
+          "description": "짝 맺은 기기를 추가 모니터로 써요. 소리를 보낼지, 언제 화면을 지울지 정해요.",
+          "title": "원격 모니터"
+        },
+        "everyday_access": {
+          "title": "관리하고 접속할 곳"
+        },
+        "everyday_automation": {
+          "description": "고급 사용자용 호스트 스크립트와 자동화예요. 대부분은 건드리지 않아도 돼요.",
+          "title": "자동화와 스크립트"
+        },
+        "everyday_capture": {
+          "title": "캡처, 인코딩, 소리, 게임패드"
+        },
+        "everyday_display": {
+          "title": "스트리밍 화면",
+          "description": "가상 화면이나 실제 모니터를 고르고, 클라이언트의 해상도·주사율·HDR에 맞춰요."
+        },
+        "everyday_integrations": {
+          "title": "스트리밍 연동",
+          "description": "프레임 제한과 Lossless Scaling을 스트리밍에 연결해요.",
+          "description_linux": "Proton이나 MangoHUD 프레임 제한과 성능 표시를 설정해요.",
+          "description_windows": "프레임 제한, RTSS, Lossless Scaling을 설정해요."
+        },
+        "everyday_pyrowave": {
+          "title": "PyroWave",
+          "description": "H.264, HEVC, AV1 대신 쓸 수 있는 Apollide의 코덱이에요."
+        },
+        "everyday_encoding": {
+          "description": "권장 외장 GPU를 자동으로 쓰고, 필요한 프리셋과 끊김 복구량만 조절해요.",
+          "title": "인코딩과 끊김 복구"
+        },
+        "everyday_host": {
+          "description": "이 호스트가 어떻게 보이고, 활동을 알리고, 업데이트를 알려 줄지 정해요.",
+          "title": "호스트 이름과 진단"
+        },
+        "everyday_pacing": {
+          "description": "게임을 스트리밍 FPS에 맞춰 움직임이 고르지 않거나 GPU가 헛일하는 걸 줄여요.",
+          "title": "부드러움과 프레임 간격 맞추기"
+        },
+        "everyday_resolution": {
+          "description": "자주 쓰는 몇몇 클라이언트 크기에 다른 스트리밍 해상도를 써요. 자동 맞춤은 그대로예요.",
+          "title": "해상도 바꿔 쓰기"
+        },
+        "everyday_recovery": {
+          "description": "접속이 끊긴 뒤 어떻게 할지 정하고, 돌아갈 정상 화면 배치를 준비해 둬요.",
+          "title": "화면 유지와 복구"
+        },
+        "everyday_remote_monitor": {
+          "description": "짝 맺은 기기를 추가 모니터로 써요. 소리를 보낼지, 언제 화면을 지울지 정해요.",
+          "title": "원격 모니터"
+        },
+        "everyday_smoothness": {
+          "description": "더 빠른 가상 화면 캡처 타이밍과 자동 게임 프레임 맞추기를 고르거나 꺼요.",
+          "description_linux": "가상 화면 자동 프레임 맞추기나 호환 모드를 골라요. Proton과 MangoHUD는 아래 스트리밍 연동에서 설정해요.",
+          "title": "더 부드러운 게임 캡처"
+        },
+        "everyday_virtual_display": {
+          "description": "가상 화면 배치, 배율, 정리 방식을 바꿔요.",
+          "title": "가상 화면 고급 설정"
+        },
+        "file_paths": {
+          "title": "데이터 경로"
+        },
+        "host_history": {
+          "title": "기록과 실시간 진단"
+        },
+        "host_identity": {
+          "title": "이름과 이 PC 동작"
+        },
+        "input_devices": {
+          "title": "클라이언트 입력"
+        },
+        "input_repeat": {
+          "title": "키 반복"
+        },
+        "network_access": {
+          "title": "접속과 연결"
+        },
+        "network_security": {
+          "title": "스트리밍과 브라우저 보안"
+        },
+        "pacing_capture": {
+          "title": "화면 캡처 방식"
+        },
+        "pacing_integrations": {
+          "description": "RTSS와 Lossless Scaling의 경로와 동작.",
+          "title": "프레임 간격 연동"
+        },
+        "pacing_limiter": {
+          "title": "프레임 제한"
+        },
+        "video_codecs": {
+          "title": "코덱 지원"
+        },
+        "video_encoder": {
+          "title": "인코더 선택"
+        },
+        "video_quality": {
+          "title": "화질과 전송량"
+        },
+        "everyday_appearance": {
+          "title": "해상도와 화면 크기",
+          "description": "클라이언트가 요청한 해상도와 FPS를 따르거나 호스트 화면 값을 직접 정해요. 배율을 바꾸면 글자와 단추 크기가 바뀌어요."
+        },
+        "everyday_audio": {
+          "title": "오디오",
+          "description": "호스트 소리를 스트리밍 기기로 보내요."
+        },
+        "everyday_input": {
+          "title": "입력",
+          "description": "스트리밍 기기에서 쓸 수 있는 입력 장치를 골라요."
+        },
+        "video_rtx_hdr": {
+          "title": "RTX HDR",
+          "description": "Windows NVIDIA HDR 변환 설정."
+        },
+        "encoder_nvenc": {
+          "title": "NVIDIA NVENC",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_qsv": {
+          "title": "Intel QuickSync",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_amd": {
+          "title": "AMD AMF",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_vt": {
+          "title": "Apple VideoToolbox",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_vaapi": {
+          "title": "VA-API",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_vk": {
+          "title": "Vulkan",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "encoder_sw": {
+          "title": "소프트웨어 인코딩",
+          "description": "이 인코더의 고급 설정이에요. 자동 선택은 스트리밍을 시작할 때 호스트가 확인해요."
+        },
+        "everyday_compatibility": {
+          "title": "화면 호환성",
+          "description": "문제를 해결할 때 HDR 요청이나 캡처 방식을 직접 정해요."
+        }
+      },
+      "loading": "설정 불러오는 중",
+      "metadata_unavailable": {
+        "description": "Apollide가 이 PC의 운영체제와 하드웨어 정보를 알려 주기 전까지 일부 설정이 숨겨질 수 있어요.",
+        "title": "호스트 정보 일부를 알 수 없어요"
+      },
+      "no_results": "“{query}”와(과) 맞는 설정이 없어요.",
+      "network": {
+        "listener_hint": "기본 포트에 따라 아래 TCP·UDP 포트가 정해져요. 방화벽에서 이 포트를 모두 열어 두세요.",
+        "table_caption": "Apollide 네트워크 포트"
+      },
+      "notices": {
+        "display_state_cleared": "저장된 화면 상태를 지웠어요.",
+        "restarting": "Apollide를 다시 시작하고 있어요. 준비되면 이 페이지가 다시 연결돼요.",
+        "saved": "설정을 저장하고 적용했어요.",
+        "saved_deferred": "저장했어요. 지금 스트리밍이 끝나면 적용돼요.",
+        "saved_restart": "저장했어요. 적용하려면 Apollide를 다시 시작하세요.",
+        "title": "설정 바뀜"
+      },
+      "options": {
+        "address_family": {
+          "both": "IPv4와 IPv6",
+          "ipv4": "IPv4만"
+        },
+        "capture": {
+          "auto_ddx": "자동 · Desktop Duplication",
+          "auto_wgc": "자동 · Windows Graphics Capture · 가변",
+          "ddx": "Desktop Duplication · 호환",
+          "kms": "DRM/KMS",
+          "kwin": "KDE/KWin 화면 공유",
+          "gamescope": "SteamOS / Gamescope",
+          "nvfbc": "NVIDIA NvFBC",
+          "portal": "XDG Desktop Portal",
+          "wgc": "Windows Graphics Capture · 가변",
+          "wgcc": "Windows Graphics Capture · 고정",
+          "wlr": "wlroots screencopy",
+          "x11": "X11 (XCB)"
+        },
+        "codec": {
+          "eight_bit": "8비트",
+          "hdr_ten_bit": "8비트와 10비트 HDR"
+        },
+        "current": "{value} · 지금 설정",
+        "display_engine": {
+          "current": "현재 엔진",
+          "legacy": "예전 엔진"
+        },
+        "display_preparation": {
+          "ensure_active": "켜기",
+          "ensure_only": "이 화면만 쓰기",
+          "ensure_primary": "켜고 주 모니터로",
+          "verify_only": "켜져 있는지만 확인"
+        },
+        "encoder": {
+          "amdvce_ffmpeg": "AMD AMF (예전 FFmpeg)",
+          "amdvce_experimental": "AMD AMF (기본 내장)",
+          "auto": "자동 · 권장",
+          "auto_selected": "자동 · {encoder}",
+          "mediafoundation": "Windows Media Foundation",
+          "nvenc": "NVIDIA NVENC (기본 내장)",
+          "nvenc_ffmpeg": "NVIDIA NVENC (예전 FFmpeg)",
+          "nvenc_experimental": "NVIDIA NVENC (기본 내장)",
+          "nvenc_legacy": "NVIDIA NVENC (예전 FFmpeg)",
+          "quicksync": "Intel Quick Sync",
+          "software": "소프트웨어",
+          "vaapi": "VA-API",
+          "videotoolbox": "Apple VideoToolbox",
+          "vulkan": "Vulkan Video"
+        },
+        "encryption": {
+          "optional": "지원하면 쓰기",
+          "required": "반드시 쓰기"
+        },
+        "frame_generation": {
+          "automatic": "자동 — VRR 클라이언트는 1000 Hz, 그 밖에는 스트리밍 FPS의 4× (권장)",
+          "automatic_linux": "자동 — 가상 화면 4×, 게임은 스트리밍 FPS로 제한 (권장)",
+          "compatibility": "호환 — 스트리밍 FPS의 2×",
+          "compatibility_linux": "호환 — 가상 화면 2×, 게임은 스트리밍 FPS로 제한",
+          "off": "끔 — 스트리밍 FPS 그대로, 게임 자동 제한 없음",
+          "off_linux": "끔 — 가상 화면 주사율 자동 조정과 게임 제한 없음",
+          "vrr": "VRR — 항상 1000 Hz, 1 ms 안에 캡처"
+        },
+        "frame_limiter_provider": {
+          "autoLinux": "자동 — Proton 제한기 + MangoHUD 표시",
+          "mangohud": "MangoHUD",
+          "mangohudProton": "MangoHUD + Proton",
+          "proton": "Proton DXVK/VKD3D",
+          "none": "없음",
+          "nvidia": "NVIDIA 제어판",
+          "rtss": "RivaTuner Statistics Server"
+        },
+        "gpu": {
+          "auto": "자동 · 권장",
+          "current": "{name} · 지금 설정"
+        },
+        "hdr": {
+          "auto": "클라이언트에 맞추기",
+          "preserve": "HDR 바꾸지 않기"
+        },
+        "hdr_request": {
+          "auto": "클라이언트 따르기",
+          "force_off": "HDR 항상 끄기",
+          "force_on": "HDR 항상 켜기"
+        },
+        "log_level": {
+          "debug": "디버그",
+          "error": "오류",
+          "fatal": "치명적 오류만",
+          "info": "정보",
+          "none": "없음",
+          "verbose": "자세히",
+          "warning": "경고"
+        },
+        "nvenc_preset": {
+          "p1": "P1 (가장 빠름, 기본)",
+          "p2": "P2",
+          "p3": "P3",
+          "p4": "P4 (화질 균형)",
+          "p5": "P5",
+          "p6": "P6",
+          "p7": "P7 (가장 느림)"
+        },
+        "qsv_preset": {
+          "fast": "빠름 (화질 낮음)",
+          "faster": "더 빠름",
+          "medium": "보통 (기본)",
+          "slow": "느림 (화질 좋음)",
+          "slower": "더 느림 (화질 더 좋음)",
+          "veryfast": "아주 빠름 (화질 가장 낮음)",
+          "veryslow": "아주 느림 (화질 가장 좋음)"
+        },
+        "amd_quality": {
+          "auto": "자동 · 드라이버 기본값",
+          "balanced": "균형 (기본)",
+          "quality": "화질",
+          "speed": "속도"
+        },
+        "origin": {
+          "lan": "집 안 네트워크",
+          "pc": "이 PC만",
+          "wan": "모든 네트워크"
+        },
+        "paused_display_timeout": {
+          "four_hours": "4시간",
+          "one_hour": "1시간",
+          "thirty_minutes": "30분",
+          "two_hours": "2시간 · 권장",
+          "until_game_closes": "게임을 끌 때까지"
+        },
+        "refresh": {
+          "auto": "클라이언트에 맞추기",
+          "highest": "가능한 가장 높은 값",
+          "manual": "주사율 직접 정하기",
+          "preserve": "지금 주사율 그대로"
+        },
+        "resolution": {
+          "auto": "클라이언트에 맞추기",
+          "manual": "해상도 직접 정하기",
+          "preserve": "지금 해상도 그대로"
+        },
+        "rtss_type": {
+          "async": "Async",
+          "back_edge": "Back-edge sync",
+          "front_edge": "Front-edge sync",
+          "reflex": "NVIDIA Reflex"
+        },
+        "virtual_display_layout": {
+          "exclusive": "가상 화면만",
+          "extended": "바탕화면 확장",
+          "extended_isolated": "확장하고 가상 화면 분리",
+          "extended_primary": "확장하고 가상 화면을 주 모니터로",
+          "extended_primary_isolated": "주 모니터로 하고 분리"
+        },
+        "virtual_display_mode": {
+          "disabled": "실제 모니터",
+          "physical": "실제 모니터",
+          "per_client": "클라이언트마다 가상 화면",
+          "shared": "가상 화면 하나를 함께 쓰기"
+        },
+        "virtual_scale": {
+          "percent": "{value}%",
+          "preserve": "@:config.virtual_display_scale_auto",
+          "recommended": "@:config.virtual_display_scale_recommended"
+        },
+        "unsupported_saved": "지원하지 않는 저장값 ({value})"
+      },
+      "placeholders": {
+        "follow_client": "0 · 클라이언트 따르기",
+        "host_name": "이 PC 이름 쓰기",
+        "refresh_rate": "120",
+        "resolution": "2560x1440"
+      },
+      "overrides": {
+        "add": "해상도 바꿔 쓰기 추가",
+        "empty_description": "예: 클라이언트가 2560x1440을 요청하면 스트리밍 화면에 3840x2160을 써요.",
+        "empty_title": "해상도 바꿔 쓰기 없음",
+        "final_refresh": "호스트에서 쓸 주사율",
+        "final_required": "호스트에서 쓸 해상도나 주사율을 고르세요.",
+        "final_resolution": "스트리밍 화면에 쓸 값",
+        "hint": "클라이언트가 어떤 해상도를 요청하면 스트리밍 화면에 다른 해상도를 써요. 입력하면 자주 쓰는 해상도가 보여요. 규칙은 위에서부터 차례로 확인해요.",
+        "inactive_description": "해상도와 주사율이 모두 고정이거나 그대로 두기면 해상도 바꿔 쓰기가 적용되지 않아요.",
+        "inactive_title": "바꿔 쓰기가 지금 꺼져 있어요",
+        "invalid_saved_description": "저장된 값이 지원하는 형식(목록 3개)이 아니에요. 몰래 덮어쓰지 않도록 그대로 두었어요. 여기서 고치기 전에 설정 파일에서 먼저 바로잡으세요.",
+        "invalid_saved_title": "저장된 해상도 바꿔 쓰기를 읽지 못했어요",
+        "manual_description": "해상도나 주사율을 고정하면 그 값에는 바꿔 쓰기 규칙보다 고정값이 먼저예요. 다른 앱이나 스트리밍이 없을 때 새로 앱을 켜면 클라이언트 → 앱 → 전체 설정 순으로 우선해요. 이미 실행 중인(일시 정지 포함) 앱에 다시 접속하거나 공유 세션에 들어가면 호스트의 기존 설정이 유지될 수 있어요. 클라이언트의 화면 모드 지정은 직접 정한 값보다 먼저고, 실행 해상도 배율도 직접 정한 해상도보다 먼저예요. '클라이언트에 맞추기'인 값에는 규칙이 계속 적용돼요. 단, 클라이언트의 화면 모드 지정이 있으면 모든 바꿔 쓰기를 건너뛰어요.",
+        "manual_title": "고정 화면 모드를 쓰고 있어요",
+        "policy_conflict_description": "자동 주사율용 규칙과 고정 주사율용 규칙이 같은 해상도에 서로 다르게 정해져 있어요. 고급 화면 설정에서 따로 관리하거나, 간단 편집을 쓰기 전에 둘을 같게 맞추세요.",
+        "policy_conflict_title": "주사율 방식별 해상도 규칙을 확인해 주세요",
+        "policy_unsynced_action": "모든 주사율 방식에 이 바꿔 쓰기 적용",
+        "policy_unsynced_description": "기존 해상도 규칙이 자동 주사율과 고정 주사율에서 서로 달라요. 고급 화면 설정에서 따로 관리하거나, 간단한 바꿔 쓰기를 둘 다에 적용할 수 있어요.",
+        "policy_unsynced_title": "기존 바꿔 쓰기가 주사율 방식별로 달라요",
+        "refresh_error": "0보다 크고 1000 이하인 주사율을 넣으세요.",
+        "requested_fps_error": "요청 FPS는 1~1000 사이 정수로 넣으세요.",
+        "refresh_optional": "FPS도 맞추거나 바꾸기",
+        "remove": "바꿔 쓰기 지우기",
+        "remove_rule": "해상도 바꿔 쓰기 {number} 지우기",
+        "requested_fps": "클라이언트가 이 FPS를 요청하면",
+        "requested_required": "이 바꿔 쓰기를 적용할 클라이언트 해상도를 고르세요.",
+        "requested_resolution": "클라이언트가 요청하면",
+        "resolution_error": "가로x세로로 넣으세요(예: 1920x1080).",
+        "rule": "바꿔 쓰기 {number}",
+        "shadowed_description": "앞쪽 고급 규칙이 먼저 맞아 이 바꿔 쓰기가 적용되지 않을 수 있어요. 적용이 안 되면 고급 화면 설정에서 규칙 순서를 확인하세요.",
+        "shadowed_title": "고급 규칙이 먼저 적용될 수 있어요",
+        "simple_hint": "클라이언트가 어떤 해상도를 요청하면 다른 해상도로 보내요. 주사율이 자동이든 고정이든 계속 작동해요."
+      },
+      "recovery": {
+        "checking": "확인 중",
+        "checking_detail": "저장된 화면 복구 기준을 확인하고 있어요.",
+        "clear_hotkey": "단축키 지우기",
+        "create_confirm": "지금 Windows 화면 배치를 복구 기준 스냅샷으로 저장할까요?",
+        "create_snapshot": "스냅샷 만들기",
+        "golden_title": "복구 기준 스냅샷",
+        "hotkey_configured": "설정됨",
+        "hotkey_detail": "Apollide가 Windows 바탕화면 세션에서 돌 때 이 단축키를 누르면 세션 기준으로 화면을 되돌리고(안 되면 기준 스냅샷으로), 가상 화면을 지우고 복구를 멈춰요. 서비스로 설치했으면 단축키가 안 먹을 수 있어요.",
+        "hotkey_invalid": "주 키는 F1–F24, 글자, 숫자 중 하나로 하세요.",
+        "hotkey_modifier_required": "평소 타자로 화면 복구가 실행되지 않게 Ctrl, Alt, Shift, Win 중 하나를 넣으세요.",
+        "hotkey_listening": "기다리는 중 — 쓸 단축키를 누르세요.",
+        "hotkey_not_configured": "설정 안 됨",
+        "hotkey_placeholder": "눌러서 단축키 입력",
+        "hotkey_title": "가상 화면 비상 단축키",
+        "hotkey_unsafe": "보조 키 필요",
+        "hotkey_unsafe_detail": "저장된 단축키가 평소 타자 중에 눌릴 수 있어요. Ctrl, Alt, Shift, Win을 더하거나 권장 단축키로 바꾸세요.",
+        "not_created": "만들지 않음",
+        "not_created_detail": "보통의 세션 복원이 안 될 때 Apollide가 되돌릴 실제 화면 배치를 저장해 두세요.",
+        "prefer_golden_detail": "켜면 Apollide가 화면을 복원할 때 이 정상 배치를 먼저 써요. 안 되면 세션 스냅샷으로 돌아가요.",
+        "prefer_golden_title": "기본으로 이 화면 배치로 복원",
+        "prefer_golden_unavailable": "복구 스냅샷을 만들면 정상 화면 배치를 기본값으로 쓸 수 있어요. 세션 기준 복원은 예비로 계속 쓸 수 있어요.",
+        "ready": "준비 됨",
+        "ready_detail": "마지막 복구 수단으로 쓸 정상 화면 배치가 있어요.",
+        "refresh_recommended": "새로 저장 권장",
+        "refresh_recommended_detail": "저장된 배치가 오래됐거나 복원에 여러 번 실패했어요. 실제 화면이 제대로 놓여 있을 때 다시 저장하세요.",
+        "replace_confirm": "복구 기준 스냅샷을 지금 Windows 화면 배치로 바꿀까요?",
+        "retry_status": "상태 다시 확인",
+        "saving_snapshot": "스냅샷 요청 중",
+        "snapshot_error": "복구 기준 스냅샷을 저장하지 못했어요.",
+        "snapshot_requested": "스냅샷을 요청했어요. 화면 도우미가 끝나면 상태가 새로 고쳐져요.",
+        "status_error": "복구 기준 스냅샷 상태를 불러오지 못했어요.",
+        "unavailable": "알 수 없음",
+        "unavailable_detail": "Apollide가 복구 기준 스냅샷 상태를 읽지 못했어요.",
+        "update_snapshot": "스냅샷 새로 저장",
+        "use_recommended_hotkey": "Ctrl + Alt + Shift + F12 쓰기"
+      },
+      "recommended": "권장",
+      "reload": "새로 고침",
+      "restart": "다시 시작",
+      "restart_now": "지금 다시 시작",
+      "restart_required": "다시 시작 필요",
+      "restart_required_description": "저장하지 않은 변경 중 Apollide를 다시 시작해야 하는 것이 있어요.",
+      "save": "저장",
+      "save_hint": "저장하면 적용돼요.",
+      "save_restart_hint": "다시 시작이 필요해요.",
+      "saving": "저장 중...",
+      "search": "설정 검색",
+      "search_description": "모든 분류에서 찾은 결과예요. 어느 구역인지 함께 보여 줘요.",
+      "search_results": "검색 결과",
+      "selected_category": "고른 분류",
+      "summary": {
+        "display": "스트리밍 화면",
+        "automatic_pacing": "자동 · VRR 클라이언트는 1000 Hz, 그 밖에는 스트리밍 FPS의 4× / 게임은 스트리밍 FPS로 제한",
+        "automatic_pacing_linux": "자동 · 가상 화면 4× / 게임은 스트리밍 FPS로 제한",
+        "automatic_pacing_limiter_off": "자동 · VRR 클라이언트는 1000 Hz, 그 밖에는 스트리밍 FPS의 4× · 제한기 꺼짐",
+        "automatic_pacing_limiter_off_linux": "자동 · 가상 화면 4× · 제한기 꺼짐",
+        "compatibility_pacing": "호환 · 화면과 캡처 2× 고정",
+        "compatibility_pacing_linux": "호환 · 가상 화면 2× / 게임은 스트리밍 FPS로 제한",
+        "compatibility_pacing_limiter_off": "호환 · 화면과 캡처 2× 고정 · 제한기 꺼짐",
+        "compatibility_pacing_limiter_off_linux": "호환 · 가상 화면 2× · 제한기 꺼짐",
+        "capture": "화면 캡처",
+        "fixed_resolution": "{resolution}로 고정",
+        "game_smoothness": "게임 부드러움",
+        "host_default": "호스트 기본값",
+        "manual_refresh_pacing": "주사율 직접 정함 · 자동 전환 꺼짐",
+        "matches_client": "클라이언트에 맞춤",
+        "overrides_need_attention": "바꿔 쓰기 확인 필요",
+        "pacing_off": "자동 프레임 맞추기 꺼짐",
+        "physical_pacing": "실제 모니터 방식",
+        "preserves_host_resolution": "호스트 해상도 그대로",
+        "resolution": "해상도",
+        "substitutions": "바꿔 쓰기 {count}개 | 바꿔 쓰기 {count}개",
+        "label": "지금 기본 설정"
+      },
+      "title": "설정",
+      "unsaved_many": "저장 안 한 변경 {count}개",
+      "unsaved_one": "저장 안 한 변경 1개",
+      "unsaved_region": "저장 안 한 설정",
+      "unsaved_short": "{count}개 저장 안 함",
+      "virtual_display_unavailable": {
+        "description": "스트리밍 전에 실제 모니터를 고르거나 Linux 가상 화면 모듈 설치를 마치세요.",
+        "title": "이 호스트에서 가상 화면을 아직 쓸 수 없어요"
+      },
+      "windows_display": {
+        "title": "가상 화면 드라이버 상태",
+        "description": "호스트가 가장 최근에 확인한 드라이버 상태예요.",
+        "error_title": "화면 상태를 알 수 없어요",
+        "error_body": "호스트가 가상 화면 상태를 새로 고치지 못했어요. 마지막으로 확인한 상태를 보여 줘요.",
+        "drivers": {
+          "unknown": "알 수 없는 드라이버"
+        },
+        "states": {
+          "failed": "쓸 수 없음",
+          "uninitialized": "드라이버 결과 없음"
+        },
+        "messages": {
+          "ready": {
+            "title": "드라이버 응답함",
+            "description": "{driver}이(가) 최근 확인에 응답했어요. 가상 화면을 쓸 수 있어요."
+          },
+          "failed": {
+            "title": "드라이버를 쓸 수 없어요",
+            "description": "{driver}이(가) 최근 확인에 응답하지 않았어요. 가상 화면을 쓰기 전에 드라이버를 고치거나 다시 설치하세요."
+          },
+          "uninitialized": {
+            "title": "드라이버 결과가 없어요",
+            "description": "Apollide는 필요할 때 가상 화면을 연결해요. 아직 드라이버 결과가 없을 뿐, 이것만으로 문제가 있다는 뜻은 아니에요."
+          },
+          "version_incompatible": {
+            "title": "드라이버 버전이 맞지 않아요",
+            "description": "{driver}의 프로토콜 버전이 맞지 않아요. 이 Apollide 버전에 맞게 드라이버를 고치거나 다시 설치하세요."
+          },
+          "watchdog_failed": {
+            "title": "드라이버 감시 실패",
+            "description": "{driver}이(가) 감시 신호에 응답하지 않아요. 다음 가상 화면 스트리밍 전에 드라이버를 고치거나 다시 설치하세요."
+          },
+          "unknown": {
+            "title": "드라이버 상태를 알 수 없어요",
+            "description": "호스트가 가상 화면 드라이버 상태를 제대로 알려 주지 않았어요. 호스트 서비스를 확인하고 다시 해 보세요."
+          }
+        },
+        "configured": "설정한 드라이버: {driver}",
+        "observed": "호스트가 확인한 드라이버: {driver}",
+        "observed_unknown": "호스트가 확인한 드라이버: 아직 결과 없음",
+        "configured_mismatch": "설정은 {configured}인데, 최근 확인된 드라이버는 {observed}예요. 선택을 저장하고 Apollide를 다시 시작한 뒤 상태를 보세요.",
+        "status_code": "상태 코드: {code}",
+        "refresh": "상태 새로 고침",
+        "refreshing": "상태 새로 고치는 중",
+        "dummy_plug_title": "더미 플러그 HDR 우회를 쓰려면 VSYNC 끄기가 필요해요",
+        "dummy_plug_description": "이 우회가 켜져 있는 동안 Apollide가 VSYNC 끄기를 켜고 잠가요. 우회를 끄면 저장해 둔 VSYNC 선택으로 그대로 돌아가요.",
+        "vsync_forced": "실제 더미 플러그 HDR 우회가 켜져 있어 필요해요. 우회를 끌 때까지 VSYNC 끄기는 켜진 채로 바꿀 수 없어요.",
+        "next_step": "화면 설정에서 드라이버를 고르고 저장한 뒤, 스트리밍을 시작하면 새로 확인해요."
+      },
+      "linux": {
+        "title": "화면 준비 상태",
+        "recommendation": "가상 화면이 클라이언트의 해상도와 주사율에 자동으로 맞춰져요.",
+        "explanation": "관리되는 가상 화면에서 KMS 캡처를 쓰면 프레임이 부드럽고 캡처 지연이 짧아요. 다른 캡처 방식도 쓸 수 있지만 제대로 안 될 수 있고 이 저지연 방식을 쓰지 않아요. 해상도·주사율 자동 맞춤으로 화면이 클라이언트와 맞춰져요.",
+        "per_client": "기기마다 가상 화면",
+        "shared": "가상 화면 하나를 함께 쓰기",
+        "states": {
+          "active": "캡처 작동 확인됨",
+          "configured": "직접 캡처로 설정됨",
+          "unavailable": "설정 확인 필요",
+          "physical": "실제 모니터 선택됨",
+          "unknown": "아직 확인 안 됨"
+        },
+        "reasons": {
+          "driver_or_outputs_unavailable": "가상 화면 드라이버나 관리되는 출력을 쓸 수 없어요. 가상 화면을 고르기 전에 Linux 설치를 확인하세요.",
+          "session_or_output_unavailable": "바탕화면 세션이나 가상 출력이 준비되지 않았어요. 세션과 화면 설정을 확인하세요.",
+          "unknown": "호스트가 가상 화면을 확인하지 못했어요. Linux 설정을 확인하고 다시 해 보세요."
+        },
+        "greeter": "로그인 전 스트리밍은 가상 화면 하나를 함께 써요. 로그인하면 이 스트리밍이 끝나니, 다시 접속해 바탕화면을 보세요. 바탕화면 설정은 로그인 뒤 적용돼요.",
+        "repair": "Linux 설정과 문제 해결 열기",
+        "audio": "Linux는 관리되는 가상 오디오 장치를 자동으로 써요. 특정 장치가 필요할 때만 소리 보내기를 바꾸세요.",
+        "unverified": "호스트에 연결은 되지만 스트리밍 준비 상태는 아직 확인하지 않았어요.",
+        "check_setup": "설정에서 화면과 인코더 준비 상태를 확인하거나, 기록에서 실패 내용을 보세요.",
+        "fields": {
+          "virtual_display_mode": "캡처 지연이 가장 짧고 프레임이 가장 부드러운 가상 화면을 권장해요. 기기마다 화면을 따로 쓰거나, 하나를 함께 쓰거나, 실제 모니터를 고르세요.",
+          "virtual_display_layout": "스트리밍하는 동안 이 PC 모니터를 어떻게 할지 정해요. 가상 화면만 쓰면 바탕화면을 되돌릴 때까지 다른 모니터가 꺼져요.",
+          "capture": "지원하는 Linux 호스트는 KMS로 가상 화면을 직접 캡처해요. 다른 방식은 호환용이라 무인 스트리밍이 안 될 수 있어요.",
+          "adapter_name": "비워 두면 GPU를 자동으로 골라요. 직접 고르려면 /dev/dri/renderD128 같은 Linux 경로를 넣으세요.",
+          "dd_virtual_display_scale": "@:config.virtual_display_scale_desc",
+          "virtual_display_outputs": "비워 두면 관리되는 가상 화면 묶음을 써요. DRM 커넥터 이름을 직접 넣는 건 고급 설정이에요."
+        }
+      },
+      "leave_warning": "저장 안 한 변경이 있어요. 버리고 이 페이지를 떠날까요?",
+      "reset_warning": "바탕화면을 되돌리고 저장된 화면 상태를 지워요. 지금 스트리밍이 끊길 수 있어요.",
+      "more_options": "설정 더 보기",
+      "audio_summary": "소리는 자동으로 보내요. 특정 장치를 고르려면 오디오를 여세요.",
+      "validation": {
+        "number": "허용 범위 안의 숫자를 넣으세요.",
+        "port_required": "기본 포트를 넣으세요.",
+        "port_integer": "기본 포트는 정수로 넣으세요.",
+        "port_dependent_low": "이 기본 포트면 TCP 포트(기본 − 5)가 1024보다 낮아져요. 1029 이상으로 고르세요.",
+        "port_dependent_high": "이 기본 포트면 TCP 포트(기본 + 21)가 65535를 넘어요. 65514 이하로 고르세요.",
+        "port_range": "모든 포트가 올바르게 잡히도록 기본 포트를 1029~65514 사이로 고르세요.",
+        "resolution": "2560x1440처럼 해상도를 넣으세요.",
+        "array": "JSON 배열을 넣으세요. 비우면 기본값을 써요."
+      },
+      "everyday_help": {
+        "pyrowave": "호환 클라이언트와 함께 Apollide의 GPU 웨이블릿 코덱을 써요. 맞는 GPU와 빠른 유선 네트워크가 필요해요.",
+        "frame_limiter_auto_virtual_framegen": "자동과 호환은 가상 화면 주사율을 더 높여요. 끔은 스트리밍 FPS를 따라요. 스트리밍 FPS는 그대로예요.",
+        "dd_virtual_display_scale": "가상 화면의 글자와 단추 크기를 바꿔요.",
+        "wayland_hdr_compatibility": "관리되는 Wayland 화면에서 HDR 게임용 호환 처리를 써요."
+      },
+      "links": {
+        "displays": "모든 화면 설정 →",
+        "pacing": "캡처와 프레임 간격 설정 →",
+        "pyrowave": "PyroWave 코덱 설정 →",
+        "integrations": "연동 관리 →",
+        "remote_monitor": "모든 원격 모니터 설정 →",
+        "video": "모든 영상 설정 →",
+        "recovery": "모든 화면 복구 설정 →",
+        "automation": "호스트 자동화 설정 →"
+      },
+      "game_library_links": "게임 라이브러리",
+      "legacy_fec_zero": "저장된 0은 호스트가 무시해요. 일반 FEC를 쓰려면 1–255%로 고르세요."
+    },
+    "application": {
+      "actions": {
+        "addPrep": "준비 명령 추가",
+        "back": "목록으로 돌아가기",
+        "returnToLibrary": "목록으로 돌아가기",
+        "save": "앱 저장",
+        "saving": "저장 중",
+        "tryAgain": "다시 시도"
+      },
+      "advanced": {
+        "description": "실행·화면·자동화·호환성 관련 선택 설정이에요. 직접 바꾸지 않으면 지금 값이 그대로 유지돼요.",
+        "summary": "실행·화면·호환성 바꾸기"
+      },
+      "alerts": {
+        "correctFields": "표시된 칸을 고쳐 주세요",
+        "expertDescription": "여기서 항목을 지우면 저장된 앱에서도 지워져요. 같은 키가 겹치면 위의 안내 칸 값이 우선이에요.",
+        "expertTitle": "전문가 설정",
+        "prepAttention": "준비 명령을 확인해 주세요",
+        "saveFailed": "저장 실패",
+        "unavailable": "앱을 열 수 없어요"
+      },
+      "compatibility": {
+        "title": "호환성·상태 명령",
+        "description": "이 앱만 실행 방식과 명령을 따로 정해요.",
+        "default": "호스트 기본값 사용",
+        "addState": "상태 명령 추가",
+        "resume": "다시 이어 하기 명령",
+        "pause": "일시 정지 명령"
+      },
+      "cover": {
+        "alt": "{name} 표지",
+        "unavailable": "설정한 표지를 불러올 수 없어요",
+        "unavailableLabel": "{name} 표지를 불러올 수 없어요"
+      },
+      "coverPicker": {
+        "action": "표지 찾기",
+        "description": "IGDB 검색 결과에서 표지 그림을 골라요.",
+        "empty": "맞는 표지를 못 찾았어요. 앱 이름을 바꿔 보세요.",
+        "errorTitle": "표지를 고를 수 없어요",
+        "playniteTitle": "Playnite 정보가 바뀌어요",
+        "playniteUpdateError": "Apollide가 표지를 받았지만 Playnite의 이 게임 표지로 바꾸지 못했어요.",
+        "playniteWarning": "여기서 표지를 고르면 Playnite에 있는 이 게임의 표지도 바뀌어요.",
+        "pathDisclosure": "고급: 표지 그림 경로",
+        "providerHelp": "연동 프로그램이 관리하는 파일 경로는 건드리지 않고 표지만 바꿔요.",
+        "searchAction": "검색",
+        "searchError": "Apollide가 표지 그림을 검색하지 못했어요.",
+        "searchLabel": "표지 그림 검색",
+        "searchPlaceholder": "게임 표지 검색",
+        "select": "{name} 표지 사용",
+        "title": "표지 그림 고르기",
+        "uploadError": "Apollide가 그 표지를 받아 준비하지 못했어요."
+      },
+      "delete": {
+        "action": "앱 삭제",
+        "busy": "삭제 중",
+        "dialogDescription": "모든 클라이언트의 목록에서 이 앱이 사라져요. 호스트(이 PC)의 파일은 지우지 않아요.",
+        "dialogTitle": "{name}을(를) 삭제할까요?",
+        "errorTitle": "삭제 실패",
+        "fallbackName": "앱",
+        "sectionDescription": "스트리밍 목록에서 이 항목을 빼요. 실행 파일과 그림 파일은 디스크에 그대로 남아요.",
+        "sectionTitle": "앱 삭제"
+      },
+      "errors": {
+        "delete": "이 앱을 삭제할 수 없어요.",
+        "load": "이 앱을 불러올 수 없어요.",
+        "missingUuid": "이 앱에는 UUID가 없어요.",
+        "notFound": "찾는 앱이 더 이상 없어요.",
+        "save": "이 앱을 저장할 수 없어요."
+      },
+      "fields": {
+        "advanced": {
+          "help": "서버가 보낸 모르는 값은 여기서 고치지 않으면 그대로 유지돼요.",
+          "label": "추가 서버 항목"
+        },
+        "autoDetach": {
+          "description": "켜면 주 명령이 스트리밍 세션(접속)에 묶이지 않아요.",
+          "label": "자동으로 분리"
+        },
+        "command": {
+          "arrayHelp": "한 줄에 인수나 명령 하나씩 적어요. 서버의 목록 형식이 유지돼요.",
+          "help": "실행 파일과 (필요하면) 인수.",
+          "placeholder": "C:/Games/Example/game.exe"
+        },
+        "configOverrides": {
+          "help": "맨 바깥이 객체인 올바른 JSON으로 적어요.",
+          "label": "덮어쓸 설정(JSON 객체)"
+        },
+        "detached": {
+          "help": "비어 있지 않은 줄마다 주 명령과 따로 실행돼요.",
+          "placeholder": "한 줄에 명령 하나"
+        },
+        "displayAction": {
+          "description": "Apollide가 요청한 화면 배치를 얼마나 강하게 적용할지 정해요.",
+          "label": "화면 설정 방식"
+        },
+        "displayLayout": {
+          "description": "가상 화면을 실제 바탕화면에 어떻게 붙일지 골라요.",
+          "label": "바탕화면 배치"
+        },
+        "displayMode": {
+          "description": "클라이언트마다 화면을 따로 줄지, 한 화면을 같이 쓸지 골라요.",
+          "label": "가상 화면 방식"
+        },
+        "displayOutput": {
+          "label": "출력 화면 직접 지정"
+        },
+        "elevated": {
+          "description": "켜면 앱을 관리자 권한으로 실행해요.",
+          "label": "관리자 권한으로 실행"
+        },
+        "excludePrep": {
+          "description": "켜면 이 앱의 준비 명령만 실행해요.",
+          "label": "공통 준비 명령 빼기"
+        },
+        "exitTimeout": {
+          "description": "앱이 스스로 꺼지길 기다리는 시간(초)이에요. 지나면 종료를 계속해요."
+        },
+        "frameMode": {
+          "label": "프레임 생성 방식"
+        },
+        "frameProvider": {
+          "label": "프레임 생성 제공자"
+        },
+        "gen1Fix": {
+          "description": "1세대 프레임 생성 화면 캡처 문제를 피해 가는 방법을 켜요.",
+          "label": "1세대 캡처 보정"
+        },
+        "gen2Fix": {
+          "description": "2세대 프레임 생성 화면 캡처 문제를 피해 가는 방법을 켜요.",
+          "label": "2세대 캡처 보정"
+        },
+        "iconPath": {
+          "label": "클라이언트 아이콘 경로"
+        },
+        "imagePath": {
+          "help": "Artemide 표지는 16 MiB 이하의 읽을 수 있는 PNG 파일이어야 해요. 표지를 못 읽으면 Artemide가 기본 그림을 보여 줄 수 있어요. 다른 형식 그림의 이름만 .png로 바꾸면 변환되지 않아요. 저장하면 표지 미리보기가 새로 고쳐져요.",
+          "label": "표지 그림 경로",
+          "placeholder": "C:/path/to/cover.png"
+        },
+        "limiterFix": {
+          "description": "이 앱 전용 프레임 제한 보정을 적용해요.",
+          "label": "프레임 생성 제한 보정"
+        },
+        "losslessDelay": {
+          "help": "Lossless Scaling을 적용하기 전에 기다리는 시간(초).",
+          "label": "시작 지연"
+        },
+        "losslessEnabled": {
+          "description": "켜면 이 앱을 실행할 때 Lossless Scaling도 켜고 관리해요.",
+          "label": "Lossless Scaling 켜기"
+        },
+        "losslessFramegen": {
+          "description": "Lossless Scaling의 프레임 생성을 써요.",
+          "label": "Lossless Scaling 프레임 생성"
+        },
+        "losslessRtss": {
+          "label": "RTSS 프레임 제한"
+        },
+        "losslessTarget": {
+          "label": "목표 프레임 수"
+        },
+        "name": {
+          "help": "이름을 직접 적거나, 연결된 게임 목록에서 골라요.",
+          "label": "앱 또는 연동 게임"
+        },
+        "output": {
+          "label": "출력 식별자"
+        },
+        "uuid": {
+          "help": "서버가 쓰는 고정 이름표예요. 여기서 바꿀 수 없어요.",
+          "label": "UUID"
+        },
+        "virtualScreen": {
+          "description": "켜면 이 앱을 위해 가상 화면을 만들어요.",
+          "label": "가상 화면 쓰기"
+        },
+        "waitAll": {
+          "description": "켜면 실행한 프로그램이 모두 꺼질 때까지 세션(접속)을 유지해요.",
+          "label": "모든 프로세스 기다리기"
+        }
+      },
+      "framegenHealth": {
+        "appOutputNotFound": "설정한 출력 화면을 찾지 못했어요. 다른 화면을 대신 검사하지는 않아요.",
+        "captureAutoUnknown": "화면 캡처는 자동이지만, 여기서는 어느 화면 경로가 쓰일지 알 수 없어요.",
+        "captureConfigured": "{capture}이(가) 선택돼 있어요. 이 앱에 특정 캡처 방식이 필요하면 실제 스트리밍에서 확인해 보세요.",
+        "configured": "설정됨",
+        "displayTargetLabel": "대상 화면",
+        "displayTargetUnknown": "저장된 호스트 설정에 대상 화면이 없어요. 스트리밍 전에 호스트의 가상 화면 방식을 확인하세요.",
+        "gameProvidedVirtualCapture": "가상 화면에서 게임 자체 프레임 생성을 쓰면, 스트리밍을 시작할 때 Windows Graphics Capture로 고정돼요.",
+        "physicalCaptureDdx": "실제 화면에 Desktop Duplication이 선택돼 있어요. 정확한 프레임 생성 간격은 실제 스트리밍에서 정해져요.",
+        "physicalCaptureDefault": "캡처 방식을 고르지 않으면, 실제 화면의 프레임 생성은 Desktop Duplication을 써요.",
+        "physicalDisplayConfigured": "이 화면은 최대 {hz} Hz까지 지원해요. 프레임 생성에 필요한 주사율은 스트리밍할 때 클라이언트 FPS에 맞춰 정해져요.",
+        "physicalDisplayCapabilitiesOnly": "이 화면의 EDID가 아래 주사율을 알려 줘요. 실제 스트리밍 목표는 여전히 클라이언트 FPS에 따라 달라져요.",
+        "physicalDisplayLabel": "실제 화면 설정",
+        "refreshCapabilitiesTitle": "지원 주사율",
+        "refreshCapability": "{hz} Hz: {status}",
+        "rtssOptional": "이 프레임 생성 방식에서 RTSS는 선택이에요. 게임 자체나 NVIDIA 프레임 생성에는 필요 없어요.",
+        "virtualCaptureDdx": "Desktop Duplication이 직접 선택돼 있어요. 이 프레임 생성 방식은 가상 화면에서 Windows Graphics Capture가 필요해요.",
+        "virtualDisplayConfigured": "이 앱은 가상 화면을 요청하도록 설정돼 있어요. 드라이버와 주사율은 실행할 때 만들어져서 여기서는 아직 확인할 수 없어요.",
+        "virtualDisplayLabel": "가상 화면 설정"
+      },
+      "loading": "앱 불러오는 중",
+      "options": {
+        "currentValue": "지금 값: {value}",
+        "displayAction": {
+          "disabled": "화면 관리 안 함",
+          "ensureActive": "대상 화면 켜 두기",
+          "ensureOnly": "대상 화면만 남기기",
+          "ensurePrimary": "대상 화면을 주 화면으로",
+          "verify": "설정 확인만"
+        },
+        "displayLayout": {
+          "exclusive": "가상 화면만",
+          "extended": "바탕화면 확장",
+          "extendedIsolated": "확장 + 클라이언트 분리",
+          "extendedPrimary": "확장 + 가상 화면을 주 화면으로",
+          "extendedPrimaryIsolated": "가상 주 화면 + 분리"
+        },
+        "displayMode": {
+          "perClient": "클라이언트마다 화면 하나",
+          "shared": "화면 같이 쓰기"
+        },
+        "frameMode": {
+          "game": "게임 자체",
+          "lossless": "Lossless Scaling",
+          "nvidia": "NVIDIA Smooth Motion",
+          "off": "끔"
+        },
+        "frameProvider": {
+          "game": "게임 자체 프레임 생성",
+          "lossless": "Lossless Scaling",
+          "nvidia": "NVIDIA Smooth Motion"
+        },
+        "hostDefault": "호스트 기본값 사용",
+        "profile": {
+          "custom": "직접 설정",
+          "recommended": "추천 설정"
+        }
+      },
+      "page": {
+        "addDescription": "스트리밍할 앱을 추가해요.",
+        "addTitle": "앱 추가",
+        "editDescription": "이 앱을 실행하고 스트리밍하는 방식을 바꿔요.",
+        "fallbackTitle": "앱"
+      },
+      "rtxHdr": {
+        "calibration": {
+          "description": "NVIDIA 프로필이나 호스트 기본값 대신 이 앱만의 HDR 출력을 맞춰요.",
+          "overrideDescription": "켜면 아래 조절값을 이 앱에 써요. 끄면 감지된 NVIDIA 프로필이나 호스트 기본값을 따라요.",
+          "overrideLabel": "이 앱 전용 보정 쓰기",
+          "reset": "보정 초기화",
+          "title": "직접 보정"
+        },
+        "description": "이 앱에서 RTX HDR을 쓸지 정하고, 다른 앱은 그대로 둔 채 밝기·색 표현을 다듬어요.",
+        "live": {
+          "applied": "지금 스트리밍에 적용됨",
+          "applying": "바로 적용 중",
+          "error": "바로 적용 실패",
+          "failureTitle": "보정을 바로 적용하지 못했어요",
+          "hint": "이 앱을 스트리밍하는 중이면 보정 변경이 잠시 뒤 바로 적용돼요. 다음 세션에도 쓰려면 저장하세요.",
+          "queued": "적용 대기 중"
+        },
+        "modeLabel": "이 앱의 RTX HDR 동작",
+        "modes": {
+          "disabled": {
+            "description": "호스트나 클라이언트가 켜도 이 앱에서는 RTX HDR을 꺼 둬요.",
+            "label": "이 앱에서 끄기"
+          },
+          "enabled": {
+            "description": "이 앱의 SDR 화면을 HDR로 바꿔 보내고, 원래 화면은 SDR로 둬요.",
+            "label": "이 앱에서 켜기"
+          },
+          "inherit": {
+            "description": "이 앱은 호스트와 클라이언트 설정을 따라요.",
+            "label": "호스트 기본값 사용"
+          }
+        },
+        "title": "RTX HDR 보정"
+      },
+      "playnite": {
+        "browse": "Playnite 게임 찾아보기",
+        "empty": "이 이름과 맞는 설치된 Playnite 게임이 없어요.",
+        "linkedHelp": "이 항목은 연결된 Playnite 게임으로 실행돼요.",
+        "loadFailed": "Playnite 게임을 불러오지 못했어요. Playnite 연동이 설치돼 켜져 있는지 확인하세요.",
+        "loading": "Playnite 게임 불러오는 중...",
+        "resultsLabel": "맞는 Playnite 게임",
+        "unavailable": "Playnite 연동이 설치되지 않았거나 꺼져 있어서 게임을 검색할 수 없어요.",
+        "useCustom": "직접 앱 지정"
+      },
+      "gamePicker": {
+        "browse": "게임 찾아보기",
+        "resultsLabel": "내 게임 목록",
+        "loading": "게임 목록 불러오는 중...",
+        "empty": "게임 목록에 맞는 게임이 없어요.",
+        "library": "실행 방법"
+      },
+      "providers": {
+        "managed": "{provider}에서 관리"
+      },
+      "steam": {
+        "browse": "Steam 게임 찾아보기",
+        "editNotice": "이 게임의 기본 실행 정보는 Apollide가 Steam 정보로 관리해요. 준비 명령과 분리 명령은 고급 실행 설정에서 따로 쓸 수 있어요.",
+        "empty": "이 이름과 맞는 설치된 Steam 게임이 없어요.",
+        "loadFailed": "Steam 게임을 불러오지 못했어요. Steam이 설치돼 있고 라이브러리를 읽을 수 있는지 확인하세요.",
+        "loading": "Steam 게임 불러오는 중...",
+        "linkedHelp": "이 항목은 Steam 게임과 연결돼 있어요.",
+        "resultsLabel": "맞는 Steam 게임",
+        "unavailable": "Steam을 찾지 못했거나 라이브러리를 읽지 못해서 게임을 검색할 수 없어요.",
+        "useCustom": "직접 앱 지정"
+      },
+      "lutris": {
+        "browse": "Lutris 게임 찾아보기",
+        "editNotice": "이 게임의 실행 명령은 Apollide가 Lutris 정보로 관리해요. 만들어진 세부 값은 여기 보이지 않고, 자동 Lutris 항목은 동기화할 때 새로 고쳐져요.",
+        "empty": "이 이름과 맞는 가져온 Lutris 게임이 없어요.",
+        "loadFailed": "Lutris 게임을 불러오지 못했어요. Lutris가 설치돼 있고 라이브러리를 읽을 수 있는지 확인하세요.",
+        "loading": "Lutris 게임 불러오는 중...",
+        "linkedHelp": "이 항목은 Lutris 게임과 연결돼 있어요.",
+        "resultsLabel": "맞는 Lutris 게임",
+        "unavailable": "Lutris를 찾지 못했거나 라이브러리를 읽지 못해서 게임을 검색할 수 없어요.",
+        "useCustom": "직접 앱 지정"
+      },
+      "prep": {
+        "after": "끝난 뒤 실행",
+        "before": "시작 전 실행",
+        "elevated": "이 명령 쌍을 관리자 권한으로 실행",
+        "empty": "이 앱 전용 준비 명령이 없어요.",
+        "legend": "준비 명령 {number}",
+        "remove": "명령 {number} 삭제"
+      },
+      "saveBar": {
+        "addHint": "저장하면 이 앱이 목록에 추가돼요.",
+        "current": "앱이 최신 상태예요",
+        "editHint": "저장해야 바뀐 내용이 적용돼요.",
+        "region": "앱 저장 단추",
+        "unsaved": "저장 안 한 앱 변경 사항"
+      },
+      "sections": {
+        "advanced": {
+          "description": "안내 칸이 없는 앱 항목은 여기에 그대로 보관돼요.",
+          "title": "고급 항목"
+        },
+        "commands": {
+          "advancedDescription": "이 연동 게임에 쓸 준비 명령과 백그라운드 명령(선택).",
+          "advancedTitle": "고급 실행 설정",
+          "description": "준비 명령은 시작 전에 실행되고, 세션(접속)이 끝나면 되돌릴 수 있어요.",
+          "title": "준비 명령과 분리 명령"
+        },
+        "display": {
+          "description": "이 앱에서만 호스트의 화면 설정을 바꿔요.",
+          "title": "가상 화면과 배치"
+        },
+        "execution": {
+          "description": "경로는 Apollide가 돌고 있는 호스트(이 PC) 기준이에요.",
+          "title": "실행 파일·출력·그림"
+        },
+        "frameGeneration": {
+          "description": "이 앱 전용 캡처 보정과 Lossless Scaling 실행 설정.",
+          "title": "프레임 생성과 Lossless Scaling"
+        },
+        "identity": {
+          "description": "클라이언트에 보이는 이름과, 안전하게 고치고 지우는 데 쓰는 고정 이름표.",
+          "title": "이름과 식별자"
+        },
+        "launch": {
+          "description": "관리자 권한, 실행·종료 처리, 준비 명령을 정해요.",
+          "title": "실행 방식"
+        },
+        "overrides": {
+          "description": "이 앱을 스트리밍하는 동안에만 적용되는 호스트 설정이에요.",
+          "title": "설정 덮어쓰기"
+        }
+      },
+      "status": {
+        "saved": "저장됨",
+        "unsaved": "저장 안 한 변경 사항"
+      },
+      "validation": {
+        "integerMinimum": "{label}은(는) {minimum} 이상의 정수여야 해요.",
+        "invalidJson": "{label}의 JSON이 올바르지 않아요.",
+        "invalidJsonDetail": "{label}의 JSON이 올바르지 않아요: {detail}",
+        "jsonObject": "{label}은(는) JSON 객체여야 해요.",
+        "nameRequired": "이 앱의 이름을 적어 주세요.",
+        "prepMissingCommand": "준비 명령 {number}에 저장된 항목은 있는데 명령이 없어요. 명령을 넣거나 그 줄을 지우세요.",
+        "uuidInvalid": "앱 UUID가 없거나 올바르지 않아요."
+      }
+    },
+    "integrations": {
+      "actions": {
+        "disable": "끄기",
+        "install": "설치",
+        "installDriver": "드라이버 설치",
+        "installExtension": "확장 설치",
+        "launchPlaynite": "Playnite 실행",
+        "launchingPlaynite": "Playnite 실행 중",
+        "enable": "켜기",
+        "purgeAutosync": "자동 동기화된 앱 지우기",
+        "refreshStatus": "상태 새로 고침",
+        "registerLayer": "레이어 등록",
+        "removeExtension": "확장 제거",
+        "repair": "고치기",
+        "repairDriver": "드라이버 고치기",
+        "repairRegistration": "등록 고치기",
+        "rescan": "다시 찾기",
+        "update": "업데이트",
+        "updateExtension": "확장 업데이트"
+      },
+      "applying": "적용 중",
+      "checksFailed": "일부 연동 확인에 실패했어요",
+      "confirm": {
+        "defaultTitle": "연동 작업 확인",
+        "playniteInstallDescription": "Apollide 확장을 설치하거나 업데이트하려고 Playnite가 꺼졌다가 다시 켜져요.",
+        "playniteInstallTitle": "Playnite 확장을 설치할까요?",
+        "playniteRemoveDescription": "확장을 지우려고 Playnite가 꺼져요. 확장을 다시 설치할 때까지 게임 목록 동기화가 멈춰요.",
+        "playniteRemoveTitle": "Playnite 확장을 제거할까요?",
+        "playnitePurgeAutosyncDescriptionOne": "지금 Playnite가 자동으로 동기화한 앱 항목이 {count}개 있어요. 확인하면 자동 동기화된 항목만 지워요. 직접 추가한 앱과 다른 연동 앱은 남아요. 직접 만든 모니터 프로필도 남으니, 지우려면 하나씩 지우세요.",
+        "playnitePurgeAutosyncDescriptionOther": "지금 Playnite가 자동으로 동기화한 앱 항목이 {count}개 있어요. 확인하면 자동 동기화된 항목만 지워요. 직접 추가한 앱과 다른 연동 앱은 남아요. 직접 만든 모니터 프로필도 남으니, 지우려면 하나씩 지우세요.",
+        "playnitePurgeAutosyncTitle": "자동 동기화된 Playnite 앱을 지울까요?",
+        "playniteUpdateTitle": "Playnite 확장을 업데이트할까요?",
+        "vigemDescription": "함께 들어 있는 설치 프로그램이 관리자 권한으로 이 호스트(이 PC)의 가상 게임패드 드라이버를 바꿔요.",
+        "vigemInstallTitle": "ViGEmBus를 설치할까요?",
+        "vigemRepairTitle": "ViGEmBus를 고칠까요?",
+        "vulkanRegisterDescription": "Apollide에 들어 있는 Vulkan 레이어의 시스템 등록을 고쳐요.",
+        "vulkanRegisterTitle": "Vulkan HDR 레이어를 등록할까요?"
+      },
+      "description": "호스트(이 PC)에 더해 쓸 수 있는 구성 요소와 지금 상태예요.",
+      "details": {
+        "bundledVersion": "포함된 버전 {version}",
+        "installedVersion": "설치된 버전 {version}"
+      },
+      "errors": {
+        "actionFailed": "연동 작업에 실패했어요.",
+        "actionIncomplete": "연동 작업이 끝나지 않았어요.",
+        "losslessStatus": "Lossless Scaling 상태를 알 수 없어요.",
+        "mangohudStatus": "MangoHUD 상태를 알 수 없어요.",
+        "mangohudUpdateFailed": "MangoHUD 설정을 바꾸지 못했어요.",
+        "lutrisStatus": "Lutris 상태를 알 수 없어요.",
+        "lutrisGames": "Lutris 게임을 불러올 수 없어요.",
+        "lutrisSyncFailed": "Lutris를 동기화하지 못했어요.",
+        "lutrisSyncRejected": "Lutris가 동기화 요청을 받지 않았어요.",
+        "playniteStatus": "Playnite 상태를 알 수 없어요.",
+        "playniteApps": "앱 목록을 불러오지 못해서 안전하게 지울 수 없어요.",
+        "playniteLaunchFailed": "Playnite를 실행하지 못했어요.",
+        "playniteLaunchRejected": "Playnite가 실행 요청을 받지 않았어요.",
+        "playnitePurgeFailed": "자동 동기화된 Playnite 앱을 지우지 못했어요.",
+        "playniteSyncFailed": "Playnite를 동기화하지 못했어요.",
+        "playniteSyncRejected": "Playnite가 동기화 요청을 받지 않았어요.",
+        "providerUpdateFailed": "연동 설정을 바꾸지 못했어요.",
+        "steamStatus": "Steam 상태를 알 수 없어요.",
+        "steamGames": "Steam 게임을 불러올 수 없어요.",
+        "exclusionsUpdateFailed": "Steam 제외 게임 목록을 바꾸지 못했어요.",
+        "steamSyncFailed": "Steam을 동기화하지 못했어요.",
+        "steamSyncRejected": "Steam이 동기화 요청을 받지 않았어요.",
+        "rtssStatus": "RTSS 상태를 알 수 없어요.",
+        "statusLoad": "상태를 불러오지 못했어요.",
+        "vigemStatus": "ViGEmBus 상태를 알 수 없어요.",
+        "vulkanStatus": "Vulkan HDR 레이어 상태를 알 수 없어요."
+      },
+      "failedCount": {
+        "one": "연동 {count}개가 마지막으로 확인한 상태이거나 확인할 수 없는 상태예요.",
+        "other": "연동 {count}개가 마지막으로 확인한 상태이거나 확인할 수 없는 상태예요."
+      },
+      "installedIntegrations": "설치된 연동",
+      "loadingStatus": "연동 상태 불러오는 중",
+      "lossless": {
+        "description": "앱 화면 확대와 프레임 생성을 돕는 선택 연동이에요.",
+        "name": "Lossless Scaling",
+        "pathIsDirectory": "설정한 경로가 폴더예요",
+        "pathNotFound": "설정한 경로를 찾을 수 없어요",
+        "shortDescription": "화면 확대·프레임 생성 실행 지원."
+      },
+      "notices": {
+        "playniteAutosyncPurgedOne": "Playnite가 자동 동기화한 앱 항목 {count}개를 지웠어요.",
+        "playniteAutosyncPurgedOther": "Playnite가 자동 동기화한 앱 항목 {count}개를 지웠어요.",
+        "playniteInstalled": "Playnite 확장을 설치했어요.",
+        "playniteLaunched": "Playnite 실행을 요청했어요.",
+        "playniteRemoved": "Playnite 확장을 제거했어요.",
+        "playniteSynced": "Playnite 동기화를 마쳤어요.",
+        "mangohudUpdated": "MangoHUD 설정을 바꿨어요.",
+        "lutrisSynced": "Lutris 동기화를 마쳤어요.",
+        "lutrisExclusionsUpdated": "Lutris 제외 게임 목록을 바꿨어요.",
+        "providerUpdated": "연동 설정을 바꿨어요.",
+        "exclusionsUpdated": "Steam 제외 게임 목록을 바꿨어요.",
+        "steamSynced": "Steam 동기화를 마쳤어요.",
+        "vigemCompleted": "ViGEmBus 설치 프로그램이 끝났어요.",
+        "vulkanRefreshed": "Vulkan HDR 레이어 등록을 새로 고쳤어요."
+      },
+      "playnite": {
+        "description": "Apollide 확장으로 설치된 게임과 게임 정보를 동기화해요.",
+        "shortDescription": "게임 목록 동기화와 실행 연동.",
+        "policies_title": "목록·실행 규칙"
+      },
+      "mangohud": {
+        "alwaysShowGraph": "프레임 시간 그래프 항상 보이기",
+        "alwaysShowGraphDescription": "켜면 관리하는 게임을 실행할 때마다 MangoHud 오버레이와 실시간 프레임 시간 그래프가 보여요.",
+        "alwaysLimit": "프레임 수 항상 제한",
+        "alwaysLimitDescription": "켜면 스트리밍 중 실행하는 모든 게임에 고른 Linux 제한기를 걸어요. 꺼도 가상 화면의 자동 간격 맞추기가 제한기를 쓸 수 있어요.",
+        "description": "Linux 게임 프레임 제한과 MangoHUD 측정 표시(선택).",
+        "fixedLimit": "고정 제한: {fps} FPS",
+        "fpsLimit": "프레임 수 제한",
+        "fpsLimitDescription": "0이면 클라이언트 스트리밍 속도를 따라가요. 고정하려면 소수점 셋째 자리까지 숫자를 적어요.",
+        "limiterMethod": "MangoHUD 제한 시점",
+        "limiterMethodDescription": "MangoHUD가 제한할 때만 적용돼요. 앞쪽은 화면에 내보내기 전에 기다려서 더 부드럽지만 지연이 늘어요. 뒤쪽은 지연이 적지만 생성된 프레임은 제한하지 못해요. Proton 제한기는 프레임 생성도 지원해요.",
+        "limiterMethodEarly": "앞쪽 — 더 부드럽고, 지연은 더 큼",
+        "limiterMethodLate": "뒤쪽 — 지연은 적고, 생성 프레임은 제한 안 함",
+        "name": "MangoHUD",
+        "overlayMissing": "Proton 준비됨 · MangoHUD 오버레이 없음",
+        "overlayPreset": "측정 항목과 배치",
+        "overlayPresetDescription": "MangoHud 기본 배치 중 하나를 고르거나, 내 MangoHud 설정의 항목을 그대로 써요.",
+        "presetCustom": "내 MangoHud 설정 사용",
+        "presetDetailed": "자세히",
+        "presetExtended": "확장",
+        "presetFpsOnly": "FPS만",
+        "presetHorizontal": "가로형",
+        "provider": "제한 방식",
+        "providerAuto": "자동 — Proton 제한기 + MangoHUD 오버레이",
+        "providerDescription": "자동은 Proton에 들어 있는 DXVK·vkd3d-proton 제한기를 쓰고 MangoHUD 오버레이를 보여 줘요. Linux에서는 스트리밍 중 Apollide 밖에서 지원되는 Proton으로 실행한 게임에도 적용돼요. 게임보다 스트리밍을 먼저 시작하세요. 이미 실행 중인 게임은 실행할 때의 제한을 그대로 써요. Proton은 생성된 프레임도 제한해요. 제한 시점(앞쪽·뒤쪽)을 고르려면 MangoHUD를 고르세요.",
+        "providerMangoHud": "MangoHUD",
+        "providerMangoHudProton": "MangoHUD + Proton",
+        "providerProton": "Proton DXVK/VKD3D",
+        "providerNone": "없음",
+        "settingsDescription": "제한 방식, MangoHUD 표시 여부, 프레임 제한 계산 방법을 골라요.",
+        "settingsTitle": "프레임 제한 설정",
+        "streamLimit": "클라이언트 스트리밍 속도에 맞춰 제한"
+      },
+      "steam": {
+        "advancedSettings": "고급 찾기 설정",
+        "appId": "Steam 앱 {id}",
+        "autoSync": "설치된 게임 자동 동기화",
+        "autoSyncDescription": "켜면 설치된 Steam 게임이 스트리밍 목록에 자동으로 맞춰져요.",
+        "syncAllInstalled": "설치된 게임 모두 동기화",
+        "syncAllInstalledDescription": "끄면 최근에 한 게임만 동기화해요.",
+        "recentGames": "최근에 한 게임",
+        "recentGamesDescription": "Steam의 마지막 플레이 시각 순으로 고를 최대 게임 수예요. 0이면 최근 게임 동기화를 꺼요.",
+        "recentMaxAge": "최근 게임 기간",
+        "recentMaxAgeDescription": "마지막으로 한 지 이 날수보다 오래된 게임은 빼요. 0이면 기간 제한이 없어요.",
+        "gamesUnit": "개",
+        "daysUnit": "일",
+        "description": "이 PC의 Steam 라이브러리에서 설치된 게임을 찾아요.",
+        "excludeGame": "{name}을(를) 자동 동기화에서 빼기",
+        "exclude": "빼기",
+        "excluded": "빠짐",
+        "excludedCount": "{count}개 빠짐",
+        "excludeResults": "검색 결과 빼기",
+        "exclusionsDescription": "뺀 게임은 Steam 자동 동기화로 추가되지 않지만, 직접 앱으로 추가할 수는 있어요.",
+        "exclusionsTitle": "뺀 게임",
+        "filteredTool": "앱 종류로 걸러짐",
+        "filterGames": "게임 거르기",
+        "filters": {
+          "all": "모든 게임",
+          "excluded": "뺀 게임",
+          "included": "넣은 게임"
+        },
+        "forced": "켜짐 (Linux 규칙)",
+        "gameCount": "설치된 게임 {count}개",
+        "includeTools": "고급: 도구와 런타임도 넣기",
+        "includeToolsDescription": "켜면 Proton 런타임, 재배포 패키지, DLC 같은 게임이 아닌 Steam 항목도 가져와요.",
+        "include": "넣기",
+        "included": "들어감",
+        "includeResults": "검색 결과 넣기",
+        "importableCount": "{count}개 동기화 선택됨",
+        "loadingGames": "찾은 Steam 게임 불러오는 중...",
+        "linuxForced": "Linux에서는 Steam 연동이 꼭 필요해요.",
+        "manageGames": "동기화할 게임 고르기",
+        "name": "Steam",
+        "noGames": "찾은 Steam 게임이 없어요.",
+        "noMatchingGames": "이 검색어와 필터에 맞는 게임이 없어요.",
+        "policyDescription": "게임 목록 자동 업데이트와 고급 Steam 찾기 방식을 정해요.",
+        "policyTitle": "동기화 규칙",
+        "removeUninstalled": "지운 게임 자동으로 빼기",
+        "removeUninstalledDescription": "설치된 게임을 모두 동기화할 때, 게임을 지우면 그 앱도 목록에서 빼요. 최근 게임만 동기화할 때는 선택 범위를 벗어난 게임을 항상 빼요.",
+        "resultCount": "결과 {count}개",
+        "searchGames": "게임 이름이나 앱 ID 검색...",
+        "selectionDescription": "Steam 라이브러리에서는 지우지 않고, 자동 동기화에서만 게임을 빼요.",
+        "selectionTitle": "동기화할 게임 고르기",
+        "synchronizedCount": "{count}개 동기화 선택됨",
+        "unknownGame": "Steam 게임 {id}"
+      },
+      "lutris": {
+        "advancedSettings": "고급: 다른 연동과 겹치는 항목",
+        "autoSync": "설치된 게임 자동 동기화",
+        "autoSyncDescription": "켜면 설치된 Lutris 게임이 스트리밍 목록에 자동으로 맞춰져요.",
+        "description": "이 PC의 Lutris 라이브러리에서 Steam 외 게임과 런처를 찾아요.",
+        "excludedCount": "{count}개 빠짐",
+        "exclusionsDescription": "뺀 게임은 Lutris에는 남지만 Apollide에 자동으로 추가되지 않아요.",
+        "exclusionsTitle": "뺀 게임",
+        "filterGames": "게임 거르기",
+        "gameCount": "설치된 게임 {count}개",
+        "gameMetadata": "Lutris 게임 {id} · {runner}",
+        "importableCount": "{count}개 동기화 선택됨",
+        "includeSteam": "Steam으로 실행되는 Lutris 항목도 넣기",
+        "includeSteamDescription": "끄는 걸 추천해요. Steam 게임은 Steam 연동이 직접 가져와요. 켜도 Steam 연동 항목이 우선이고 겹치는 건 지워져요.",
+        "loadingGames": "찾은 Lutris 게임 불러오는 중...",
+        "name": "Lutris",
+        "noGames": "찾은 설치된 Lutris 게임이 없어요.",
+        "noMatchingGames": "이 검색어와 필터에 맞는 게임이 없어요.",
+        "policyDescription": "Steam 외 게임은 Lutris로 가져오고, Steam 게임은 Steam 연동이 맡아요.",
+        "policyTitle": "동기화 규칙",
+        "removeUninstalled": "지운 게임 자동으로 빼기",
+        "removeUninstalledDescription": "게임을 지우면 Lutris가 관리하던 앱도 목록에서 빼요.",
+        "resultCount": "결과 {count}개",
+        "searchGames": "게임, 러너, Lutris ID 검색...",
+        "steamGame": "기본으로 Steam 연동이 맡음",
+        "steamHandledBySteam": "Steam 게임 {count}개는 Steam 연동이 맡아요",
+        "unknownGame": "Lutris 게임 {id}"
+      },
+      "refreshing": "새로 고치는 중",
+      "rtss": {
+        "description": "스트리밍 화면 간격을 고르게 맞추는 데 가장 좋은 프레임 제한기예요.",
+        "name": "RTSS",
+        "processRunning": "실행 중",
+        "shortDescription": "프레임 제한·간격 맞추기 연동."
+      },
+      "status": {
+        "detected": "찾음",
+        "installationUnknown": "설치 여부 모름",
+        "notConfigured": "설정 안 됨",
+        "notDetected": "못 찾음",
+        "notInstalled": "설치 안 됨",
+        "notRequired": "필요 없음",
+        "ready": "준비됨",
+        "repairNeeded": "고쳐야 함",
+        "unavailable": "쓸 수 없음",
+        "updateAvailable": "업데이트 있음",
+        "updateRequired": "업데이트 필요",
+        "windowsOnly": "Windows 전용"
+      },
+      "syncing": "동기화 중",
+      "saved": "모두 저장됨",
+      "title": "연동",
+      "unsavedChanges": "저장 안 한 변경 사항",
+      "updated": "연동을 바꿨어요",
+      "vigem": {
+        "description": "스트리밍하는 앱에 가상 Xbox·DualShock 게임패드를 제공해요.",
+        "name": "ViGEmBus",
+        "shortDescription": "가상 게임패드 드라이버 지원.",
+        "supersededDescription": "지금은 안 써요. Apollide 가상 게임패드 드라이버가 대신 게임패드를 제공하고 있어요. ViGEmBus가 필요한 Xbox 360이나 DualShock 4 방식을 쓰고 싶을 때만 설치하세요."
+      },
+      "vulkan": {
+        "description": "가상 화면 HDR에 쓰는 Vulkan 레이어를 등록해요.",
+        "disabledInConfiguration": "설정에서 꺼짐",
+        "enabledAndRegistered": "켜짐 · 등록됨",
+        "enabledInConfiguration": "설정에서 켜짐",
+        "registeredDisabled": "등록됨 · 꺼짐",
+        "registrationMissing": "등록 안 됨",
+        "shortDescription": "가상 화면의 HDR 지원."
+      }
+    },
+    "app": {
+      "connecting": "이 호스트에 연결하는 중…",
+      "skip_to_content": "본문으로 바로 가기"
+    },
+    "auth": {
+      "credentials_required": "사용자 이름과 비밀번호를 넣어 주세요.",
+      "login_description": "이 Apollide 호스트를 관리하려면 로그인하세요.",
+      "security_note": "이 페이지는 호스트가 직접 보여 줘요. 입력한 계정 정보는 이 PC 밖으로 나가지 않아요.",
+      "setup_description": "스트리밍과 짝 맺은 기기를 관리할 관리자 계정을 만들어요."
+    },
+    "common": {
+      "confirm": "확인",
+      "working": "처리 중…"
+    },
+    "devices": {
+      "action": {
+        "disconnect_named": "{name} 연결 끊기",
+        "pair": "기기 짝 맺기",
+        "pair_indefinite": "기기 짝 맺기",
+        "refreshing": "새로 고치는 중",
+        "save": "기기 저장",
+        "saving": "저장 중",
+        "unpair": "짝 풀기",
+        "unpair_named": "{name} 짝 풀기",
+        "working": "처리 중"
+      },
+      "alert": {
+        "action_failed": "기기 작업 실패",
+        "updated": "기기 목록을 새로 고쳤어요"
+      },
+      "confirm": {
+        "disconnect_description": "이 기기의 스트리밍을 멈춰요. 짝은 그대로 유지돼요.",
+        "disconnect_label": "스트리밍 끊기",
+        "disconnect_title": "{name} 연결을 끊을까요?",
+        "generic_title": "기기 작업 확인",
+        "unpair_label": "기기 짝 풀기"
+      },
+      "count": {
+        "blocked": "차단 {count}대",
+        "offline": "오프라인 {count}대",
+        "streaming": "스트리밍 중 {count}대"
+      },
+      "editor": {
+        "allow_stream": "이 기기의 스트리밍 허용",
+        "blocking_help": "차단해도 짝은 유지되지만, 앞으로의 스트리밍 요청은 거절해요.",
+        "common_display_summary": "공통 가상 화면 모드: {mode}, 배치: {layout}.",
+        "custom_settings": "개별 설정",
+        "display_description": "호스트 공통 설정을 그대로 쓰거나, 이 클라이언트만의 화면 연결과 표시 방식을 정해요.",
+        "display_mode_invalid": "가로x세로xFPS 형식으로 써 주세요. 예: 1920x1080x60",
+        "display_override": "이 클라이언트만의 화면 연결 쓰기",
+        "hdr_description": "이 클라이언트에 쓸 HDR 보정과 가상 화면 표시 설정이에요.",
+        "hdr_peak_description": "이 클라이언트의 가상 화면과 HDR 스트리밍에 쓸 최대 밝기를 직접 정하거나, 자동으로 두세요.",
+        "hdr_profile_description": "Apollide 가상 화면 드라이버는 Windows HDR 보정 프로필을 알아서 유지해요. 실제 모니터나 다른 가상 화면 드라이버를 쓸 때만 여기서 고르세요.",
+        "name_helper": "이 클라이언트를 쓰는 사람이나 화면을 알아볼 수 있는 이름을 쓰세요.",
+        "no_displays": "이 호스트에서 찾은 화면이 없어요",
+        "no_hdr_profiles": "설치된 HDR 색 프로필 없음",
+        "physical_display_description": "이 클라이언트에 쓸 호스트 화면을 고르세요. 꺼져 있는 더미 플러그도 고를 수 있어요.",
+        "permissions_description": "짝 맺은 Artemide 클라이언트가 호스트에서 할 수 있는 일을 정해요. '스트리밍 보기'와 '앱 실행'을 둘 다 끄면 짝은 유지한 채 스트리밍만 막아요.",
+        "permissions_title": "클라이언트 권한",
+        "prefer_10bit_description": "이 클라이언트가 HDR을 요청하면 대신 10비트 SDR로 보내요. HEVC 또는 AV1 Main10이 필요해요.",
+        "route_target": "이 클라이언트를 보낼 곳",
+        "sections": {
+          "display": "화면 연결",
+          "hdr": "HDR과 표시",
+          "identity": "이름과 권한"
+        },
+        "title": "기기 편집",
+        "use_common_value": "공통 설정 쓰기: {value}",
+        "allow_sleep": "이 기기가 PC를 절전 모드로 보내도록 허용",
+        "allow_sleep_description": "절전을 지원하는 클라이언트와 Windows 호스트에서만 쓰는 별도 권한이에요. 호스트의 앱과 스트리밍이 모두 닫혀 있어야 절전돼요. 기본은 꺼짐이에요."
+      },
+      "common_settings_title": "호스트 공통 설정을 불러올 수 없음",
+      "common_settings_unavailable": "호스트 공통 설정을 불러오지 못했어요. 클라이언트별 설정은 그대로지만, 공통 설정에서 가져오는 값은 빠져 있을 수 있어요.",
+      "empty": {
+        "description": "Artemide에서 짝 맺기를 시작한 뒤, 나오는 PIN을 여기에 넣어 기기를 승인하세요.",
+        "filtered_description": "다른 기기 이름이나 ID로 찾아보세요.",
+        "filtered_title": "맞는 기기가 없어요",
+        "title": "짝 맺은 기기 없음"
+      },
+      "error": {
+        "action": "기기 작업을 끝내지 못했어요.",
+        "conflict": "편집하는 동안 이 기기 정보가 바뀌었어요. 새로 고친 뒤 지금 값을 확인하고 다시 저장하세요.",
+        "list_rejected": "호스트가 짝 맺은 기기 목록을 보여 주지 못했어요.",
+        "load": "짝 맺은 기기를 불러오지 못했어요.",
+        "name_required": "기기 이름을 비워 둘 수 없어요.",
+        "partial_update": "호스트가 기기 설정 일부를 저장하지 못했어요. 새로 고친 뒤 다시 해 보세요.",
+        "unpair_rejected": "호스트가 이 기기의 짝을 풀지 못했어요."
+      },
+      "filters": {
+        "aria_label": "기기 필터",
+        "result_count": "기기 {total}대 중 {shown}대 | 기기 {total}대 중 {shown}대",
+        "search_label": "기기 찾기",
+        "search_placeholder": "이름 또는 기기 ID",
+        "status_all": "모든 기기"
+      },
+      "last_seen": {
+        "active_now": "지금 접속 중",
+        "never": "접속 기록 없음"
+      },
+      "list": {
+        "aria_label": "짝 맺은 기기"
+      },
+      "loading": {
+        "aria_label": "짝 맺은 기기 불러오는 중"
+      },
+      "notice": {
+        "disconnected": "{name} 연결을 끊었어요.",
+        "unpaired": "{name} 짝을 풀었어요.",
+        "updated": "{name} 정보를 바꿨어요."
+      },
+      "page": {
+        "description": "기기와 짝을 맺고, 이 호스트로 스트리밍할 수 있는 기기를 정해요.",
+        "title": "기기"
+      },
+      "status": {
+        "blocked": "차단됨",
+        "streaming": "스트리밍 중"
+      },
+      "unpair_all": {
+        "action": "모든 기기 짝 풀기",
+        "title": "모든 기기의 짝을 풀까요?",
+        "description": "짝 맺은 기기가 모두 접속 권한을 잃고, 실행 중인 앱도 멈춰요. 다시 접속하려면 기기마다 짝을 새로 맺어야 해요.",
+        "success": "모든 기기의 짝을 풀었어요."
+      },
+      "layout": {
+        "title": "클라이언트 화면 배치",
+        "description": "확장 화면 스트리밍과 Remote Monitor가 놓일 자리를 정해요."
+      }
+    },
+    "library": {
+      "actions": {
+        "add": "앱 추가",
+        "editLabel": "{name} 편집",
+        "menuLabel": "{name} 작업",
+        "moreLabel": "{name} 작업 더 보기",
+        "removePlaynite": "Playnite 항목 지우기",
+        "showMore": "더 보기",
+        "tryAgain": "다시 시도",
+        "sources": "가져올 곳 관리"
+      },
+      "alerts": {
+        "unavailable": "라이브러리를 쓸 수 없어요"
+      },
+      "collection": {
+        "label": "앱"
+      },
+      "command": {
+        "none": "실행 명령이 설정되지 않음"
+      },
+      "controls": {
+        "region": "라이브러리 조작"
+      },
+      "cover": {
+        "alt": "{name} 표지",
+        "unavailable": "표지 없음",
+        "unavailableLabel": "{name} 표지 없음",
+        "fallbackLabel": "{name} 기본 그림",
+        "application": "앱",
+        "desktop": "데스크톱"
+      },
+      "delete": {
+        "busy": "지우는 중",
+        "confirm": "앱 지우기",
+        "description": "모든 스트리밍 클라이언트에서 이 앱이 사라져요. 디스크의 실행 파일은 지우지 않아요.",
+        "errorTitle": "지우지 못했어요",
+        "fallbackName": "앱",
+        "title": "{name}을(를) 지울까요?"
+      },
+      "empty": {
+        "description": "앱을 추가하면 스트리밍 클라이언트에서 쓸 수 있어요.",
+        "noMatchDescription": "“{search}”에 맞는 앱이 없어요. 다른 말로 찾거나 검색어를 지우세요.",
+        "noMatchTitle": "맞는 앱이 없어요",
+        "title": "아직 앱이 없어요"
+      },
+      "errors": {
+        "delete": "앱을 지우지 못했어요.",
+        "load": "앱 라이브러리를 불러오지 못했어요.",
+        "missingUuid": "{name}에 UUID가 없어서 안전하게 편집할 수 없어요.",
+        "missingUuidGeneric": "이 앱에는 UUID가 없어요."
+      },
+      "loading": "앱 불러오는 중",
+      "page": {
+        "description": "다음 스트리밍을 위해 준비된 게임과 앱이에요.",
+        "title": "라이브러리"
+      },
+      "purgePlaynite": {
+        "busy": "Playnite 항목 지우는 중",
+        "confirm": "Playnite 항목 지우기",
+        "descriptionOne": "지금 Playnite와 연결된 앱 항목이 {count}개 있어요. 확인하면 직접 추가한 Playnite 항목과 Playnite 전체 화면 실행기까지 지워요. Steam·Lutris·직접 만든 앱 등 나머지 앱은 남아요. 따로 만든 Monitor 프로필도 남으니, 지우려면 하나씩 지우세요.",
+        "descriptionOther": "지금 Playnite와 연결된 앱 항목이 {count}개 있어요. 확인하면 직접 추가한 Playnite 항목과 Playnite 전체 화면 실행기까지 지워요. Steam·Lutris·직접 만든 앱 등 나머지 앱은 남아요. 따로 만든 Monitor 프로필도 남으니, 지우려면 하나씩 지우세요.",
+        "errorTitle": "Playnite 항목을 지우지 못했어요",
+        "failed": "Playnite 항목 일부를 지우지 못했어요.",
+        "title": "Playnite 항목을 지울까요?"
+      },
+      "progress": {
+        "shown": "{total}개 중 {visible}개 표시"
+      },
+      "providers": {
+        "custom": "직접 추가",
+        "managed": "{provider}에서 관리"
+      },
+      "result": {
+        "many": "앱 {count}개",
+        "one": "앱 {count}개"
+      },
+      "search": {
+        "clear": "검색어 지우기",
+        "label": "앱 찾기",
+        "placeholder": "앱 찾기"
+      },
+      "selection": {
+        "clear": "선택 해제",
+        "count": "{count}개 선택됨",
+        "escapeHint": "Esc를 누르면 선택이 풀려요.",
+        "selected": "선택됨"
+      },
+      "sort": {
+        "configured": "설정한 순서",
+        "label": "앱 정렬",
+        "nameAsc": "이름 오름차순 (A→Z)",
+        "nameDesc": "이름 내림차순 (Z→A)",
+        "provider": "가져온 곳"
+      },
+      "unnamed": "이름 없는 앱",
+      "view": {
+        "grid": "격자",
+        "label": "라이브러리 보기 방식",
+        "list": "목록"
+      }
+    },
+    "logs": {
+      "action": {
+        "clear_search": "검색어 지우기",
+        "copy_visible": "보이는 줄 복사",
+        "download_text": "텍스트로 내려받기",
+        "jump_to_latest": "최신 줄로 가기",
+        "new_lines": "새 줄 {count}개 - 최신 줄로 가기 | 새 줄 {count}개 - 최신 줄로 가기",
+        "next_match": "다음 찾은 곳",
+        "pause": "새로 고침 멈춤",
+        "previous_match": "이전 찾은 곳",
+        "refreshing": "새로 고치는 중…",
+        "resume": "새로 고침 다시 시작"
+      },
+      "alert": {
+        "export_ready": "내보내기 준비 완료",
+        "unavailable_description": "마지막으로 불러온 내용은 그대로 보여요.",
+        "unavailable_title": "기록을 불러올 수 없어요"
+      },
+      "count": {
+        "errors": "오류 없음 | 오류 {count}개 | 오류 {count}개",
+        "total_lines": "줄 없음 | 모두 {count}줄 | 모두 {count}줄",
+        "warnings": "경고 없음 | 경고 {count}개 | 경고 {count}개"
+      },
+      "empty": {
+        "description": "여기에는 아직 읽을 수 있는 기록이 없어요.",
+        "filtered_description": "심각도나 검색 조건을 바꿔 범위를 넓혀 보세요.",
+        "filtered_title": "맞는 기록 줄이 없어요",
+        "title": "기록 줄이 없어요"
+      },
+      "error": {
+        "clipboard_unavailable": "이 브라우저에서는 클립보드를 쓸 수 없어요.",
+        "copy": "보이는 기록을 복사하지 못했어요.",
+        "load": "이 호스트의 기록을 불러오지 못했어요."
+      },
+      "filters": {
+        "follow_newest": "새 줄 따라가기",
+        "matching_count": "찾은 곳 없음 | {count}곳 찾음 | {count}곳 찾음",
+        "search_label": "기록 내용 찾기",
+        "search_placeholder": "메시지, 모듈, 코드",
+        "severity": "심각도"
+      },
+      "notice": {
+        "copied": "복사한 줄이 없어요. | 보이는 줄 {count}개를 복사했어요. | 보이는 줄 {count}개를 복사했어요.",
+        "downloaded": "내려받은 줄이 없어요. | 보이는 줄 {count}개를 내려받았어요. | 보이는 줄 {count}개를 내려받았어요."
+      },
+      "page": {
+        "description": "호스트 진단 기록을 걸러 보고, 새 줄을 잠시 멈추고, 보이는 그대로 내보내요."
+      },
+      "severity": {
+        "all": "모든 심각도",
+        "error": "오류",
+        "errors": "오류",
+        "other": "기록",
+        "trace": "추적",
+        "warning": "경고",
+        "warnings": "경고"
+      },
+      "status": {
+        "following": "실시간 기록 따라가는 중",
+        "paused": "새로 고침 멈춤"
+      },
+      "summary": {
+        "clear": "{count}줄에서 오류나 경고가 없어요. | {count}줄에서 오류나 경고가 없어요.",
+        "counts_aria_label": "심각도별 기록 수",
+        "empty": "지금 {source}에서 볼 수 있는 줄이 없어요.",
+        "errors": "확인이 필요한 오류 줄이 {count}개 있어요. | 확인이 필요한 오류 줄이 {count}개 있어요.",
+        "title": "{source} 요약",
+        "warnings_also": "다른 경고는 없어요. | 경고 줄도 {count}개 있어요. | 경고 줄도 {count}개 있어요.",
+        "warnings_only": "오류는 없어요. 경고 줄이 {count}개 있어요. | 오류는 없어요. 경고 줄이 {count}개 있어요."
+      },
+      "viewer": {
+        "aria_label": "걸러진 기록 줄",
+        "line_numbers_preserved": "줄 번호는 불러온 기록 범위 기준이에요.",
+        "match_line": "{line}번째 줄에서 찾음",
+        "search_aria_label": "앞뒤 내용이 함께 보이는 기록 검색 결과",
+        "search_context": "{total}곳 중 {current}번째, 앞뒤 {count}줄 함께 보기",
+        "loading": "{source} 기록 불러오는 중…",
+        "title": "기록 내용",
+        "truncated": "최신 {limit}곳만 보여 줘요. 내보내기에는 불러온 범위의 걸러진 줄이 모두 들어가요."
+      }
+    },
+    "maintenance": {
+      "actionCompleted": "관리 작업을 마쳤어요",
+      "actionFailed": "작업 실패",
+      "actions": {
+        "acknowledge": "확인함",
+        "captureSnapshot": "지금 배치 저장",
+        "deleteSnapshot": "저장한 배치 지우기",
+        "replaceSnapshot": "저장한 배치 바꾸기",
+        "restartService": "서비스 다시 시작",
+        "revokeSession": "세션 취소",
+        "terminateVirtualDisplay": "가상 화면 끄기"
+      },
+      "applying": "적용 중",
+      "confirm": {
+        "captureSnapshotDescription": "지금의 Windows 화면 배치를 문제가 생겼을 때 되돌릴 기준으로 저장해요.",
+        "captureSnapshotTitle": "이 화면 배치를 저장할까요?",
+        "defaultTitle": "관리 작업 확인",
+        "deleteSnapshotDescription": "화면 자동 복구 때 이 정상 배치로 되돌릴 수 없게 돼요.",
+        "deleteSnapshotTitle": "저장한 복구 배치를 지울까요?",
+        "replaceSnapshotTitle": "저장한 복구 배치를 바꿀까요?",
+        "restartDescription": "서비스가 다시 시작되는 동안 스트리밍이 끊기고 이 화면도 잠시 쓸 수 없어요.",
+        "restartTitle": "Apollide를 다시 시작할까요?",
+        "revokeSessionDescription": "그 브라우저에서 이 호스트를 관리하려면 다시 로그인해야 해요.",
+        "revokeSessionTitle": "{browser} 세션을 취소할까요?",
+        "terminateVirtualDisplayDescription": "Apollide가 자동 복구를 멈추고, 실제 모니터 배치로 되돌린 뒤, 관리하는 가상 화면과 화면 감시를 모두 꺼요. 가상 화면으로 스트리밍 중이면 영상이 끊겨요.",
+        "terminateVirtualDisplayLinuxDescription": "Apollide가 대기 중인 화면 복구를 취소하고, 실제 모니터 배치로 되돌린 뒤, 관리하는 가상 화면을 모두 끊어요. 가상 화면으로 스트리밍 중이면 영상이 끊겨요. 쓸 수 있는 실제 모니터가 없으면 화면이 꺼질 수 있어요. 새 세션을 시작하면 가상 화면을 다시 만들 수 있어요.",
+        "terminateVirtualDisplayTitle": "모든 가상 화면을 끌까요?"
+      },
+      "crash": {
+        "acknowledged": "충돌 확인함",
+        "detected": "최근 충돌이 있었어요",
+        "noneFound": "최근 7일 동안의 충돌 기록 파일이 없어요.",
+        "noneRecent": "최근 충돌 없음",
+        "recentDump": "최근 충돌 기록 파일"
+      },
+      "credentials": {
+        "currentPassword": "지금 비밀번호",
+        "description": "이 호스트를 관리할 때 쓰는 비밀번호를 바꿔요.",
+        "title": "웹 로그인 정보 바꾸기"
+      },
+      "dataUnavailable": "관리 정보 일부를 불러올 수 없어요",
+      "description": "버전 정보, 문제 해결용 파일, 복구 상태, 관리자 접속을 다뤄요.",
+      "errors": {
+        "actionFailed": "관리 작업에 실패했어요.",
+        "crashManifest": "충돌 묶음 목록을 불러오지 못해 내려받기를 시작하지 않았어요.",
+        "crashPart": "이 충돌 묶음 조각을 내려받지 못했어요.",
+        "crashPartsFailed": "충돌 묶음 조각 {parts}을(를) 내려받지 못했어요. 그 조각만 하나씩 다시 받아 보세요.",
+        "crashDismiss": "충돌 알림을 닫지 못했어요.",
+        "crashStatus": "충돌 기록 상태를 알 수 없어요.",
+        "metadata": "설치된 버전 정보를 알 수 없어요.",
+        "passwordChange": "웹 화면 비밀번호를 바꾸지 못했어요.",
+        "passwordUnchanged": "비밀번호가 바뀌지 않았어요.",
+        "recoveryStatus": "화면 복구 상태를 알 수 없어요.",
+        "sessions": "신뢰하는 브라우저 세션을 불러올 수 없어요.",
+        "snapshotCapture": "화면 배치를 저장하지 못했어요.",
+        "snapshotNotDeleted": "저장한 화면 복구 배치를 지우지 못했어요.",
+        "virtualDisplayTermination": "관리하는 가상 화면 일부를 끄지 못했어요."
+      },
+      "notices": {
+        "crashAcknowledged": "충돌 알림을 확인했어요.",
+        "crashBundleStarted": "충돌 묶음 내려받기를 시작했어요. 브라우저가 여러 파일 내려받기를 막았다면 아래 조각 단추로 하나씩 받으세요.",
+        "credentialsUpdated": "웹 로그인 정보를 바꿨어요.",
+        "restartRequested": "다시 시작을 요청했어요. Apollide 서비스가 돌아오면 다시 연결하세요.",
+        "sessionRevoked": "{browser} 세션을 취소했어요.",
+        "snapshotCaptured": "지금 화면 배치를 복구 기준으로 저장했어요.",
+        "snapshotDeleted": "저장한 화면 복구 배치를 지웠어요.",
+        "virtualDisplayTerminated": "자동 복구를 멈추고 관리하는 가상 화면을 껐어요.",
+        "virtualDisplayTerminatedLinux": "관리하는 가상 화면을 끊었어요.",
+        "virtualDisplayTerminatedLinuxWithoutRestore": "관리하는 가상 화면은 끊었지만, 실제 모니터 배치로 되돌리지는 못했어요."
+      },
+      "recovery": {
+        "available": "있음",
+        "availableDetail": "복구에 쓸 정상 화면 배치가 저장돼 있어요.",
+        "lastFailure": "마지막 실패",
+        "linuxTitle": "가상 화면 복구",
+        "linuxDescription": "화면에 문제가 생기면 관리하는 가상 화면을 꺼서 되살려요. Apollide가 먼저 실제 모니터 배치로 되돌려 봐요.",
+        "noneRecorded": "기록 없음",
+        "notCaptured": "저장 안 됨",
+        "notCapturedDetail": "저장한 정상 화면 배치가 없어요.",
+        "refreshRecommended": "다시 저장 권장",
+        "refreshRecommendedDetail": "저장한 배치가 오래됐거나 되돌리기에 여러 번 실패했어요.",
+        "snapshotSchema": "저장 형식",
+        "statusUpdated": "상태 갱신",
+        "title": "정상 화면 배치 복구",
+        "unavailable": "복구 배치 상태를 불러오지 못했어요.",
+        "unresolvedRestores": "해결 안 된 되돌리기",
+        "windowsOnly": "정상 화면 배치 복구는 Windows 호스트에서만 쓸 수 있어요."
+      },
+      "refreshing": "새로 고치는 중",
+      "restart": {
+        "description": "스트리밍을 모두 끊고 호스트 서비스를 다시 시작해요."
+      },
+      "saving": "저장 중",
+      "sessions": {
+        "activeCount": "{count}개 사용 중",
+        "browser": "브라우저",
+        "current": "지금",
+        "description": "지금 이 호스트를 관리할 수 있는 브라우저를 확인해요.",
+        "emptyDescription": "세션 목록이 최근에 비워졌다면 다시 로그인하세요.",
+        "emptyTitle": "신뢰하는 세션이 없어요",
+        "expires": "만료",
+        "lastSeen": "마지막 접속",
+        "now": "지금",
+        "rememberedDevice": "기억한 기기",
+        "thisBrowser": "이 브라우저",
+        "title": "신뢰하는 브라우저 세션",
+        "trustedBrowser": "신뢰하는 브라우저"
+      },
+      "status": {
+        "unavailable": "알 수 없음",
+        "windowsOnly": "Windows 전용"
+      },
+      "support": {
+        "crashDownloadFailed": "충돌 묶음을 내려받지 못했어요",
+        "crashPart": "조각 {index}",
+        "crashPartsDescription": "큰 묶음도 브라우저에 한꺼번에 담지 않도록 조각마다 따로 내려받아요.",
+        "crashPartsTitle": "충돌 묶음 조각",
+        "description": "복구나 연동 상태를 바꾸기 전에 진단 파일을 먼저 내려받아 두세요.",
+        "downloadAgain": "다시 내려받기",
+        "downloadCrash": "충돌 묶음 내려받기",
+        "downloadPart": "조각 내려받기",
+        "downloadingBundle": "묶음 내려받는 중",
+        "downloadingPart": "내려받는 중",
+        "directPartLink": "바로 받기 링크",
+        "downloadLogs": "기록 묶음 내려받기",
+        "legacyHost": "예전 호스트",
+        "multipleDownloadHint": "브라우저가 여러 파일 자동 내려받기를 막을 수 있어요. 이 호스트에 허용하거나 아래에서 조각을 하나씩 받으세요.",
+        "partStarted": "내려받기 시작",
+        "preparingCrash": "묶음 준비 중",
+        "retryPart": "조각 다시 받기",
+        "title": "문제 해결용 묶음",
+        "windowsUnavailable": "이 운영체제에서는 Windows 문제 해결용 묶음을 받을 수 없어요."
+      },
+      "title": "관리",
+      "updating": "갱신 중",
+      "validation": {
+        "currentPassword": "지금 비밀번호를 넣어 주세요.",
+        "newPassword": "새 비밀번호를 넣어 주세요.",
+        "passwordMismatch": "새 비밀번호가 서로 달라요.",
+        "username": "지금 웹 화면 사용자 이름을 넣어 주세요."
+      },
+      "version": {
+        "branch": "브랜치",
+        "commit": "커밋",
+        "description": "지금 이 화면을 보여 주는 정확한 빌드예요.",
+        "metadataIncomplete": "정보 일부 없음",
+        "platform": "운영체제",
+        "releaseDate": "출시일",
+        "title": "설치된 버전",
+        "unknown": "알 수 없는 버전",
+        "version": "버전"
+      },
+      "linux": {
+        "title": "Linux 스트리밍 설정",
+        "description": "스트리밍 문제를 살펴보기 전에 관리하는 가상 화면, 사용 중인 데스크톱 세션, 인코더를 확인하세요.",
+        "logs": "기록 열기·내려받기",
+        "display": "화면 설정"
+      },
+      "releases": {
+        "title": "업데이트와 변경 내역",
+        "check": "업데이트 확인",
+        "available": "최신 버전",
+        "current": "설치된 버전",
+        "unavailable": "버전 정보를 불러올 수 없어요. 나중에 다시 해 보세요.",
+        "open": "변경 내역 보기",
+        "empty": "변경 내역이 없어요.",
+        "loading": "새 버전 확인 중…"
+      }
+    },
+    "updates": {
+      "available": "Apollide {version}이(가) 나왔어요"
+    },
+    "nav": {
+      "api_tokens": "API 토큰",
+      "browser_stream": "브라우저 스트리밍",
+      "devices": "기기",
+      "integrations": "연동",
+      "library": "라이브러리",
+      "logs": "기록",
+      "maintenance": "관리",
+      "overview": "개요",
+      "stats": "통계",
+      "settings": "설정"
+    },
+    "not_found": {
+      "action": "개요로 돌아가기",
+      "description": "그 Apollide 페이지는 없거나 다른 곳으로 옮겨졌어요.",
+      "title": "페이지를 찾을 수 없어요"
+    },
+    "overview": {
+      "actions": {
+        "addApplication": "앱 추가",
+        "manage": "관리",
+        "manageDevices": "기기 관리",
+        "checkUpdates": "업데이트 확인",
+        "openLibrary": "라이브러리 열기",
+        "openLogs": "기록 열기",
+        "openStats": "통계 열기",
+        "pairDevice": "기기 짝 맺기",
+        "reportBug": "버그 알리기",
+        "startBrowserStream": "브라우저 스트리밍 시작",
+        "useLegacyWebUi": "예전 웹 화면 쓰기",
+        "viewAll": "모두 보기",
+        "reviewSetup": "설정 살펴보기",
+        "viewDetails": "자세히 보기"
+      },
+      "activeSessions": {
+        "one": "접속 중인 세션 {count}개.",
+        "other": "접속 중인 세션 {count}개."
+      },
+      "additionalDataUnavailable": "추가 정보를 불러올 수 없어요",
+      "attention": "확인 필요",
+      "currentApplication": "지금 실행 중인 앱",
+      "description": "스트리밍 호스트를 한눈에 봐요.",
+      "devices": {
+        "allowed": {
+          "one": "접속 허용된 기기 {count}대",
+          "other": "접속 허용된 기기 {count}대"
+        },
+        "connected": {
+          "one": "지금 {count}대 연결됨",
+          "other": "지금 {count}대 연결됨"
+        },
+        "emptyDescription": "Artemide 클라이언트와 짝을 맺으면 스트리밍을 시작할 수 있어요.",
+        "emptyTitle": "짝 맺은 기기 없음",
+        "title": "짝 맺은 기기"
+      },
+      "errors": {
+        "hostInfo": "호스트 정보를 불러올 수 없어요.",
+        "hostMetrics": "호스트 실시간 상태를 불러올 수 없어요.",
+        "library": "앱 라이브러리를 불러올 수 없어요.",
+        "pairedDevices": "짝 맺은 기기를 불러올 수 없어요.",
+        "streamStatus": "스트리밍 상태를 불러올 수 없어요."
+      },
+      "hardwareUnavailable": "호스트 하드웨어 정보를 불러올 수 없음",
+      "hostLoad": {
+        "description": "지금 자원 사용량이에요. 10초마다 새로 고쳐요.",
+        "memoryInUse": "메모리 {total} 중 {used} 사용 중",
+        "title": "호스트 성능",
+        "unavailableDescription": "새로 고치면 호스트 상태를 다시 받아 와요.",
+        "unavailableTitle": "호스트 상태를 불러올 수 없음",
+        "staleDescription": "마지막으로 받은 값을 보여 주고 있어요. 새로 고쳐 다시 해 보세요."
+      },
+      "library": {
+        "configured": {
+          "one": "설정된 앱 {count}개",
+          "other": "설정된 앱 {count}개"
+        },
+        "emptyDescription": "앱이나 데스크톱 항목을 추가하면 클라이언트에서 쓸 수 있어요.",
+        "emptyTitle": "라이브러리가 비어 있어요",
+        "title": "라이브러리",
+        "unnamedApplication": "이름 없는 앱"
+      },
+      "loadingReadiness": "호스트 준비 상태 불러오는 중",
+      "memory": "메모리",
+      "notUpdated": "아직 갱신 안 됨",
+      "reportBug": {
+        "description": "제대로 안 되는 게 있나요? GitHub 이슈를 열고 관련 기록을 함께 올려 주세요.",
+        "title": "버그 알리기"
+      },
+      "readiness": {
+        "attention": "확인 필요",
+        "ready": "스트리밍 준비 완료",
+        "readyDetail": "Artemide로 연결하거나 브라우저에서 스트리밍을 시작하세요.",
+        "remoteSessionActive": "원격 세션이 접속 중이에요.",
+        "streaming": "지금 스트리밍 중",
+        "hostStatus": "호스트 상태"
+      },
+      "refreshing": "새로 고치는 중",
+      "remoteStream": "원격 스트리밍",
+      "sessions": "세션",
+      "title": "개요",
+      "unavailable": "알 수 없음",
+      "updated": "{time} 갱신",
+      "updates": {
+        "installed": "설치된 버전: {version}. 업데이트 전에 최신 버전 내용을 확인하세요.",
+        "title": "업데이트"
+      },
+      "warnings": {
+        "blockedDevices": {
+          "detail": "스트리밍하려면 짝 맺은 기기를 하나 이상 허용하세요.",
+          "title": "짝 맺은 기기가 모두 차단돼 있어요"
+        },
+        "hostLoad": {
+          "detail": "CPU나 GPU 사용률이 {threshold}%를 넘었어요. 스트리밍 화질이 떨어질 수 있어요.",
+          "title": "호스트 부하가 아주 높아요"
+        },
+        "encoderProbe": {
+          "detail": "마지막 인코더 점검에 실패했어요. 쓸 수 있는 화면이 있으면 스트리밍이 될 수도 있지만, 믿고 쓰기 전에 기록을 확인하세요.",
+          "title": "인코더 점검 실패"
+        },
+        "noDevices": {
+          "detail": "원격 스트리밍을 시작하기 전에 클라이언트와 짝을 맺으세요.",
+          "title": "짝 맺은 기기가 없어요"
+        },
+        "partialData": {
+          "title": "호스트 정보 일부를 불러올 수 없어요"
+        },
+        "paused": {
+          "detail": "{app}에 연결된 스트리밍이 없어요.",
+          "title": "앱이 아직 실행 중이에요"
+        }
+      },
+      "quickActions": {
+        "title": "바로 가기",
+        "library": "라이브러리 꾸미기",
+        "libraryDetail": "기기에서 쓸 게임과 앱을 골라요.",
+        "devices": "기기 연결하기",
+        "devicesDetail": "Artemide 클라이언트와 짝을 맺고 접속 권한을 관리해요.",
+        "settings": "스트리밍 다듬기",
+        "settingsDetail": "화면, 소리, 입력을 설정해요."
+      },
+      "hostDetails": "호스트 정보",
+      "processor": "프로세서",
+      "graphics": "그래픽",
+      "installedVersion": "설치된 버전",
+      "support": "도움말과 업데이트"
+    },
+    "pair": {
+      "action": {
+        "approve": "기기 승인",
+        "approving": "승인 중",
+        "back_to_devices": "기기 목록으로",
+        "pair_another": "다른 기기 짝 맺기",
+        "view_devices": "기기 보기"
+      },
+      "alert": {
+        "failed": "짝 맺기 실패",
+        "paired": "짝을 맺었어요"
+      },
+      "error": {
+        "name_required": "이 기기의 이름을 넣어 주세요.",
+        "pin_invalid": "Artemide에 나온 1~4자리 PIN을 넣어 주세요.",
+        "pin_rejected": "그 PIN에 맞는 Artemide 요청이 없어요. 클라이언트에서 짝 맺기를 시작하고 다시 해 보세요.",
+        "submit": "이 기기와 짝을 맺지 못했어요."
+      },
+      "form": {
+        "description": "기기 이름은 세션 목록과 기기 목록에 나와요.",
+        "name_helper": "나중에 알아보기 쉬운 이름을 고르세요.",
+        "name_placeholder": "거실 TV",
+        "pin_helper": "숫자 4자리까지 넣으세요.",
+        "pin_label": "Artemide PIN",
+        "pin_placeholder": "0000",
+        "pin_submit_as": "{pin}(으)로 보내요",
+        "title": "클라이언트 승인"
+      },
+      "notice": {
+        "connected": "이제 {name}이(가) 이 호스트에 연결할 수 있어요."
+      },
+      "page": {
+        "description": "Artemide 클라이언트에 나온 PIN으로 승인해요. 짝 맺기는 접속만 허락할 뿐, 스트리밍을 시작하지는 않아요.",
+        "local_approval": "이 PC에서 승인",
+        "title": "기기 짝 맺기"
+      },
+      "privacy": "PIN은 지금 로그인된 연결로 이 Apollide 호스트에만 보내져요.",
+      "steps": {
+        "approve_description": "짧은 PIN은 앞에 0을 붙여 4자리로 보내요.",
+        "approve_title": "여기서 승인하기",
+        "number": "{number}",
+        "open_moonlight_description": "승인할 Artemide 클라이언트에서 이 Apollide 호스트를 고르세요.",
+        "open_moonlight_title": "Artemide 열기",
+        "start_pairing_description": "숫자 PIN이 보이는 동안 Artemide를 닫지 마세요.",
+        "start_pairing_title": "짝 맺기 시작",
+        "title": "PIN을 넣기 전에"
+      }
+    },
+    "sessions": {
+      "action": {
+        "delete_record": "세션 기록 지우기",
+        "refreshing": "새로 고치는 중",
+        "stop_stream": "스트리밍 멈추기",
+        "stop_stream_named": "{client}의 {protocol} 스트리밍 멈추기",
+        "working": "처리 중"
+      },
+      "active": {
+        "empty_description": "Artemide나 브라우저가 연결되면 여기에 바로 세션이 나와요.",
+        "list_aria_label": "접속 중인 스트리밍 세션",
+        "refresh_description": "이 탭이 보이는 동안 4초마다 새로 고쳐요.",
+        "title": "접속 중인 세션"
+      },
+      "alert": {
+        "action_complete": "세션 작업을 마쳤어요",
+        "app_running_description": "{app}에 연결된 RTSP 클라이언트가 없어요. 다시 연결을 기다리며 멈춰 있을 수 있어요.",
+        "app_running_title": "앱이 아직 실행 중이에요",
+        "history_degraded_description": "지금 스트리밍에는 영향이 없지만, 새 진단 정보가 빠질 수 있어요.",
+        "history_degraded_title": "세션 기록에 문제가 있어요",
+        "partial_failure_description": "Apollide가 다시 시도하는 동안 지금 줄들은 그대로 보여요.",
+        "partial_failure_title": "세션 정보 일부를 불러올 수 없어요"
+      },
+      "confirm": {
+        "delete_title": "이 세션 기록을 지울까요?",
+        "generic_title": "세션 작업 확인",
+        "stop_rtsp_all_description": "실행 중인 앱을 멈추면 이 호스트의 RTSP 스트리밍이 모두 끝나요.",
+        "stop_rtsp_description": "실행 중인 앱을 멈추면 이 RTSP 스트리밍이 끝나요.",
+        "stop_rtsp_title": "RTSP 스트리밍을 멈출까요?",
+        "stop_webrtc_description": "고른 WebRTC 세션이 바로 닫혀요.",
+        "stop_webrtc_title": "이 브라우저 스트리밍을 멈출까요?"
+      },
+      "count": {
+        "active": "접속 중인 세션 {count}개 | 접속 중인 세션 {count}개",
+        "rtsp": "RTSP 세션 {count}개 접속 중 | RTSP 세션 {count}개 접속 중",
+        "webrtc": "WebRTC 세션 {count}개 접속 중 | WebRTC 세션 {count}개 접속 중"
+      },
+      "diagnostic": {
+        "ice_candidates": "ICE 후보",
+        "session_id": "세션 ID",
+        "title": "진단"
+      },
+      "error": {
+        "action": "세션 작업을 끝내지 못했어요.",
+        "source_detail": "{source}: {detail}",
+        "source_load": "{source}을(를) 불러오지 못했어요.",
+        "stop_rtsp_rejected": "호스트가 RTSP 스트리밍을 멈추지 않았어요.",
+        "webrtc_not_found": "브라우저 스트리밍을 찾지 못했어요."
+      },
+      "history": {
+        "actions": "작업",
+        "client_and_game": "클라이언트와 게임",
+        "description": "이 호스트에 남아 있는 지난 세션을 봐요.",
+        "empty_description": "세션 기록을 쓸 수 있으면 끝난 스트리밍이 여기에 나와요.",
+        "empty_title": "세션 기록 없음",
+        "next_page": "다음 페이지",
+        "outcome": "결과",
+        "previous_page": "이전 페이지",
+        "stream": "스트리밍",
+        "table_caption": "최근 끝난 스트리밍 세션"
+      },
+      "metric": {
+        "picture": "화질"
+      },
+      "notice": {
+        "history_deleted": "세션 기록을 지웠어요.",
+        "stop_rtsp": "실행 중인 앱과 RTSP 스트리밍에 멈추라고 요청했어요.",
+        "stop_webrtc": "브라우저 스트리밍을 멈췄어요."
+      },
+      "page": {
+        "description": "지금 접속 중인 Artemide·브라우저 스트리밍과 진단 정보, 최근 세션 결과를 봐요. 실시간 값은 줄 위치를 바꾸지 않고 갱신돼요.",
+        "title": "세션"
+      },
+      "protocol": {
+        "rtsp": "RTSP",
+        "webrtc": "WebRTC"
+      },
+      "source": {
+        "host_status": "호스트 세션 상태",
+        "rtsp": "RTSP 세션",
+        "webrtc": "WebRTC 세션"
+      },
+      "status": {
+        "awaiting_offer": "연결 요청 기다리는 중",
+        "error": "오류",
+        "negotiating": "연결 조율 중",
+        "no_active": "스트리밍 없음",
+        "paused": "일시 정지",
+        "stopped": "멈춤",
+        "stopping": "멈추는 중",
+        "streaming": "스트리밍 중"
+      },
+      "value": {
+        "browser_session": "브라우저 세션 {id}",
+        "browser_stream": "브라우저 스트리밍",
+        "desktop_stream": "데스크톱 스트리밍",
+        "fps": "{value} fps",
+        "frame_count": "프레임 없음 | {count}프레임 | {count}프레임",
+        "milliseconds": "{value} ms",
+        "milliseconds_ago": "{value} ms 전",
+        "moonlight_client": "Artemide 클라이언트",
+        "negotiating_codec": "코덱 정하는 중",
+        "not_reported": "알려지지 않음",
+        "streamed_application": "스트리밍한 앱",
+        "unknown_client": "알 수 없는 클라이언트",
+        "unknown_codec": "알 수 없는 코덱",
+        "unknown_time": "알 수 없는 시간"
+      }
+    },
+    "stats": {
+      "close_detail": "세션 상세 닫기",
+      "host_cpu": "CPU",
+      "host_gpu": "GPU",
+      "host_ram": "RAM",
+      "host_vitals_title": "호스트 상태",
+      "host_vram": "VRAM",
+      "maximum": "최대 {value}",
+      "minimum": "최소 {value}",
+      "sample_count": "측정 {count}회 | 측정 {count}회"
+    },
+    "api_tokens": {
+      "active": {
+        "active": "사용 중",
+        "created": "{date} 만듦",
+        "description": "지금 이 호스트를 부를 수 있는 토큰을 확인해요.",
+        "empty_description": "범위를 정한 연동이나 자동화가 필요할 때 위에서 토큰을 만드세요.",
+        "empty_title": "사용 중인 API 토큰 없음",
+        "eyebrow": "접근 목록",
+        "filtered_empty_description": "다른 토큰 해시나 경로로 찾아보세요.",
+        "filtered_empty_title": "맞는 토큰이 없어요",
+        "result_count": "토큰 {total}개 중 {shown}개 표시",
+        "search_label": "토큰 찾기",
+        "search_placeholder": "해시나 경로로 찾기",
+        "title": "사용 중인 토큰",
+        "token_label": "토큰 {hash}"
+      },
+      "active_count": "사용 중인 토큰 {count}개",
+      "actions": {
+        "add_scope": "범위 추가",
+        "copied": "복사했어요",
+        "copy": "토큰 복사",
+        "generate": "API 토큰 만들기",
+        "generating": "만드는 중",
+        "refresh_tokens": "토큰 새로 고침",
+        "refreshing": "새로 고치는 중",
+        "remove_scope": "범위 빼기",
+        "remove_scope_named": "{path} 범위 빼기",
+        "revoke": "취소",
+        "revoke_named": "토큰 {hash} 취소",
+        "revoking": "취소하는 중"
+      },
+      "alert": {
+        "action_failed": "토큰 작업 실패",
+        "create_failed": "토큰 만들기 실패",
+        "no_routes_description": "호스트가 토큰으로 쓸 수 있는 API 경로를 알려 주지 않았어요.",
+        "no_routes_title": "경로 목록을 불러올 수 없음",
+        "routes_unavailable": "경로를 불러오지 못했어요",
+        "success_title": "토큰 접근 권한을 바꿨어요",
+        "tokens_unavailable": "사용 중인 토큰을 불러오지 못했어요"
+      },
+      "builder": {
+        "description": "연동에 꼭 필요한 일만 할 수 있는 토큰을 만들어요.",
+        "empty_description": "위에서 경로와 방식을 골라 첫 범위를 추가하세요.",
+        "empty_title": "아직 범위가 없어요",
+        "eyebrow": "접근 권한 만들기",
+        "generate_hint": "전체 토큰은 한 번만 보여 줘요. 이 창을 닫기 전에 안전한 곳에 저장하세요.",
+        "least_privilege": "최소 권한",
+        "methods_available": "{count}개 쓸 수 있음",
+        "methods_description": "이 연동에 필요한 HTTP 방식만 고르세요.",
+        "methods_label": "허용할 방식",
+        "no_methods": "이 경로에는 토큰으로 쓸 수 있는 방식이 없어요.",
+        "route_count": "맞는 경로 {count}개",
+        "route_description": "API 경로를 찾은 뒤 허용할 방식을 고르세요.",
+        "route_label": "API 경로",
+        "route_placeholder": "경로 고르기",
+        "route_title": "경로 고르기",
+        "search_label": "경로 걸러 보기",
+        "search_placeholder": "/api/... 찾기",
+        "summary_description": "이 토큰이 할 수 있는 일을 정확히 확인하세요.",
+        "summary_methods": "허용한 방식",
+        "summary_routes": "허용한 경로",
+        "summary_title": "권한 확인",
+        "title": "범위를 정한 토큰 만들기"
+      },
+      "description": "스크립트, 연동, 믿을 수 있는 도구에 쓸 좁은 권한의 API 토큰을 만들어요.",
+      "errors": {
+        "create": "이 토큰을 만들지 못했어요",
+        "revoke": "이 토큰을 취소하지 못했어요",
+        "routes_load": "API 경로 목록을 불러오지 못했어요",
+        "scope_required": "토큰을 만들기 전에 경로와 방식을 하나 이상 추가하세요.",
+        "token_missing": "호스트가 토큰을 돌려주지 않았어요.",
+        "tokens_load": "사용 중인 API 토큰을 불러오지 못했어요"
+      },
+      "notices": {
+        "created": "토큰을 만들었어요. 다시 볼 수 없으니 지금 복사하세요.",
+        "revoked": "API 토큰을 취소했어요."
+      },
+      "reveal": {
+        "description": "이 토큰은 만든 직후에만 보여요.",
+        "title": "API 토큰이 준비됐어요",
+        "warning": "지금 이 토큰을 복사하세요. Apollide는 해시만 저장해서 전체 토큰을 다시 보여 줄 수 없어요.",
+        "warning_title": "안전하게 저장하세요"
+      },
+      "revoke": {
+        "description": "토큰 {hash}을(를) 취소할까요? 이 토큰을 쓰는 연동은 바로 멈춰요.",
+        "title": "API 토큰을 취소할까요?"
+      },
+      "scope_count": "고른 범위 {count}개",
+      "title": "API 토큰",
+      "unknown_date": "만든 날짜 알 수 없음"
+    },
+    "shell": {
+      "appearance": "모양",
+      "brand_overview": "Apollide 개요",
+      "change_theme": "테마: {theme}. 테마 바꾸기",
+      "close_navigation": "메뉴 닫기",
+      "collapse_navigation": "메뉴 접기",
+      "expand_navigation": "메뉴 펼치기",
+      "host_status": "호스트 상태",
+      "open_navigation": "메뉴 열기",
+      "primary_navigation": "주 메뉴",
+      "refresh_host_status": "호스트 상태 새로 고침",
+      "theme": "테마: {theme}",
+      "theme_auto": "시스템 설정 따름",
+      "theme_dark": "어둡게",
+      "theme_light": "밝게",
+      "workspace": "작업",
+      "monitor": "살펴보기",
+      "manage": "관리",
+      "host_console": "호스트 콘솔",
+      "classic_interface": "예전 화면"
+    },
+    "status": {
+      "needs_attention": "확인 필요",
+      "ready": "준비됨",
+      "streaming": "스트리밍 중"
+    },
+    "system": {
+      "host_status_unavailable": "호스트 상태를 잠시 알 수 없어요.",
+      "unreachable": "Apollide에 연결할 수 없어요."
+    }
+  },
+  "sessions": {
+    "history_performance_title": "세션 성능",
+    "fps": "FPS",
+    "chart_range_recent_short": "{minutes}분",
+    "chart_host_cpu": "CPU",
+    "chart_host_gpu": "GPU",
+    "chart_host_ram": "RAM",
+    "chart_host_vram": "VRAM",
+    "chart_ms": "ms",
+    "history_hdr": "HDR",
+    "history_server_version": "Apollide 버전",
+    "tip_history_server_version": "이 스트림이 시작되었을 때 기록된 Apollide 버전입니다."
+  },
+  "config": {
+    "app_focus_title": "실행한 게임 앞으로 가져오기",
+    "app_focus_description": "Steam·Lutris·Playnite에서 실행한 게임 창을 맨 앞으로 가져와요. 게임이 뒤에 숨어 조작이 안 될 때 도움이 돼요.",
+    "app_focus_attempts": "앞으로 가져올 횟수",
+    "app_focus_attempts_desc": "게임을 실행한 뒤 창을 맨 앞으로 가져오는 횟수예요. 0이면 이 기능을 꺼요.",
+    "app_focus_timeout_secs": "기다릴 시간(초)",
+    "app_focus_timeout_secs_desc": "이 시간 동안 게임 창이 뜨기를 기다리며 맨 앞으로 가져와요. 0이면 이 기능을 꺼요.",
+    "app_focus_exit_on_first": "한 번 성공하면 멈추기",
+    "app_focus_exit_on_first_desc": "켜면 게임 창이 맨 앞에 오는 순간 멈춰요. 끄면 정한 횟수나 시간이 다 될 때까지 계속해요.",
+    "amf": {
+      "quality": "AMF 사용 방식",
+      "rate_control": "AMF 비트레이트 조절"
+    },
+    "adapter_name": "그래픽카드(GPU)",
+    "adapter_name_default": "자동(추천)",
+    "adapter_name_desc_linux_1": "화면 캡처에 쓸 GPU를 직접 고를 때 써요.",
+    "adapter_name_desc_linux_2": "을(를) 실행하면 VAAPI를 쓸 수 있는 장치를 모두 찾을 수 있어요.",
+    "adapter_name_desc_linux_3": "``renderD129``를 위에서 찾은 장치로 바꾸면 그 장치의 이름과 기능이 나와요. Apollide에서 쓰려면 적어도 다음 기능이 있어야 해요:",
+    "adapter_name_desc_windows": "화면 캡처에 쓸 GPU를 골라요. 보통은 자동이 좋아요. 이름이 같은 GPU가 여럿이어도 구별해서 기억해요. 실제 모니터를 캡처하려면 그 GPU에 켜진 모니터가 있어야 하고, 가상 화면 모드에서는 모니터가 없어도 돼요.",
+    "adapter_name_not_detected": "지금은 찾을 수 없음",
+    "adapter_name_placeholder_windows": "Radeon RX 580 Series",
+    "adapter_pnp_id": "그래픽카드 PnP ID",
+    "adapter_pnp_id_desc": "캡처에 쓸 GPU의 Windows 장치 ID예요. 이름이 같은 GPU를 구별해야 할 때만 적고, 아니면 비워 두세요.",
+    "add": "추가",
+    "address_family": "IP 주소 종류",
+    "address_family_both": "IPv4+IPv6",
+    "address_family_desc": "Apollide가 쓸 IP 주소 종류를 골라요.",
+    "address_family_ipv4": "IPv4만",
+    "always_send_scancodes": "항상 스캔 코드 보내기",
+    "always_send_scancodes_desc": "켜면 게임·앱에서 키보드가 더 잘 먹지만, 미국식 영어 배열이 아닌 클라이언트에서는 다른 글자가 입력될 수 있어요. 어떤 앱에서 키보드가 아예 안 되면 켜고, 엉뚱한 키가 눌리면 꺼 보세요.",
+    "amd_coder": "AMF 코더(H264)",
+    "amd_coder_desc": "화질과 인코딩 속도 중 무엇을 앞세울지 골라요. H.264에만 적용돼요.",
+    "amd_enforce_hrd": "AMF HRD 강제",
+    "amd_enforce_hrd_desc": "켜면 비트레이트가 정한 값을 넘는 일이 크게 줄지만, 일부 그래픽카드에서는 화면이 깨지거나 화질이 떨어질 수 있어요.",
+    "amd_high_motion_quality_boost": "AMF 빠른 움직임 화질 높이기",
+    "amd_high_motion_quality_boost_desc": "드라이버가 지원하면 움직임이 많은 장면의 화질을 높여요. 자동이면 드라이버 기본값을 그대로 써요.",
+    "amd_input_queue_size": "AMF 입력 대기열 크기",
+    "amd_input_queue_size_desc": "인코더에 미리 쌓아 둘 화면 수예요. 0이면 지연이 적은 값으로 자동으로 정해요.",
+    "amd_lowlatency_mode": "AMF 저지연 모드",
+    "amd_lowlatency_mode_desc": "AMF 저지연 모드를 켜거나 꺼요. 자동이면 드라이버 기본값을 그대로 써요.",
+    "amd_ltr_frames": "AMF 장기 참조 프레임",
+    "amd_ltr_frames_desc": "인코더가 오래 기억해 둘 참조 프레임 수예요. 0이면 인코더 기본값을 써요.",
+    "amd_native_group": "AMF 기본 인코더 옵션",
+    "amd_preanalysis": "AMF 사전 분석",
+    "amd_preanalysis_desc": "켜면 화질이 좋아질 수 있지만 인코딩 지연이 조금 늘어요.",
+    "amd_quality": "AMF 품질",
+    "amd_quality_balanced": "balanced -- 속도와 화질 균형",
+    "amd_quality_desc": "인코딩 속도와 화질 중 무엇을 앞세울지 골라요. 기본값 speed는 지연이 가장 적고, balanced·quality는 같은 비트레이트에서 화질이 더 좋을 수 있어요. auto면 AMF 사용 방식에 맡겨요.",
+    "amd_quality_group": "AMF 품질 설정(기본 + FFmpeg)",
+    "amd_quality_quality": "quality -- 화질 우선",
+    "amd_quality_speed": "speed -- 속도 우선",
+    "amd_qvbr_quality_level": "AMF QVBR 품질 단계",
+    "amd_qvbr_quality_level_desc": "'qvbr' 방식에서 목표 화질이에요. 1(가장 낮음)부터 51(가장 높음)까지 고를 수 있고, 0이면 인코더 기본값을 써요. AMF 비트레이트 조절이 'qvbr'일 때만 적용돼요.",
+    "amd_rc": "AMF 비트레이트 조절",
+    "amd_rc_cbr": "cbr -- 고정 비트레이트(HRD를 켰다면 추천)",
+    "amd_rc_cqp": "cqp -- 고정 QP 모드",
+    "amd_rc_desc": "클라이언트가 정한 비트레이트를 넘지 않게 조절하는 방식이에요. 'cqp'는 비트레이트를 맞추기에 알맞지 않고, 'vbr_latency' 말고 다른 방식은 HRD 강제를 켜야 넘침을 잘 막아요.",
+    "amd_rc_group": "AMF 비트레이트 조절 설정(기본 + FFmpeg)",
+    "amd_rc_hqcbr": "hqcbr -- 고화질 고정 비트레이트",
+    "amd_rc_hqvbr": "hqvbr -- 고화질 가변 비트레이트",
+    "amd_rc_qvbr": "qvbr -- 화질 기준 가변 비트레이트(QVBR 품질 단계 사용)",
+    "amd_rc_vbr_latency": "vbr_latency -- 지연 제한 가변 비트레이트(HRD를 껐다면 추천, 기본값)",
+    "amd_rc_vbr_peak": "vbr_peak -- 최고치 제한 가변 비트레이트",
+    "amd_smart_access_video": "AMD SmartAccess Video",
+    "amd_smart_access_video_desc": "드라이버가 지원하면 SmartAccess Video를 켜거나 꺼요. 자동이면 드라이버 기본값을 그대로 써요.",
+    "amd_av1_latency_lowest": "lowest -- 지연 가장 적음(전력 가장 많이 씀)",
+    "amd_av1_tiles": "AMF AV1 타일(실험)",
+    "amd_av1_tiles_desc": "AMF AV1 전용이에요. 0이면 클라이언트·프리셋에 맡기고, 1·2·4면 그 수만큼 화면을 나눠 달라고 요청해요(드라이버가 바꿀 수 있어요). 많이 나눈다고 꼭 빨라지지는 않아요. sunshine.conf에서 바꾸고 다시 접속해 비교해 보세요.",
+    "amd_av1_latency_mode": "AMF AV1 인코딩 지연 모드",
+    "amd_av1_latency_mode_desc": "AV1 인코딩 속도 단계를 골라요. 낮은 단계일수록 화면 한 장을 더 빨리 만들지만 전력을 더 써요. auto면 드라이버 기본값을 써요. AV1 기본 인코더(amdvce_experimental)에만 적용돼요.",
+    "amd_av1_latency_none": "none -- 지연과 전력 균형",
+    "amd_av1_latency_power_saving": "power_saving -- 실시간, 전력 절약",
+    "amd_av1_latency_realtime": "realtime -- 실시간",
+    "amd_av1_screen_content": "AMF AV1 화면 콘텐츠 도구",
+    "amd_av1_screen_content_desc": "켜면 데스크톱처럼 글자·메뉴가 많은 화면이 더 선명하고 효율적으로 인코딩돼요. auto면 드라이버 기본값을 써요. AV1 기본 인코더(amdvce_experimental)에만 적용돼요.",
+    "amd_opt_auto": "auto -- AMF 드라이버 기본값 그대로",
+    "amd_opt_disabled": "꺼짐",
+    "amd_opt_enabled": "켜짐",
+    "amd_usage": "AMF 사용 방식(기본 + FFmpeg)",
+    "amd_usage_desc": "인코딩의 바탕이 되는 설정 묶음을 골라요. 아래 옵션들이 일부를 덮어쓰지만, 여기서만 정해지는 숨은 설정도 있어요.",
+    "amd_usage_lowlatency": "lowlatency - 저지연(가장 빠름)",
+    "amd_usage_lowlatency_high_quality": "lowlatency_high_quality - 저지연, 고화질(빠름)",
+    "amd_usage_transcoding": "transcoding -- 트랜스코딩(가장 느림)",
+    "amd_usage_ultralowlatency": "ultralowlatency - 초저지연(가장 빠름, 기본값)",
+    "amd_usage_webcam": "webcam -- 웹캠(느림)",
+    "amd_vbaq": "AMF VBAQ(적응형 양자화)",
+    "amd_vbaq_desc": "사람 눈은 복잡한 무늬 속 깨짐은 잘 못 알아채요. 켜면 매끈한 부분에 데이터를 더 써서 눈에 보이는 화질이 좋아져요. 기본으로 켜져 있고, auto면 AMF 사용 방식에 맡겨요.",
+    "apply_note": "'적용'을 누르면 Apollide가 다시 시작되며 바뀐 설정이 적용돼요. 지금 연결된 세션은 모두 끊겨요.",
+    "audio_sink": "소리 장치",
+    "audio_sink_capture_only": "고른 소리 장치만 캡처",
+    "audio_sink_capture_only_desc": "켜면 Windows 기본 출력 장치는 바꾸지 않고 고른 소리 장치의 소리만 가져와요. 먼저 Windows에서 원하는 앱 소리를 그 장치로 보내 두세요. 소리 장치를 직접 골라야 하고, 가상 장치 설정이 있으면 그쪽이 먼저예요. 기본은 꺼짐이에요.",
+    "audio_sink_desc_linux": "소리를 가져올 장치 이름이에요. 비워 두면 pulseaudio가 기본 장치를 골라요. 장치 이름은 다음 명령 중 하나로 찾을 수 있어요:",
+    "audio_sink_desc_macos": "소리를 가져올 장치 이름이에요. macOS에서는 시스템 제한 때문에 마이크만 가져올 수 있어요. 컴퓨터 소리를 보내려면 Soundflower나 BlackHole을 쓰세요.",
+    "audio_sink_desc_windows": "소리를 가져올 장치를 직접 골라요. 비워 두면 자동으로 골라 주니 되도록 비워 두세요! 이름이 같은 장치가 여럿이면 다음 명령으로 장치 ID를 알 수 있어요:",
+    "audio_sink_placeholder_macos": "BlackHole 2ch",
+    "audio_sink_placeholder_windows": "스피커(High Definition Audio Device)",
+    "av1_mode": "AV1 지원",
+    "av1_mode_0": "인코더가 지원하면 AV1을 쓸 수 있다고 알려요(추천)",
+    "av1_mode_1": "AV1을 쓸 수 없다고 알려요",
+    "av1_mode_2": "AV1 Main 8비트만 쓸 수 있다고 알려요",
+    "av1_mode_3": "AV1 Main 8비트와 10비트(HDR)를 쓸 수 있다고 알려요",
+    "av1_mode_desc": "클라이언트가 AV1 8비트·10비트 영상을 요청할 수 있게 해요. 소프트웨어 인코딩을 쓸 때는 CPU를 많이 써서 느려질 수 있어요.",
+    "pyrowave": "PyroWave 지원",
+    "pyrowave_desc": "지원하는 클라이언트가 PyroWave 코덱을 쓸 수 있게 해요. 화면 한 장을 1ms도 안 걸려 만들고 끊겨도 바로 회복하지만, 깨끗한 화질에 수백 Mbps가 필요해서 유선 LAN에서만 쓰세요. 중요한 패킷은 'PyroWave 중요 FEC 비율' 설정을 따라요. Vulkan을 지원하는 GPU가 필요해요(Windows는 Direct3D 11 연동, Linux는 RGB DMA-BUF·BGRA 메모리 캡처).",
+    "app_prefer_10bit_sdr_inherit": "기기 설정 따르기",
+    "app_prefer_10bit_sdr_desc": "이 앱에서만 기기 설정 대신 따로 정해요. 켜면 HDR 요청이 와도 SDR로 두고 10비트 HEVC·AV1로 보내고, 끄면 평소처럼 HDR로 보내요. SDR 클라이언트와 H.264는 8비트 그대로예요. HDR을 따로 강제한 설정이 먼저예요. 다음 실행이나 이어하기 때 적용돼요.",
+    "prefer_10bit_sdr": "HDR 대신 10비트 SDR",
+    "prefer_10bit_sdr_label": "이 클라이언트의 HDR 요청을 10비트 SDR로 보내기",
+    "prefer_10bit_sdr_desc": "켜면 이 클라이언트가 HDR을 요청해도 화면은 SDR로 두고 10비트 SDR로 보내요. 모니터·TV를 HDR로 바꾸지 않고도 색 띠(밴딩)가 줄어요. HEVC나 AV1 Main10이 필요하고, H.264는 8비트 그대로예요. SDR을 요청하는 클라이언트는 영향 없어요 — 8비트 디코더를 쓰기 때문에 10비트로 바뀌지 않아요.",
+    "guide_button_key": "홈/가이드 버튼으로 쓸 키",
+    "guide_button_key_desc": "클라이언트 키 코드(1–255 숫자)를 적어요. 0이면 꺼요. 예: Steam Input 조합을 F13에 묶고 124 입력. 이 키는 다른 곳에 전달되지 않고, 누르는 동안 그 클라이언트의 게임패드에서 가이드 버튼이 눌려요. 키보드와 게임패드 입력이 켜져 있어야 해요. 게임패드를 새로 만들지 않고, 연결 전에 누른 키는 뗐다가 다시 눌러야 해요. 새 세션부터 적용되고 클라이언트마다 바꿀 수 있어요.",
+    "guide_button_controller": "홈/가이드를 보낼 게임패드 번호",
+    "guide_button_controller_desc": "그 클라이언트의 게임패드 번호 0–15예요(0이 첫 번째). 다른 클라이언트의 게임패드에는 보내지 않아요. 원래 가이드 버튼과 뒤로/선택 길게 누르기도 그대로 쓸 수 있어요. 그 단축키를 끄려면 아래 시간을 0보다 작게 두세요.",
+    "back_button_timeout": "홈/가이드 버튼 대신 누르기 시간",
+    "back_button_timeout_desc": "뒤로/선택 버튼을 이 시간(밀리초)만큼 누르고 있으면 홈/가이드 버튼을 누른 것으로 처리해요. 0보다 작으면(기본값) 이 기능을 꺼요.",
+    "bind_address": "연결받을 IP 주소",
+    "bind_address_desc": "Apollide가 연결을 받을 IP 주소를 정해요. 비워 두면 이 PC의 모든 주소로 받아요.",
+    "capture": "화면 캡처 방식 직접 고르기",
+    "capture_virtual_warning": "Linux 가상 화면에서는 KMS가 가장 잘 맞아요. 다른 방식도 고를 수 있지만 제대로 안 될 수 있고, Apollide의 저지연 가상 화면 캡처를 쓸 수 없어요. 고른 방식은 그대로 따라요.",
+    "capture_desc": "자동이면 Linux 가상 화면에 KMS를 써서 잘 맞고 지연이 적어요. 실제·가상 화면 모두 다른 방식을 직접 고를 수 있어요. NvFBC는 지원되는 NVIDIA 드라이버가 필요해요.",
+    "capture_auto_wgc": "자동(Windows Graphics Capture)",
+    "capture_wgc_auto": "Windows Graphics Capture(가변)",
+    "wgc_pacing_smoothing": "WGC 프레임 간격 고르게",
+    "wgc_pacing_smoothing_desc": "켜면 캡처한 화면이 들어오는 때에 휘둘리지 않고 스트리밍 박자에 맞춰 일정하게 보내요.",
+    "wgc_direct_encoder_input": "WGC 화면을 인코더로 바로 넘기기",
+    "wgc_direct_encoder_input_desc": "켜면 캡처한 화면을 복사하지 않고 GPU 인코더가 바로 읽어서 화면마다 일이 줄어요. 문제가 생기면 끄세요(예전 방식). PyroWave와 Windows Graphics Capture(고정)는 늘 복사 방식을 써요.",
+    "capture_ddx_legacy": "Desktop Duplication API(예전 방식)",
+    "capture_autodetect_legacy": "자동(예전 방식으로 대체)",
+    "cert": "인증서",
+    "cert_desc": "웹 화면과 Artemide 짝 맺기에 쓰는 인증서예요. 잘 맞으려면 RSA-2048 공개 키여야 해요.",
+    "channels": "최대 동시 접속 클라이언트 수",
+    "channels_desc_1": "한 스트리밍 세션을 여러 클라이언트가 함께 볼 수 있어요.",
+    "channels_desc_2": "일부 하드웨어 인코더는 여러 스트림을 동시에 보내면 느려질 수 있어요.",
+    "coder_cabac": "cabac -- 문맥 적응 산술 코딩 - 화질 더 좋음",
+    "coder_cavlc": "cavlc -- 문맥 적응 가변 길이 코딩 - 디코딩 더 빠름",
+    "configuration": "설정",
+    "controller": "게임패드 입력 켜기",
+    "controller_desc": "켜면 접속한 사람이 게임패드로 이 PC를 조작할 수 있어요.",
+    "credentials_file": "로그인 정보 파일",
+    "credentials_file_desc": "아이디·비밀번호를 Apollide 상태 파일과 따로 저장해요.",
+    "dd_config_ensure_active": "화면 자동으로 켜기",
+    "dd_config_ensure_active_warning": "Windows는 외부 모니터를 클릭하기 전까지 잠금 화면을 띄우지 않아서, 스트리밍 화면이 검게 나올 수 있어요. 그러면 '주 화면으로 설정' 옵션을 대신 쓰세요.",
+    "dd_config_ensure_only_display": "다른 화면은 끄고 고른 화면만 켜기",
+    "dd_config_ensure_primary": "화면을 자동으로 켜고 주 화면으로 설정",
+    "dd_configuration_option": "화면 설정",
+    "dd_config_label": "화면 설정",
+    "dd_config_revert_delay": "설정 되돌리기 전 기다리는 시간",
+    "dd_config_revert_delay_desc": "앱을 닫거나 마지막 세션이 끝난 뒤 화면 설정을 되돌리기 전에 더 기다리는 시간(밀리초)이에요. 앱을 빠르게 바꿀 때 화면이 덜 깜빡여요.",
+    "dd_remove_virtual_display_after_restore": "모두 되돌린 뒤 가상 화면 없애기",
+    "dd_remove_virtual_display_after_restore_desc": "켜면 게임이 닫히고 마지막 스트리밍이 끝나 실제 화면이 원래대로 돌아온 뒤 가상 화면을 없애요. 기본은 꺼짐이라 가상 화면을 같은 모습으로 유지해요. 일시 정지한 세션이나 복원이 확인되지 않으면 가상 화면을 남겨 둬요.",
+    "dd_config_revert_on_disconnect": "연결이 끊기면 설정 되돌리기",
+    "dd_config_revert_on_disconnect_desc": "켜면 앱이 닫힐 때가 아니라 모든 클라이언트 연결이 끊길 때 화면 설정을 되돌려요.",
+    "dd_paused_virtual_display_timeout_secs": "일시 정지 중 가상 화면 유지 시간(초)",
+    "dd_paused_virtual_display_timeout_secs_desc": "세션을 일시 정지했을 때(연결이 끊기면 되돌리기가 꺼진 경우) 가상 화면을 없애기 전 기다리는 시간이에요. 0이면 이어하거나 앱을 끌 때까지 가상 화면을 남겨 둬요.",
+    "dd_paused_virtual_display_timeout_secs_warning": "게임이 켜져 있는 동안 가상 화면을 없애면 어떤 방법(시간 초과·단축키·직접 복원)이든 게임이 튕길 수 있어요. 이 옵션은 오래 쉬었다 돌아왔을 때 멈춘 가상 화면에 갇히는 일을 막아 줘요.",
+    "dd_paused_virtual_display_timeout_secs_hotkey_hint": "다른 방법: 필요할 때 복원 단축키를 누르면 바로 끝내고 화면을 원래대로 돌려요.",
+    "dd_virtual_display_scale": "가상 화면 배율",
+    "dd_virtual_display_scale_desc": "'지금 배율 유지'(기본값)면 지금 배율을 다음 스트리밍에도 그대로 써요. Windows에서는 가상 화면에 접속한 뒤 설정 > 시스템 > 디스플레이에서 배율을 바꾸세요. Apollide에서 퍼센트나 '추천(해상도 기준)'을 고를 수도 있고, 클라이언트 해상도는 바뀌지 않아요.",
+    "virtual_display_outputs": "Linux 전용 화면 커넥터",
+    "virtual_display_outputs_desc": "개인 스트리밍용으로 따로 남겨 둘 DRM 커넥터 이름을 쉼표로 나눠 적어요. 비워 두면 자동 관리 목록을 써요(새로 만들면 8개, 업데이트하면 4개 유지). Linux 6.16 이상에서는 함께 든 vibeshine_drm 모듈로 HDR10·10비트 출력을 쓸 수 있어요. HDR은 KMS 캡처를 쓰고, SDR은 KWin을 추천해요. 이 드라이버가 없으면 가상 화면을 만들 수 없어요.",
+    "virtual_display_max_clients": "가상 화면 클라이언트 수 제한",
+    "virtual_display_max_clients_desc": "가상 화면을 가질 수 있는 짝 맺은 클라이언트 수예요(1~8, 기본 4). 일반 스트리밍과 원격 모니터가 함께 써요. Linux에서는 준비된 전용 출력 수만큼만 돼요. 줄여도 이미 있는 가상 화면은 주인이 놓을 때까지 남아요.",
+    "remote_monitor_mute_audio": "원격 모니터 소리 끄기",
+    "remote_monitor_mute_audio_desc": "켜면 원격 모니터 클라이언트에 화면과 입력만 보내고 게임·데스크톱 소리는 보내지 않아요.",
+    "remote_monitor_disconnect_on_stream_end": "스트리밍이 끝나면 원격 모니터 없애기",
+    "remote_monitor_disconnect_on_stream_end_desc": "켜면 RTSP 스트리밍이 끝날 때 그 클라이언트의 전용 모니터를 없애요. 꺼 두면 나중에 이어할 수 있게 남겨 둬요.",
+    "remote_monitor_disconnect_on_client_disconnect": "클라이언트 연결을 끊으면 원격 모니터 없애기",
+    "remote_monitor_disconnect_on_client_disconnect_desc": "켜면 짝 맺은 클라이언트가 직접 연결을 끊을 때 전용 모니터를 없애요. 이어하기용으로 남겨 둔 것도 없어져요.",
+    "remote_monitor_terminate_on_first_request": "첫 요청에 바로 종료",
+    "remote_monitor_terminate_on_first_request_desc": "켜면 추가로 접속한 클라이언트가 종료를 한 번만 눌러도 실행 중인 게임을 끌 수 있어요.",
+    "remote_monitor_confirm_app_replacement": "실행 중인 앱을 바꾸기 전에 확인",
+    "remote_monitor_confirm_app_replacement_desc": "켜면 실행 중인 앱을 바꾸려는 첫 요청을 막고, 60초 동안 이어하기 가능으로 보여서 Artemide가 '앱 닫기' 경고를 띄울 수 있어요. 원격 입력·원격 모니터는 경고 없이 붙어요. 끄면 바로 앱을 바꿔요.",
+    "dd_snapshot_exclude_title": "스냅샷에서 뺄 장치",
+    "dd_snapshot_exclude_desc": "고른 장치(예: 더미 플러그)를 화면 스냅샷에서 빼요. 가상 화면과 더미 플러그를 함께 쓸 때 복원 시 더미 플러그를 건너뛰게 해요.",
+    "dd_snapshot_exclude_placeholder": "뺄 장치 고르기(예: 더미 플러그)",
+    "dd_snapshot_exclude_warning": "적어도 화면 하나는 남겨 두세요.",
+    "dd_always_restore_from_golden": "항상 스냅샷으로 복원",
+    "dd_always_restore_from_golden_desc": "켜면 Apollide가 데스크톱을 되돌릴 때 저장해 둔 복구 스냅샷을 먼저 써요. 스냅샷이 없거나 실패하면 세션 스냅샷으로 대신해요. 복구 스냅샷이 있으면 켜 두길 추천해요.",
+    "dd_display_helper_engine": "화면 복원 엔진",
+    "dd_display_helper_engine_desc": "화면 설정을 바꾸고 되돌리는 엔진이에요. 자동이면 미리보기 버전에서만 새 엔진을 쓰고, 정식 버전은 직접 고르지 않는 한 검증된 예전 엔진을 써요.",
+    "dd_display_helper_engine_auto": "자동(미리보기 버전에서 새 엔진)",
+    "dd_display_helper_engine_v2": "새 엔진(v2)",
+    "dd_display_helper_engine_legacy": "예전 엔진",
+    "golden_layout_upgrade_title": "화면 스냅샷을 새로 만들어야 해요",
+    "golden_layout_upgrade_desc": "저장된 스냅샷이 화면 배치 기능보다 예전에 만들어졌어요. 다시 만들어야 세로·가로 모니터 배치가 제대로 돌아와요.",
+    "golden_layout_upgrade_action": "화면 설정 열기",
+    "golden_snapshot_outdated_title": "화면 스냅샷이 오래됐을 수 있어요",
+    "golden_snapshot_outdated_desc": "며칠째 화면 복원이 제대로 끝나지 않았어요. 저장된 스냅샷이 오래됐을 수 있어요. PC로 돌아왔을 때 모니터가 원래대로 안 돌아왔다면 스냅샷을 다시 만드세요. 괜찮았다면 무시해도 돼요.",
+    "golden_snapshot_outdated_action": "화면 설정 열기",
+    "end_stream_hotkey": "모든 스트리밍 끝내기 단축키",
+    "end_stream_hotkey_desc": "호스트(Windows)에서 쓰는 단축키예요. 영문자·숫자·F1-F24 중 하나를 적어요(예: Q). 누르면 모든 스트리밍과 실행 중인 앱을 끝내고 실제 화면을 원래대로 돌려요. 비워 두면 꺼져요. 로그인한 데스크톱에서만 되고, 잠금 화면·UAC 창에서는 안 돼요.",
+    "end_stream_hotkey_modifiers": "끝내기 단축키 보조 키",
+    "end_stream_hotkey_modifiers_desc": "끝내기 단축키와 함께 누를 보조 키예요(예: ctrl+alt+shift). 복원 단축키와 다른 조합으로 고르세요.",
+    "dd_snapshot_restore_hotkey": "스냅샷 복원 단축키",
+    "dd_snapshot_restore_hotkey_desc": "Windows 전용 단축키예요. Apollide가 멈추거나 일시 정지됐을 때 가상 화면을 끄고 스냅샷으로 되돌려요. 칸을 누른 뒤 원하는 키 조합을 누르세요.",
+    "dd_snapshot_restore_hotkey_capture": "기다리는 중... 지금 키 조합을 누르세요.",
+    "dd_snapshot_restore_hotkey_reset": "단축키 지우기",
+    "dd_snapshot_restore_hotkey_invalid": "쓸 수 없는 키예요. F1-F24, 영문자, 숫자를 쓰세요.",
+    "dd_snapshot_restore_hotkey_modifiers": "복원 단축키 보조 키",
+    "dd_snapshot_restore_hotkey_modifiers_desc": "복원 단축키와 함께 누를 보조 키예요(예: ctrl+alt+shift, ctrl|shift, win, none). 쓸 수 있는 값: ctrl/control, alt, shift, win/windows/meta, none/off/disabled.",
+    "dd_config_verify_only": "화면이 켜져 있는지만 확인(기본값)",
+    "dd_hdr_option": "HDR",
+    "dd_hdr_option_auto": "클라이언트 요청에 맞춰 HDR 켜기/끄기(기본값)",
+    "dd_hdr_option_disabled": "HDR 설정 바꾸지 않기",
+    "dd_wa_virtual_double_refresh": "가상 화면 주사율 두 배",
+    "dd_wa_virtual_double_refresh_desc": "가상 화면을 목표 주사율의 2배로 만들어 이유 없이 FPS가 떨어지는 일을 막아요. 특정 게임이나 모니터에서 문제가 없다면 켜 두세요. 주사율을 직접 정하면 두 배로 하지 않아요.",
+    "dd_wa_dummy_plug_hdr10": "더미 플러그 HDR 10비트 보정",
+    "dd_wa_dummy_plug_hdr10_desc": "더미 플러그를 30 Hz로 고정하고 VSYNC 설정을 유지해 HDR10이 인식되게 해요. 실제 더미 플러그를 쓸 때만 켜세요. 게임을 실행할 때만 적용돼요(데스크톱 스트리밍은 평소 주사율 그대로).",
+    "dd_wa_dummy_plug_hdr10_link": "더미 플러그 설정 안내",
+    "dd_display_overrides": "화면 직접 설정",
+    "dd_manual_refresh_rate": "주사율 직접 정하기",
+    "dd_manual_resolution": "해상도 직접 정하기",
+    "dd_mode_remapping": "화면 모드 바꿔 적용",
+    "dd_mode_remapping_add": "바꿔 적용할 항목 추가",
+    "dd_mode_remapping_desc_1": "요청한 해상도나 주사율을 다른 값으로 바꿔 적용하고 싶을 때 항목을 추가해요.",
+    "dd_mode_remapping_desc_2": "위에서부터 차례로 보고 처음 맞는 항목을 써요.",
+    "dd_mode_remapping_desc_3": "'요청' 칸을 비워 두면 어떤 값이든 맞는 것으로 봐요.",
+    "dd_mode_remapping_desc_example": "예: 호스트 화면은 3840×2160 그대로 두고 클라이언트에는 1920×1080으로 보내기.",
+    "dd_mode_remapping_desc_4_final_values_mixed": "'최종' 칸을 하나 이상 채워야 해요. 비워 둔 해상도나 주사율은 바뀌지 않아요.",
+    "dd_mode_remapping_desc_4_final_values_non_mixed": "'최종' 칸은 꼭 채워야 해요.",
+    "dd_mode_remapping_final_refresh_rate": "최종 주사율",
+    "dd_mode_remapping_final_resolution": "최종 해상도",
+    "dd_mode_remapping_requested_fps": "요청 FPS",
+    "dd_mode_remapping_requested_resolution": "요청 해상도",
+    "dd_options_header": "고급 화면 장치 옵션",
+    "dd_display_setup_title": "화면 준비(스트리밍 전)",
+    "dd_display_setup_intro": "캡처할 화면과, 스트리밍 직전에 Apollide가 Windows를 어떻게 준비할지 골라요(모니터 켜기, 주 화면 바꾸기, 해상도·주사율, HDR).",
+    "dd_automation_label": "화면 자동 맞춤",
+    "dd_automation_desc": "켜면 스트리밍 전에 호스트 화면을 클라이언트가 요청한 해상도·주사율로 자동으로 맞춰요.",
+    "dd_step_1": "1단계",
+    "dd_step_2": "2단계",
+    "dd_step_3": "3단계",
+    "dd_choose_display": "화면 고르기",
+    "dd_virtual_display_choice_virtual": "가상 화면 쓰기",
+    "dd_virtual_display_choice_physical": "내 모니터 쓰기",
+    "virtual_display_mode_disabled": "실제 모니터 쓰기",
+    "virtual_display_mode_per_client": "가상 화면(클라이언트마다) — 추천",
+    "virtual_display_mode_shared": "함께 쓰는 가상 화면",
+    "virtual_display_mode_label": "가상 화면 모드",
+    "virtual_display_mode_step_hint": "Apollide가 준비할 화면을 골라요: 실제 모니터 그대로, 클라이언트마다 가상 화면 만들기, 함께 쓰는 가상 화면 다시 쓰기. 가상 화면을 추천해요 — 실제 모니터의 해상도·주사율에 묶이지 않고, 4× 주사율 + WGC 캡처로 프레임 생성 게임도 깔끔하게 담아요.",
+    "physical_display_framegen_warning": "실제 모니터로는 DLSS/FSR이 만든 프레임을 캡처할 수 없어요. 실제 모니터에서 프레임 제한과 프레임 생성을 함께 쓰면 지연이 50 ms 넘게 늘 수 있고, 프레임 간격이 안 맞으면 화면이 미세하게 끊길 수 있어요. 지연이 적고 부드럽게 하려면 가상 화면을 쓰세요.",
+    "dd_use_sunshine_virtual_display_driver": "Apollide 화면 드라이버 쓰기",
+    "dd_use_sunshine_virtual_display_driver_desc": "Apollide에 든 가상 화면 드라이버를 써요. SudoVDA로 돌아가고 싶을 때만 끄세요.",
+    "virtual_display_driver_label": "가상 화면 드라이버",
+    "virtual_display_driver_desc": "가상 화면에는 Apollide 화면 드라이버를 추천해요. 예전 드라이버가 꼭 필요할 때만 SudoVDA(예전)를 고르세요 — 둘 다 설치돼 있어 언제든 다시 바꿀 수 있어요.",
+    "virtual_display_driver_vibeshine_option": "Apollide 화면 드라이버(추천, 기본값)",
+    "virtual_display_driver_sudovda_option": "SudoVDA(예전)",
+    "vulkan_hdr_layer": "가상 화면용 Vulkan HDR 레이어",
+    "vulkan_hdr_layer_desc": "켜면 가상 화면에서 Vulkan 게임이 HDR을 쓸 수 있어요. 드라이버 설치 뒤 Vulkan 게임·앱이 튕기면 끄세요.",
+    "wayland_hdr_compatibility": "KDE Wayland HDR 호환",
+    "wayland_hdr_compatibility_desc": "켜면 KDE Plasma Wayland에서 실행한 게임에 지금 스트리밍이 HDR인지 알려 줘요. HDR을 강제하거나 SDR 결과를 바꾸지는 않아요.",
+    "virtual_display_hdr_tip": "HDR 팁: 스트리밍하면서 Windows HDR Calibration을 실행해 프로필을 저장하세요. 그다음 클라이언트 탭에서 그 클라이언트의 'HDR 색 프로필'을 눌러 저장한 프로필을 고르세요.",
+    "virtual_display_scale_label": "가상 화면 배율",
+    "virtual_display_scale_desc": "'지금 배율 유지'(기본값)면 지금 배율을 다음 스트리밍에도 그대로 써요. Windows에서는 가상 화면에 접속한 뒤 설정 > 시스템 > 디스플레이에서 배율을 바꾸세요. Apollide에서 퍼센트나 '추천(해상도 기준)'을 고를 수도 있고, 클라이언트 해상도는 바뀌지 않아요.",
+    "virtual_display_scale_recommended": "추천(해상도 기준)",
+    "virtual_display_scale_auto": "지금 배율 유지(기본값)",
+    "virtual_display_shared_hdr_warning": "함께 쓰는 가상 화면은 HDR에 맞지 않아요. 먼저 접속한 세션이 HDR 밝기·보정 프로필·배율을 정해서, 나중에 온 클라이언트는 자기 값을 쓸 수 없어요. HDR 보정을 제대로 쓰려면 클라이언트마다 가상 화면을 쓰세요.",
+    "virtual_display_layout_label": "가상 화면 배치",
+    "virtual_display_layout_hint": "가상 화면을 켰을 때 어디에 두고 얼마나 앞세울지 골라요.",
+    "virtual_display_toggle_label": "실제 모니터 / 가상 화면 직접 고르기",
+    "virtual_display_toggle_hint": "이 앱에서만 쓸 화면을 따로 정해요: Apollide 가상 화면이나 특정 실제 모니터. 체크하지 않으면 전체·클라이언트 설정을 따라요.",
+    "remote_monitor_display_title": "원격 모니터 화면 규칙",
+    "remote_monitor_display_description": "원격 모니터는 짝 맺은 클라이언트마다 전용 가상 화면을 하나씩 써요. 위치와 주 화면 여부는 기기 → 클라이언트 화면 배치에서 정해요.",
+    "remote_monitor_display_limits": "함께 쓰는 화면·실제 모니터 캡처와 원격 모니터 프로필 중복은 지원하지 않아요. 일반 앱 화면 설정은 이 모니터를 고르지 않아요. 실행 중 설정 덮어쓰기는 그대로 쓸 수 있어요.",
+    "remote_monitor_display_layout_action": "화면 배치 열기",
+    "app_display_override_label": "앱마다 화면 따로 정하기",
+    "client_display_override_label": "클라이언트마다 화면 따로 정하기",
+    "client_display_override_hint": "이 클라이언트에서만 화면 고르는 방식을 따로 정해요. 체크하지 않으면 전체 화면 설정을 따라요.",
+    "app_display_override_hint": "이 앱을 전체 기본값 대신 Apollide 가상 화면에서 실행할지, 특정 실제 모니터에서 실행할지 골라요.",
+    "app_display_override_virtual": "Apollide 가상 화면 쓰기",
+    "app_display_override_physical": "실제 모니터 쓰기",
+    "app_display_physical_label": "실제 모니터 고르기",
+    "app_display_physical_hint": "이 앱을 실행할 때 쓸 모니터를 골라요. 더미 플러그는 꺼져 있어도 여기에 보여요.",
+    "app_display_physical_placeholder": "화면 고르기",
+    "app_display_physical_status_hint": "선택을 지우면 이 앱도 전체 화면 설정을 따라요.",
+    "app_display_status_active": "켜짐",
+    "app_display_status_inactive": "꺼짐",
+    "virtual_display_layout_exclusive": "가상 화면만",
+    "virtual_display_layout_exclusive_desc": "다른 모니터는 모두 끄고 Apollide 가상 화면만 남겨요.",
+    "virtual_display_layout_extended": "확장",
+    "virtual_display_layout_extended_desc": "실제 모니터는 그대로 두고 가상 화면을 하나 더 붙여요.",
+    "virtual_display_layout_extended_primary": "확장 + 주 화면",
+    "virtual_display_layout_extended_primary_desc": "화면을 확장하고 가상 화면을 주 화면(작업 표시줄·로그인 등)으로 정해요.",
+    "virtual_display_layout_extended_isolated": "확장 + 떨어뜨리기",
+    "virtual_display_layout_extended_isolated_desc": "화면을 확장하되 가상 화면을 멀리 떨어뜨려 마우스가 넘어가지 않게 해요.",
+    "virtual_display_layout_extended_primary_isolated": "확장 + 주 화면(떨어뜨리기)",
+    "virtual_display_layout_extended_primary_isolated_desc": "가상 화면을 주 화면으로 정하고, 실제 모니터에서 마우스가 넘어가지 않게 멀리 떨어뜨려요.",
+    "virtual_display_driver_sudovda_name": "SudoVDA",
+    "virtual_display_driver_vibeshine_name": "Apollide",
+    "virtual_display_status_sudovda_ready": "SudoVDA 드라이버 준비됨",
+    "virtual_display_status_vibeshine_ready": "Apollide 드라이버 준비됨",
+    "virtual_display_status_driver_state": "{driver} 드라이버: {status}",
+    "virtual_display_status_hint_sudovda": "되돌림용 SudoVDA 드라이버를 쓰고 있어요. 오류가 뜨면 스트리밍 전에 Apollide를 다시 설치하거나 드라이버를 고치세요.",
+    "virtual_display_status_hint_vibeshine": "기본 가상 화면 드라이버인 Apollide 화면 드라이버를 쓰고 있어요. 오류가 뜨면 스트리밍 전에 SudoVDA로 바꾸거나 드라이버를 고치세요.",
+    "app_virtual_display_mode_label": "앱 화면 설정",
+    "app_virtual_display_mode_hint": "이 앱이 Apollide 가상 화면에서 실행될 때 클라이언트마다 따로 쓸지, 함께 쓸지 고르고 아래에서 배치를 정해요. 초기화하면 전체 화면 설정을 따라요.",
+    "app_virtual_display_mode_follow_global": "전체 화면 설정을 따르는 중이에요.",
+    "app_virtual_display_mode_reset": "전체 화면 설정으로 되돌리기",
+    "app_virtual_display_layout_action_hint": "배치를 고르면 이 게임에서 화면 설정이 켜져요. 전체 화면 설정은 그대로예요.",
+    "app_virtual_display_layout_blocked": "화면 설정이 꺼져 있거나 '확인만'으로 되어 있어요. 고른 확장 배치(주 화면·떨어뜨리기 포함)는 적용되지 않아요.",
+    "app_virtual_display_layout_enable": "이 게임에 이 배치 적용",
+    "app_virtual_display_layout_reset": "전체 배치로 되돌리기",
+    "app_virtual_display_layout_follow_global": "전체 가상 화면 배치를 따르는 중이에요.",
+    "virtual_display_driver_status_unknown": "알 수 없음",
+    "virtual_display_driver_status_ready": "준비됨",
+    "virtual_display_driver_status_uninitialized": "준비 안 됨",
+    "virtual_display_driver_status_version_incompatible": "드라이버 버전이 안 맞음",
+    "virtual_display_driver_status_watchdog_failed": "감시 기능 오류",
+    "dd_pre_stream_setup": "스트리밍 전 준비",
+    "dd_pre_stream_intro": "스트리밍을 시작할 때 Apollide가 이 설정을 자동으로 적용해요. 화면을 켜고 주 화면으로 정하고, 원하면 해상도·주사율·HDR도 맞춰요.",
+    "dd_config_hint": "스트리밍 전에 Apollide가 화면을 어떻게 준비할지 골라요.",
+    "dd_activate_virtual_display": "Apollide 가상 화면 자동으로 켜기",
+    "dd_activate_virtual_display_desc": "켜면 스트리밍을 시작하는 동안 가상 모니터를 켜고 잠시 그 화면만 켜 둬요(Apollide 가상 화면 드라이버를 쓸 때).",
+    "dd_optional_adjustments": "추가로 맞출 것(선택)",
+    "dd_advanced_remapping_title": "고급: 화면 모드 바꿔 적용",
+    "dd_refresh_rate_option": "주사율",
+    "dd_refresh_rate_option_auto": "클라이언트가 보낸 FPS 쓰기(기본값)",
+    "dd_refresh_rate_option_disabled": "주사율 바꾸지 않기",
+    "dd_refresh_rate_option_manual": "직접 적은 주사율 쓰기",
+    "dd_resolution_option": "해상도",
+    "dd_resolution_option_auto": "클라이언트가 보낸 해상도 쓰기(기본값)",
+    "dd_resolution_option_disabled": "해상도 바꾸지 않기",
+    "dd_resolution_option_manual": "직접 적은 해상도 쓰기",
+    "dd_resolution_option_manual_desc": "바꿔 적용 규칙 대신 직접 적은 해상도를 써요. 아무것도 실행 중이 아닐 때 새로 앱을 켜면 클라이언트 → 앱 → 전체 설정 순서로 먼저 정해진 값을 써요. 이미 진행 중인 세션에 끼거나 일시 정지한 앱에 다시 접속하면 호스트의 지금 설정이 그대로일 수 있어요. 클라이언트의 화면 모드 설정과 실행 해상도 배율이 이 값보다 먼저예요.",
+    "dd_refresh_rate_option_manual_desc": "바꿔 적용 규칙과 가상 화면 자동 주사율 대신 직접 적은 주사율을 써요. 아무것도 실행 중이 아닐 때 새로 앱을 켜면 클라이언트 → 앱 → 전체 설정 순서로 먼저 정해진 값을 써요. 이미 진행 중인 세션에 끼거나 일시 정지한 앱에 다시 접속하면 호스트의 지금 설정이 그대로일 수 있어요. 클라이언트의 화면 모드 설정이 이 값보다 먼저예요.",
+    "dd_wa_hdr_toggle_delay_desc_1": "가상 화면으로 스트리밍하면 HDR 색이 이상하게 나올 수 있어요. 이때 Apollide가 HDR을 껐다 켜서 고쳐 볼 수 있어요.",
+    "dd_wa_hdr_toggle_delay_desc_2": "0이면 이 기능을 꺼요(기본값). 0~3000밀리초 사이 값을 넣으면 HDR을 끄고 그만큼 기다렸다가 다시 켜요. 보통 500밀리초쯤이 좋아요.",
+    "dd_wa_hdr_toggle_delay_desc_3": "스트리밍 시작이 그만큼 늦어지니, HDR에 정말 문제가 있을 때만 쓰세요!",
+    "dd_wa_hdr_toggle_delay": "HDR 색 문제 보정",
+    "dd_wa_hdr_toggle": "HDR 색 문제 보정",
+    "dd_wa_hdr_toggle_desc": "가상 화면에서 HDR 색이 이상하게 나올 때, 켜면 HDR을 껐다 켜서 고쳐 봐요. HDR 색 문제가 보일 때만 켜세요.",
+    "ds4_back_as_touchpad_click": "뒤로/선택을 터치패드 클릭으로",
+    "ds4_back_as_touchpad_click_desc": "DS4 흉내 내기를 강제할 때 뒤로/선택 버튼을 터치패드 클릭으로 바꿔요.",
+    "ds5_inputtino_randomize_mac": "가상 게임패드 MAC 무작위로",
+    "ds5_inputtino_randomize_mac_desc": "켜면 게임패드마다 무작위 MAC을 줘요. 클라이언트에서 게임패드 순서를 바꿔도 서로의 설정이 섞이지 않아요.",
+    "encoder": "인코더 직접 고르기",
+    "encoder_desc": "인코더를 직접 골라요. 고르지 않으면 Apollide가 가장 좋은 것을 골라요. Windows에서 하드웨어 인코더를 고를 때는 모니터가 연결된 GPU의 것이어야 해요.",
+    "encoder_software": "소프트웨어",
+    "external_ip": "외부 IP",
+    "external_ip_desc": "비워 두면 Apollide가 외부 IP를 자동으로 알아내요.",
+    "csrf_allowed_origins": "CSRF 허용 주소",
+    "csrf_allowed_origins_desc": "CSRF 보호에서 추가로 허용할 주소를 쉼표로 나눠 적어요. 믿을 수 있는 주소만, 프로토콜과 호스트까지 적으세요(예: https://example.com).",
+    "fec_percentage": "FEC 비율",
+    "fec_percentage_desc": "화면마다 덧붙이는 오류 복구 데이터의 비율이에요. 높이면 네트워크가 불안해도 화면이 덜 깨지지만 데이터를 더 써요. PyroWave는 늘 FEC 없이 보내요.",
+    "frame_limiter_fps_limit": "프레임 제한 FPS",
+    "frame_limiter_fps_limit_desc": "프레임 제한에 쓸 FPS예요. MangoHUD·RTSS는 소수점 셋째 자리까지 되고, NVIDIA 제어판은 반올림해요. 0이면 스트리밍이 요청한 FPS를 써요.",
+    "mangohud_limiter_method": "MangoHUD 제한 시점",
+    "mangohud_limiter_method_desc": "Early는 더 고르게 보이지만 지연이 늘어요. Late는 지연이 적지만 프레임 생성 화면은 제한하지 못해요. Proton 제한은 프레임 생성도 지원해요.",
+    "mangohud_preset": "MangoHud 표시 항목·배치",
+    "mangohud_preset_desc": "MangoHud 기본 표시 묶음 중 하나를 고르거나, 내 MangoHud 설정의 항목을 그대로 써요.",
+    "mangohud_always_show_graph": "MangoHud 프레임 시간 그래프 늘 보이기",
+    "mangohud_always_show_graph_desc": "켜면 스트리밍 중 실행한 게임(외부 Proton 게임 포함)에 MangoHud 화면과 실시간 프레임 시간 그래프를 늘 띄워요.",
+    "frame_limiter_auto_virtual_framegen": "캡처 타이밍(가상 화면 주사율)",
+    "frame_limiter_auto_virtual_framegen_desc": "가상 화면이 얼마나 빨리 바뀔지 정해요. 빠를수록 게임 화면을 그리자마자 담아서 기기에 고르게 도착해요. 자동은 VRR 클라이언트면 1000 Hz, 아니면 스트리밍 FPS의 4배예요. VRR은 늘 1000 Hz, 호환은 2배, 끄기는 스트리밍 FPS 그대로이고 게임 자동 제한도 꺼요.",
+    "rtss_allow_virtual_display_override": "가상 화면에서 Reflex 외 RTSS 모드 허용",
+    "rtss_allow_virtual_display_override_desc": "가상 화면에서는 보통 NVIDIA Reflex를 강제로 써요. 그러지 않으면 DLSS 프레임 생성 때 지연이 크게 늘 수 있거든요. 고른 RTSS 모드를 가상 화면에도 꼭 쓰고 싶을 때만 켜세요.",
+    "ffmpeg_auto": "auto -- ffmpeg에 맡기기(기본값)",
+    "file_apps": "앱 목록 파일",
+    "file_apps_desc": "Apollide의 앱 목록을 저장하는 파일이에요.",
+    "file_state": "상태 파일",
+    "file_state_desc": "Apollide의 현재 상태를 저장하는 파일이에요.",
+    "gamepad": "가상 게임패드 종류",
+    "gamepad_auto": "자동 선택 옵션",
+    "gamepad_desc": "호스트에서 어떤 게임패드로 보일지 골라요. 'Apollide 가상 게임패드'는 ViGEmBus 대신 Apollide 자체 드라이버를 써요. 자동이면 PlayStation 클라이언트에는 DualSense, 나머지는 Xbox Series로 보여요. XInput만 지원하는 게임은 Xbox Series·Xbox One만 알아봐요. DualShock 4·DualSense는 터치패드·모션·배터리·라이트바, DualSense는 적응형 트리거까지 돼요. '파형 진동 DualSense'는 접속 방식과 상관없이 Windows 게임에 USB DualSense와 그 오디오 장치로 보여요. 설치 때 DualSense USB 오디오·진동 구성 요소를 넣어야 하고, 파형 진동을 지원하는 Artemide 같은 클라이언트가 필요해요.",
+    "gamepad_desc_linux": "Linux에서 UHID로 보여 줄 가상 게임패드를 골라요. 자동이면 클라이언트가 알린 종류를 따라요. DS4를 고르면 진동·터치패드·모션·배터리·라이트바를 지원하는 DualShock 4로 고정해요.",
+    "gamepad_ds4": "DS4 (PS4)",
+    "gamepad_ds4_manual": "DS4 선택 옵션",
+    "gamepad_ds5": "DS5 (PS5)",
+    "gamepad_ds5_manual": "DS5 선택 옵션",
+    "gamepad_switch": "닌텐도 프로 컨트롤러(Switch)",
+    "gamepad_manual": "DS4 직접 설정",
+    "gamepad_x360": "X360 (Xbox 360)",
+    "gamepad_vhf": "Apollide 가상 게임패드(자동)",
+    "gamepad_vhf_xbox": "Apollide 가상 게임패드(Xbox Series)",
+    "gamepad_vhf_xbox_one": "Apollide 가상 게임패드(Xbox One)",
+    "gamepad_vhf_ds4": "Apollide 가상 게임패드(DualShock 4)",
+    "gamepad_vhf_ds5": "Apollide 가상 게임패드(DualSense)",
+    "gamepad_usbip_ds5": "DualSense (파형 진동 지원)",
+    "gamepad_vhf_switch": "Apollide 가상 게임패드 (Switch Pro)",
+    "gamepad_xone": "XOne (Xbox One)",
+    "vigem_missing_title": "가상 게임패드 드라이버(ViGEm)가 설치되어 있지 않아요",
+    "vigem_missing_desc": "Windows에서 게임패드를 쓰려면 ViGEmBus 드라이버가 필요해요. 이제 함께 설치되지 않으니 직접 내려받아 설치해 주세요:",
+    "vigem_install": "ViGEmBus 내려받기",
+    "vigem_detected_version": "감지됨",
+    "crash_dump_title": "최근에 프로그램이 멈춘 적이 있어요",
+    "crash_dump_desc": "지난 일주일 안에 Apollide가 비정상 종료된 기록을 찾았어요. 문제를 알릴 때 오류 묶음을 내보내 함께 첨부해 주세요.",
+    "crash_dump_export": "오류 묶음 내보내기",
+    "crash_dump_export_preparing": "오류 묶음 준비 중...",
+    "crash_dump_export_error": "오류 묶음을 내보내지 못했어요.",
+    "crash_dump_report": "문제 알리기",
+    "crash_dump_dismiss": "닫기",
+    "crash_dump_dismiss_success": "오류 알림을 닫았어요.",
+    "crash_dump_dismiss_error": "오류 알림을 닫지 못했어요.",
+    "global_prep_cmd": "실행 전후 명령",
+    "global_prep_cmd_desc": "어떤 앱이든 실행하기 전이나 끝난 뒤에 돌릴 명령을 정해요. 이 중 하나라도 실패하면 앱이 실행되지 않아요.",
+    "global_state_cmd": "상태 변경 명령",
+    "global_state_cmd_desc": "앱의 상태가 바뀔 때마다 돌릴 명령을 정해요. 앱마다 정한 상태 명령과 함께 실행돼요.",
+    "hevc_mode": "HEVC 지원",
+    "hevc_mode_0": "인코더가 지원하면 HEVC를 쓸 수 있다고 알려요 (추천)",
+    "hevc_mode_1": "HEVC를 쓰지 않아요",
+    "hevc_mode_2": "HEVC Main 프로필만 쓸 수 있다고 알려요",
+    "hevc_mode_3": "HEVC Main과 Main10(HDR) 프로필을 쓸 수 있다고 알려요",
+    "hevc_mode_desc": "클라이언트가 HEVC 영상을 요청할 수 있게 해요. 소프트웨어 인코딩을 쓰면 CPU 부담이 커져 느려질 수 있어요.",
+    "high_resolution_scrolling": "고해상도 스크롤 지원",
+    "high_resolution_scrolling_desc": "켜면 Artemide의 세밀한 스크롤 움직임을 그대로 전달해요. 오래된 앱에서 스크롤이 너무 빠르면 꺼 보세요.",
+    "install_steam_audio_drivers": "Steam 오디오 드라이버 설치",
+    "install_steam_audio_drivers_desc": "Steam이 설치되어 있으면 Steam Streaming Speakers 드라이버를 자동으로 설치해요. 5.1/7.1 서라운드와 호스트 소리 끄기를 쓸 수 있어요.",
+    "key_repeat_delay": "키 반복 시작 시간",
+    "key_repeat_delay_desc": "키를 누르고 있을 때 반복 입력이 시작되기까지 기다리는 시간(ms)이에요. 줄이면 더 빨리 반복돼요.",
+    "key_repeat_frequency": "키 반복 속도",
+    "key_repeat_frequency_desc": "키를 누르고 있을 때 1초에 몇 번 반복할지 정해요. 소수점도 쓸 수 있어요.",
+    "key_rightalt_to_key_win": "오른쪽 Alt 키를 Windows 키로 쓰기",
+    "key_rightalt_to_key_win_desc": "Artemide에서 Windows 키가 바로 전달되지 않을 때 켜면, 오른쪽 Alt 키를 Windows 키로 받아들여요.",
+    "keybindings": "키 설정",
+    "keyboard": "키보드 입력 켜기",
+    "keyboard_desc": "접속한 사람이 키보드로 이 PC를 조작할 수 있게 해요",
+    "lan_encryption_mode": "LAN 암호화",
+    "lan_encryption_mode_1": "지원하는 클라이언트만 켜짐",
+    "lan_encryption_mode_2": "모든 클라이언트에 필수",
+    "lan_encryption_mode_desc": "집 안 네트워크로 스트리밍할 때 암호화를 쓸지 정해요. 암호화하면 성능이 낮은 기기에서는 스트리밍이 느려질 수 있어요.",
+    "legacy_ordering": "옛 클라이언트용 앱 순서",
+    "legacy_ordering_desc": "옛 클라이언트에서도 앱 순서를 지키도록 우회 방법을 켜요. UTF8을 제대로 못 다루는 클라이언트·스크립트나, 앱 이름을 그대로 맞춰 찾는 MoonDeck·Moonlight CLI 같은 도구에서 문제가 생길 수 있어요. Artemis 클라이언트는 이미 지원해요.",
+    "locale": "언어",
+    "locale_desc": "Apollide 설정 화면에 쓸 언어예요.",
+    "log_path": "기록 파일 위치",
+    "log_path_desc": "Apollide의 현재 기록이 저장되는 파일이에요.",
+    "max_bitrate": "최대 비트레이트",
+    "max_bitrate_desc": "스트리밍 영상의 비트레이트 상한(Kbps)이에요. 0이면 Artemide가 요청한 값을 그대로 써요.",
+    "minimum_fps_target": "최소 FPS",
+    "minimum_fps_target_desc": "스트리밍이 내려갈 수 있는 가장 낮은 FPS예요. 0이면 스트리밍 FPS의 약 절반이에요. 24·30fps 영상을 볼 때는 20을 추천해요.",
+    "rtx_hdr_title": "RTX HDR (AI SDR → HDR)",
+    "rtx_hdr_intro": "앱에서 켠 RTX HDR 변환의 기본값이에요. RTX HDR 스트리밍 중 바탕화면처럼 대상이 아닌 화면은 SDR 밝기만 적용되고 대비·채도는 바뀌지 않아요.",
+    "rtx_hdr": "RTX HDR",
+    "rtx_hdr_desc": "앱이나 클라이언트 설정에서 RTX HDR을 요청하면 켜져요.",
+    "rtx_hdr_force_sdr": "RTX HDR에 SDR 원본 강제",
+    "rtx_hdr_force_sdr_desc": "호환을 위해 남겨 둔 옛 설정이에요. 앱에서 켠 RTX HDR은 스트리밍은 HDR로 하되 원본 화면은 늘 SDR로 둬요. 게임 자체 HDR이 RTX HDR 위에 겹치지 않게 하려는 거예요.",
+    "rtx_hdr_peak_brightness": "최대 밝기(nits)",
+    "rtx_hdr_peak_brightness_desc": "클라이언트 화면의 최대 밝기(nits, 400–2000, 기본 1000)예요. RTX HDR 변환, 가상 화면 EDID, HDR10 정보에 모두 이 값이 쓰여요.",
+    "rtx_hdr_sdr_brightness": "SDR 밝기",
+    "rtx_hdr_sdr_brightness_desc": "RTX HDR 스트리밍 중 바탕화면처럼 대상이 아닌 화면을 얼마나 밝힐지 정해요(0–100, 0 = 그대로). RTX HDR을 쓰지 않는 HDR 스트리밍은 바뀌지 않아요.",
+    "rtx_hdr_middle_gray": "중간 밝기",
+    "rtx_hdr_middle_gray_desc": "중간 톤의 밝기 목표예요(10–100, 기본 50). 높일수록 화면 전체가 밝아져요.",
+    "rtx_hdr_contrast": "대비",
+    "rtx_hdr_contrast_desc": "HDR 대비예요(-100–100, 0 = 그대로).",
+    "rtx_hdr_saturation": "채도",
+    "rtx_hdr_saturation_desc": "HDR 색의 진하기예요(-100–100, 0 = 그대로).",
+    "session_token_ttl_seconds": "설정 화면 로그인 유지 시간(초)",
+    "session_token_ttl_seconds_desc": "설정 화면에 로그인한 뒤 다시 로그인해야 할 때까지의 시간이에요. 줄이면 더 안전하고, 늘리면 더 편해요.",
+    "remember_me_refresh_token_ttl_seconds": "기억한 기기 유지 시간(초)",
+    "remember_me_refresh_token_ttl_seconds_desc": "기억해 둔 기기가 다시 로그인 없이 쓸 수 있는 시간이에요. 줄이면 더 안전해요.",
+    "session_history_enabled": "접속 기록 저장",
+    "session_history_enabled_desc": "스트리밍 접속과 측정값, 이벤트를 이 PC의 기록 저장소에 남겨요. 끄면 새 기록을 더 남기지 않아요.",
+    "session_history_ttl_days": "접속 기록 보관 기간(일)",
+    "session_history_ttl_days_desc": "이 날수보다 오래된 접속 기록을 자동으로 지워요. 0이면 기간으로는 지우지 않아요.",
+    "session_history_db_size_limit_mb": "접속 기록 최대 크기(MiB)",
+    "session_history_db_size_limit_mb_desc": "접속 기록 저장소가 이 크기를 넘으면 가장 오래된 기록부터 지워요. 0이면 크기로는 지우지 않아요.",
+    "min_log_level": "기록 수준",
+    "min_log_level_0": "아주 자세히",
+    "min_log_level_1": "디버그",
+    "min_log_level_2": "정보",
+    "min_log_level_3": "경고",
+    "min_log_level_4": "오류",
+    "min_log_level_5": "치명적 오류",
+    "min_log_level_6": "없음",
+    "min_log_level_desc": "기록에 남길 가장 낮은 수준이에요. 낮출수록 더 많이 남아요",
+    "min_threads": "최소 CPU 스레드 수",
+    "min_threads_desc": "높이면 인코딩 효율은 조금 떨어지지만 CPU 코어를 더 많이 써요. 원하는 설정에서 안정적으로 인코딩되는 가장 낮은 값이 좋아요.",
+    "misc": "기타 설정",
+    "dualsense_haptics_gain": "DualSense 진동 세기",
+    "dualsense_haptics_gain_desc": "DualSense 파형 진동의 세기예요. 1은 원래 그대로, 0은 꺼짐, 최대 4까지예요. 1보다 크면 두 진동 모터를 같은 비율로 키우고, 소리가 깨지지 않는 선까지만 키워요. 일반 진동이나 적응형 트리거에는 영향이 없어요. 파형 진동을 지원하는 클라이언트가 필요해요.",
+    "proton_dualsense_compatibility": "Proton 게임 DualSense 호환",
+    "proton_dualsense_compatibility_desc": "스트리밍 중 실행하는 게임(Steam 안에서 켠 게임 포함)에서 DualSense 진동을 그대로 쓸 수 있게 해요. 기본으로 켜져 있어요. 맞는 Proton 버전과 게임 지원이 필요해요. 다시 접속한 뒤 새로 켠 게임부터 적용되고, 게임 실행 옵션에 직접 적은 값이 우선이에요.",
+    "motion_as_ds4": "게임패드에 모션 센서가 있으면 DS4로 흉내 내기",
+    "motion_as_ds4_desc": "끄면 게임패드 종류를 고를 때 모션 센서가 있는지 보지 않아요.",
+    "mouse": "마우스 입력 켜기",
+    "mouse_desc": "접속한 사람이 마우스로 이 PC를 조작할 수 있게 해요",
+    "native_pen_touch": "펜·터치 그대로 전달",
+    "native_pen_touch_desc": "켜면 Artemide의 펜·터치 입력을 그대로 전달해요. 펜·터치를 지원하지 않는 오래된 앱에서 이상하면 꺼 보세요.",
+    "notify_pre_releases": "미리보기 버전 알림",
+    "notify_pre_releases_desc": "기본으로 켜져 있어요. 끄면 정식 버전 알림만 받아요. 업데이트가 자동으로 설치되지는 않아요.",
+    "update_check_interval": "업데이트 확인 간격(초)",
+    "update_check_interval_desc": "Apollide가 새 버전을 자동으로 확인하는 간격이에요(git 태그 기준). 0이면 자동 확인을 하지 않아요.",
+    "nvenc_h264_cavlc": "H.264에서 CABAC 대신 CAVLC 쓰기",
+    "nvenc_h264_cavlc_desc": "더 단순한 압축 방식이에요. 같은 화질에 비트레이트가 약 10% 더 들어요. 아주 오래된 기기에서만 필요해요.",
+    "nvenc_latency_over_power": "전기 절약보다 낮은 지연 우선",
+    "nvenc_latency_over_power_desc": "스트리밍 중 GPU를 최고 속도로 돌려 인코딩 지연을 줄여요. 끄면 지연이 크게 늘 수 있어 추천하지 않아요.",
+    "nvenc_opengl_vulkan_on_dxgi": "OpenGL/Vulkan을 DXGI 위에 표시",
+    "nvenc_opengl_vulkan_on_dxgi_desc": "전체 화면 OpenGL·Vulkan 게임을 제 프레임으로 캡처하려면 DXGI 위에 표시해야 해요. PC 전체에 적용되며 Apollide를 끄면 원래대로 돌아가요.",
+    "nvenc_preset": "성능 단계",
+    "nvenc_preset_1": "(가장 빠름, 기본값)",
+    "nvenc_preset_4": "(화질과 속도 균형)",
+    "nvenc_preset_7": "(가장 느림)",
+    "nvenc_preset_desc": "숫자가 클수록 같은 비트레이트에서 화질이 좋아지지만 지연이 늘어요. 네트워크나 클라이언트가 버거울 때만 바꾸고, 아니면 비트레이트를 올리는 게 나아요.",
+    "nvenc_section_title": "NVIDIA NVENC 인코더",
+    "nvenc_section_desc": "NVIDIA 그래픽카드의 인코더 설정이에요.",
+    "nvenc_realtime_hags": "하드웨어 가속 GPU 스케줄링에서 실시간 우선순위 쓰기",
+    "nvenc_realtime_hags_desc": "HAGS가 켜져 있고 VRAM이 거의 꽉 찼을 때 NVIDIA 드라이버가 인코딩 중 멈출 수 있어요. 끄면 우선순위가 낮아져 멈춤은 피하지만, GPU가 바쁠 때 캡처 성능이 떨어져요. 대신 고급 탭에서 캡처 방식을 Windows.Graphics.Capture로 바꾸면 성능 손해 없이 멈춤을 피할 수 있어요.",
+    "nvenc_spatial_aq": "공간 AQ",
+    "nvenc_spatial_aq_desc": "밋밋한 부분은 덜 세밀하게 압축해 아낀 데이터를 다른 곳에 써요. 비트레이트가 낮을 때 켜면 좋아요.",
+    "nvenc_split_encode": "프레임 나눠 인코딩",
+    "nvenc_split_encode_desc": "HEVC·AV1에서 한 프레임을 나눠 인코딩할지 정해요. 4K 이상에서는 NVIDIA 드라이버가 자동으로 켜는 경우가 많아요. 켜짐을 고르면 낮은 해상도에서도 쓰고, 꺼짐이면 항상 쓰지 않아요.",
+    "nvenc_twopass": "두 번 훑기 모드",
+    "nvenc_twopass_desc": "본 인코딩 전에 한 번 미리 훑어, 움직임을 더 잘 찾고 비트레이트를 고르게 나눠 상한을 잘 지켜요. 끄면 가끔 비트레이트가 튀어 끊길 수 있어 추천하지 않아요.",
+    "nvenc_twopass_disabled": "꺼짐 (가장 빠름, 추천하지 않음)",
+    "nvenc_twopass_full_res": "전체 해상도 (느림)",
+    "nvenc_twopass_quarter_res": "1/4 해상도 (빠름, 기본값)",
+    "nvenc_vbv_increase": "한 프레임 VBV/HRD 여유(%)",
+    "nvenc_vbv_increase_desc": "기본으로는 한 프레임의 크기가 '비트레이트 ÷ 프레임 수'를 넘지 않게 해요. 이 제한을 풀면 지연이 낮은 가변 비트레이트처럼 동작해 좋을 수 있지만, 네트워크 여유가 없으면 끊길 수 있어요. 최대 400이며, 프레임 크기 상한이 5배가 돼요.",
+    "origin_web_ui_allowed": "설정 화면 접속 허용 범위",
+    "origin_web_ui_allowed_desc": "어디에서 설정 화면에 들어올 수 있는지 정해요",
+    "origin_web_ui_allowed_lan": "같은 집 안 네트워크(LAN)에서만",
+    "origin_web_ui_allowed_pc": "이 PC에서만",
+    "origin_web_ui_allowed_wan": "어디서나 (보안이 약해질 수 있어요)",
+    "output_name": "화면 ID",
+    "output_name_default": "주 화면 (기본값)",
+    "output_name_desc_linux": "이 Linux 호스트가 찾은 화면 중에서 골라요. 비워 두면 Apollide가 주 화면을 자동으로 골라요.",
+    "output_name_desc_unix": "Apollide가 시작될 때 찾은 화면 목록이 나와요. 괄호 안의 id 값을 써야 해요. 아래는 예시이고, 실제 목록은 문제 해결 탭에서 볼 수 있어요.",
+    "output_name_desc_windows": "캡처할 화면 ID를 직접 정해요. 비워 두면 주 화면을 캡처해요. 위에서 GPU를 골랐다면 그 GPU에 연결된 화면이어야 해요. Apollide가 시작될 때 찾은 화면 목록이 나와요. 아래는 예시이고, 실제 목록은 문제 해결 탭에서 볼 수 있어요.",
+    "control_peer_timeout": "제어 연결 대기 시간",
+    "control_peer_timeout_desc": "제어 연결이 끊겼을 때 다시 시도하며 기다리는 시간(밀리초, 0~86399999)이에요. 0이면 기본값(5초·30초)을 써요. 네트워크가 잠깐 끊겨도 버티게 하려면 핑 대기 시간도 함께 늘리고, 같은 재시도 시간을 쓰는 클라이언트가 필요해요. 직접 종료할 때는 영향이 없어요.",
+    "ping_timeout": "핑 대기 시간",
+    "ping_timeout_desc": "Artemide에서 데이터가 오지 않을 때 스트리밍을 끝내기 전까지 기다리는 시간(밀리초)이에요",
+    "video_max_batch_size_kb": "영상 묶음 최대 크기",
+    "video_max_batch_size_kb_desc": "영상을 보낼 때 한 번에 묶어 보내는 최대 크기(KiB)예요. 기본은 64KiB예요. 줄이면 저렴한 공유기·Wi-Fi 장비에서 더 안정적일 수 있고, 지연은 1ms 미만만 늘어요. PyroWave는 크기를 자동으로 정해요.",
+    "pacing_batch_demand_limit": "필요량에 맞춘 전송 간격·묶음 크기",
+    "pacing_batch_demand_limit_desc": "일반 영상 스트리밍용 실험 기능이에요. 비트레이트·프레임 수·FEC를 포함한 패킷 수로 전송 단위를 계산해, 보내는 간격과 한 번에 보낼 양을 정해요. 한 프레임을 더 잘게 나눠 보내 호스트 부담이 조금 늘 수 있고, 몰아서 보내는 양을 꼭 제한하지는 못해요. PyroWave는 원래 방식 그대로예요.",
+    "pyrowave_critical_fec_percentage": "PyroWave 핵심 부분 오류 보정(%)",
+    "pyrowave_critical_fec_percentage_desc": "PyroWave 프레임 앞부분(큰 윤곽을 담은 부분)에만 오류 보정 패킷을 붙여요(프레임마다 최소 2개). 이 부분을 잃으면 프레임 전체가 사라지지만, 다른 곳은 잃어도 한 프레임 동안 일부만 흐려져요. 기본 20은 비트레이트를 1%도 안 써요. 0이면 끄고 프레임을 더 크게 쓸 수 있어요. 일반 FEC 비율 설정은 PyroWave에 적용되지 않아요.",
+    "pkey": "개인 키",
+    "pkey_desc": "설정 화면과 Artemide 짝 맺기에 쓰는 개인 키예요. 호환을 위해 RSA-2048 키를 쓰는 게 좋아요.",
+    "port": "포트",
+    "port_alert_1": "Apollide는 1024보다 작은 포트를 쓸 수 없어요!",
+    "port_alert_2": "65535보다 큰 포트는 쓸 수 없어요!",
+    "port_desc": "Apollide가 쓰는 포트 묶음의 시작 번호를 정해요",
+    "port_http_port_note": "Artemide로 접속할 때 이 포트를 쓰세요.",
+    "port_note": "참고",
+    "port_port": "포트",
+    "port_protocol": "프로토콜",
+    "port_tcp": "TCP",
+    "port_udp": "UDP",
+    "port_warning": "설정 화면을 인터넷에 열어 두면 보안이 위험해요! 꼭 필요할 때만 하세요!",
+    "port_web_ui": "설정 화면",
+    "qp": "양자화 값(QP)",
+    "qp_desc": "고정 비트레이트를 지원하지 않는 기기에서는 이 QP 값을 대신 써요. 높을수록 더 많이 압축해 화질이 떨어져요.",
+    "qsv_coder": "QuickSync 코더 (H264)",
+    "qsv_preset": "QuickSync 단계",
+    "qsv_preset_fast": "fast (낮은 화질)",
+    "qsv_preset_faster": "faster (더 낮은 화질)",
+    "qsv_preset_medium": "medium (기본값)",
+    "qsv_preset_slow": "slow (좋은 화질)",
+    "qsv_preset_slower": "slower (더 좋은 화질)",
+    "qsv_preset_slowest": "slowest (가장 좋은 화질)",
+    "qsv_preset_veryfast": "fastest (가장 낮은 화질)",
+    "qsv_slow_hevc": "느린 HEVC 인코딩 허용",
+    "qsv_slow_hevc_desc": "켜면 오래된 Intel 그래픽에서도 HEVC를 쓸 수 있지만, GPU를 더 많이 써서 느려질 수 있어요.",
+    "hot_applied_now": "설정을 저장하고 바로 적용했어요.",
+    "hot_deferred": "설정을 저장했어요. 지금 스트리밍이 끝나면(또는 다음에 시작할 때) 적용돼요.",
+    "saving": "저장 중…",
+    "saved_success": "저장했어요",
+    "saved_deferred": "다음 스트리밍부터 적용돼요",
+    "restart_required": "적용하려면 Apollide를 다시 시작하세요",
+    "manual_save_needed": "직접 저장해야 해요 (다시 시작이 필요한 변경)",
+    "waiting_for_changes": "변경을 기다리는 중…",
+    "restart_note": "변경을 적용하려고 Apollide를 다시 시작하고 있어요.",
+    "stream_audio": "소리 스트리밍",
+    "stream_audio_desc": "소리도 함께 보낼지 정해요. 이 PC를 보조 모니터처럼 쓸 때는 꺼 두면 좋아요.",
+    "sunshine_name": "Apollide 이름",
+    "sunshine_name_desc": "Artemide에 보이는 이름이에요. 비워 두면 PC 이름을 써요",
+    "sw_preset": "소프트웨어 인코딩 단계",
+    "sw_preset_desc": "인코딩 속도와 압축 효율(같은 용량에서의 화질) 사이의 균형을 정해요. 기본값은 superfast예요.",
+    "sw_preset_fast": "fast",
+    "sw_preset_faster": "faster",
+    "sw_preset_medium": "medium",
+    "sw_preset_slow": "slow",
+    "sw_preset_slower": "slower",
+    "sw_preset_superfast": "superfast (기본값)",
+    "sw_preset_ultrafast": "ultrafast",
+    "sw_preset_veryfast": "veryfast",
+    "sw_preset_veryslow": "veryslow",
+    "sw_tune": "소프트웨어 인코딩 조정",
+    "sw_tune_animation": "animation -- 만화에 좋아요. 경계를 더 부드럽게 다듬어요",
+    "sw_tune_desc": "단계 설정 뒤에 덧붙이는 조정이에요. 기본값은 zerolatency예요.",
+    "sw_tune_fastdecode": "fastdecode -- 일부 필터를 꺼서 재생을 가볍게 해요",
+    "sw_tune_film": "film -- 고화질 영화에 좋아요",
+    "sw_tune_grain": "grain -- 오래된 필름의 거친 입자감을 살려요",
+    "sw_tune_stillimage": "stillimage -- 슬라이드쇼 같은 화면에 좋아요",
+    "sw_tune_zerolatency": "zerolatency -- 빠른 인코딩과 낮은 지연에 좋아요 (기본값)",
+    "system_tray": "작업 표시줄 아이콘 켜기",
+    "system_tray_desc": "작업 표시줄 알림 영역에 아이콘을 두고 바탕화면 알림을 보여 줘요",
+    "system_tray_desc_machine_host": "Linux 시스템 서비스로 돌 때는 트레이 아이콘과 알림을 보여 줄 수 없어요. 설정 화면에서 관리해 주세요. 저장한 선택은 데스크톱에서 실행할 때 그대로 쓰여요.",
+    "touchpad_as_ds4": "게임패드에 터치패드가 있으면 DS4로 흉내 내기",
+    "touchpad_as_ds4_desc": "끄면 게임패드 종류를 고를 때 터치패드가 있는지 보지 않아요.",
+    "upnp": "UPnP",
+    "upnp_desc": "인터넷으로 스트리밍할 수 있게 공유기 포트를 자동으로 열어요",
+    "vaapi_strict_rc_buffer": "AMD 그래픽에서 H.264/HEVC 프레임 비트레이트 상한 엄격히 지키기",
+    "vaapi_strict_rc_buffer_desc": "켜면 장면이 바뀔 때 프레임이 끊기는 걸 줄일 수 있지만, 움직임이 많을 때 화질이 떨어질 수 있어요.",
+    "vk_rc_cbr": "CBR (고정 비트레이트)",
+    "vk_rc_cqp": "CQP (고정 QP)",
+    "vk_rc_mode": "Vulkan 비트레이트 방식",
+    "vk_rc_mode_desc": "Vulkan 인코딩의 비트레이트 조절 방식이에요. 자동이면 드라이버가 정해요.",
+    "vk_rc_vbr": "VBR (가변 비트레이트)",
+    "vk_tune": "Vulkan 조정 단계",
+    "vk_tune_desc": "Vulkan 인코더의 조정 단계예요. 낮은 지연을 고르면 지연은 줄지만 화질이 떨어져요.",
+    "vk_tune_hq": "고화질",
+    "vk_tune_ll": "낮은 지연",
+    "vk_tune_lossless": "무손실",
+    "vk_tune_ull": "아주 낮은 지연",
+    "virtual_sink": "가상 오디오 장치",
+    "virtual_sink_desc": "쓸 가상 오디오 장치를 직접 정해요. 비워 두면 자동으로 골라요. 웬만하면 비워 두는 걸 강력히 추천해요!",
+    "virtual_sink_placeholder": "Steam Streaming Speakers",
+    "vt_coder": "VideoToolbox 코더",
+    "vt_realtime": "VideoToolbox 실시간 인코딩",
+    "vt_software": "VideoToolbox 소프트웨어 인코딩",
+    "vt_software_allowed": "허용",
+    "vt_software_forced": "강제",
+    "wan_encryption_mode": "WAN 암호화",
+    "wan_encryption_mode_1": "지원하는 클라이언트만 켜짐 (기본값)",
+    "wan_encryption_mode_2": "모든 클라이언트에 필수",
+    "wan_encryption_mode_desc": "인터넷으로 스트리밍할 때 암호화를 쓸지 정해요. 암호화하면 성능이 낮은 기기에서는 스트리밍이 느려질 수 있어요.",
+    "dd_hdr_request_override": "HDR 요청 덮어쓰기",
+    "dd_snapshot_exclude_devices": "스냅샷에서 뺄 장치",
+    "frame_limiter_disable_vsync": "스트리밍 중 VSYNC 끄기",
+    "frame_limiter_enable": "프레임 제한 켜기",
+    "frame_limiter_provider": "프레임 제한 도구",
+    "lossless_scaling_path": "Lossless Scaling 실행 파일",
+    "lossless_scaling_legacy_auto_detect": "옛 Lossless 자동 감지 쓰기",
+    "lossless_scaling_legacy_auto_detect_label": "옛 Lossless 자동 감지 쓰기",
+    "lossless_scaling_legacy_auto_detect_desc": "Lossless Scaling 단축키 대신 시간을 재서 자동으로 적용해요. 감지가 덜 정확할 수 있어, 단축키 방식이 안 될 때만 쓰세요.",
+    "rtss_frame_limit_type": "RTSS 프레임 제한 방식",
+    "rtss_install_path": "RTSS 설치 위치",
+    "vibepollo_file_state": "Apollide 상태 파일",
+    "virtual_display_layout": "가상 화면 배치",
+    "virtual_display_mode": "가상 화면 방식",
+    "dd_step_4": "4단계",
+    "search_options": "설정 검색...",
+    "adapter_name_placeholder_linux": "/dev/dri/renderD128",
+    "adapter_name_placeholder_macos": "자동",
+    "adapter_name_placeholder_unix": "/dev/dri/renderD128",
+    "audio_sink_desc_unix": "소리를 가져올 오디오 장치 이름이에요. 비워 두면 시스템 기본 장치를 써요.",
+    "audio_sink_placeholder_linux": "alsa_output.pci-0000_09_00.3.analog-stereo",
+    "audio_sink_placeholder_unix": "alsa_output.pci-0000_09_00.3.analog-stereo",
+    "dd_mode_remapping_desc_5_sops_mixed_only": "Artemide에서 \"게임 설정 최적화\"를 켜야 해요. 끄면 해상도를 적은 항목은 건너뛰어요.",
+    "dd_mode_remapping_desc_5_sops_resolution_only": "Artemide에서 \"게임 설정 최적화\"를 켜야 해요. 끄면 바꿔 맞추기를 건너뛰어요.",
+    "dd_resolution_option_ogs_desc": "이 기능을 쓰려면 Artemide에서 \"게임 설정 최적화\"를 켜야 해요.",
+    "dd_virtual_display_permanent_count": "늘 켜 둘 가상 화면 수",
+    "dd_virtual_display_permanent_count_desc": "스트리밍하지 않을 때도 계속 남겨 둘 가상 화면 개수예요. 0이면 스트리밍하는 동안에만 임시로 만들어요.",
+    "log_level": "기록 수준",
+    "log_level_0": "아주 자세히",
+    "log_level_1": "디버그",
+    "log_level_2": "정보",
+    "log_level_3": "경고",
+    "log_level_4": "오류",
+    "log_level_5": "치명적 오류",
+    "log_level_6": "없음",
+    "log_level_desc": "기록에 남길 가장 낮은 수준이에요. 낮출수록 더 많이 남아요",
+    "nvenc_intra_refresh": "인트라 리프레시",
+    "nvenc_intra_refresh_desc": "지원되면 전체 키프레임 대신 화면을 조금씩 나눠 새로 고쳐, 순간 데이터 몰림을 줄여요. 자동이면 인코더 기본값을 따라요.",
+    "output_name_desc_macos": "Apollide가 시작될 때 찾은 화면 목록이 나와요. 괄호 안의 id 값을 써야 해요. 아래는 예시이고, 실제 목록은 문제 해결 탭에서 볼 수 있어요.",
+    "output_name_unix": "화면 번호",
+    "output_name_windows": "화면 장치 ID",
+    "server_cmd": "서버 명령",
+    "server_cmd_desc": "허락받은 클라이언트가 이 PC에서 실행할 수 있는 명령이에요.",
+    "virtual_display_status_hint": "Apollide 가상 화면 드라이버로 높은 주사율의 가상 모니터를 자동으로 만들어요. 드라이버에 오류가 나오면 스트리밍 전에 Apollide를 다시 설치하거나 드라이버를 고쳐 주세요.",
+    "virtual_display_status_label": "Apollide 가상 화면 드라이버:",
+    "server_cmd_entry": "명령 {index}",
+    "server_cmd_name": "명령 이름",
+    "server_cmd_command": "명령",
+    "hardware_metrics": "클라이언트에 하드웨어 상태 보내기",
+    "hardware_metrics_desc": "보기·실행 권한이 있는 짝 맺은 클라이언트가 스트리밍 중 CPU·GPU 상태를 요청할 수 있게 해요. 이를 지원하는 클라이언트 화면 표시 기능이 필요해요.",
+    "hardware_metrics_interval": "하드웨어 상태 보내는 간격",
+    "hardware_metrics_interval_desc": "측정값을 다시 잴 때까지 최소 간격(밀리초, 500–10000)이에요. 요청들은 같은 측정값을 나눠 써요. 켜기만 해서는 측정하지 않아요.",
+    "realtime_stats_enabled": "실시간 통계 켜기",
+    "realtime_stats_enabled_desc": "통계 페이지에 보여 줄 이 PC의 상태(CPU, GPU, RAM, VRAM, 네트워크)를 계속 재요. 끄면 측정을 완전히 멈추고, 접속 기록에도 이 값들이 빠져요.",
+    "realtime_stats_poll_interval_ms": "새로 고침 간격(ms)",
+    "realtime_stats_poll_interval_ms_desc": "상태를 재고 화면을 새로 고치는 간격(밀리초)이에요. 낮출수록 부드럽지만 CPU를 조금 더 써요.",
+    "realtime_stats_history_retention_seconds": "그래프 보관 기간",
+    "realtime_stats_history_retention_seconds_desc": "실시간 그래프에 얼마나 지난 데이터까지 보여 줄지 정해요.",
+    "realtime_stats_max_history_points": "그래프 최대 점 개수",
+    "realtime_stats_max_history_points_desc": "보관 기간과 상관없이 실시간 그래프에 남길 점 개수의 상한이에요.",
+    "realtime_stats_pause_when_hidden": "탭을 안 볼 때 잠시 멈춤",
+    "realtime_stats_pause_when_hidden_desc": "브라우저 탭이 뒤로 가면 측정을 멈춰 자원을 아껴요. 돌아오면 자동으로 다시 시작해요.",
+    "realtime_stats_show_active_sessions": "현재 접속 카드 보이기",
+    "realtime_stats_show_host_stats": "호스트 상태 카드 보이기",
+    "realtime_stats_show_host_charts": "기록 그래프 카드 보이기",
+    "realtime_stats_show_session_history": "접속 기록 카드 보이기",
+    "vibeshine_file_state": "Apollide 상태 파일",
+    "virtual_display_mode_disabled_win10": "실제 화면 사용 — Windows 10 기본값",
+    "virtual_display_mode_per_client_plain": "가상 화면 (클라이언트마다)",
+    "virtual_display_mode_step_hint_win10": "Apollide가 준비할 화면을 고르세요. Windows 10에서는 DXGI 캡처로 실제 화면을 쓰는 게 기본이에요. 가상 화면의 장점인 Windows 11 전용 캡처(주사율 4배의 WGC 프레임 생성 캡처)를 여기서는 쓸 수 없어요. 가상 화면을 직접 켤 수는 있지만, Windows 10에서는 프레임 생성 캡처와 프레임 간격 맞추기에 문제가 생겨요.",
+    "win10_notice_title": "Windows 10은 지원하지 않아요",
+    "win10_notice_body": "이 호스트는 Windows 10이에요. 가상 화면에서 프레임 생성 게임을 매끄럽게 캡처하는 WGC 캡처와 Lossless Scaling 프레임 생성 등 여러 성능·게임 기능은 Windows 11에서만 돼요. Windows 10에서는 DXGI 캡처로 실제 화면을 기본으로 써요. 모든 기능을 쓰려면 Windows 11로 올려 주세요.",
+    "crash_dump_detected_relative": "비정상 종료 감지: {time}.",
+    "display_fallback": "화면",
+    "lossless": {
+      "status_checking": "Lossless Scaling 확인 중…",
+      "status_ready": "준비됨",
+      "status_custom_path_attention": "직접 지정한 위치를 확인해 주세요",
+      "status_unavailable": "쓸 수 없음",
+      "status_configured_hint": "지정한 위치에서 Lossless Scaling을 찾았어요.",
+      "status_detected_hint": "Lossless Scaling을 자동으로 찾았어요.",
+      "status_path_unresolved": "지정한 Lossless Scaling 위치를 확인하지 못했어요.",
+      "status_not_found": "Lossless Scaling을 찾지 못했어요. 위치를 직접 지정하거나 Steam에서 설치해 주세요.",
+      "status_query_failed": "Lossless Scaling 상태를 확인하지 못했어요.",
+      "check": "확인",
+      "override_path": "위치 직접 지정",
+      "hide_override": "직접 지정 숨기기",
+      "using_path": "사용 중: {path}",
+      "app_hint": "프레임 생성을 쓰려면 Lossless Scaling 앱이 설치되어 켜져 있어야 해요.",
+      "use_suggested": "추천 위치 쓰기",
+      "default_installation": "기본 설치 위치: {path}",
+      "browser_title": "Lossless Scaling 위치 고르기",
+      "browser_not_found": "자동으로 찾은 Lossless Scaling이 없어요.",
+      "browser_path_label": "위치",
+      "browser_detected_installations": "찾은 설치본",
+      "browser_executables": "실행 파일",
+      "browser_open_folder": "폴더 열기",
+      "browser_computer": "컴퓨터",
+      "browser_folder": "폴더",
+      "browser_executable": "실행 파일",
+      "browser_empty": "빈 폴더예요.",
+      "browser_directory_warning": "폴더 말고 Lossless Scaling 실행 파일을 골라 주세요.",
+      "browser_failed": "이 위치를 열 수 없어요.",
+      "rescan": "다시 찾기",
+      "use_path": "이 위치 쓰기"
+    },
+    "display_devices_load_failed": "화면 장치를 불러오지 못했어요",
+    "dd_snapshot_restore_hotkey_placeholder": "누른 뒤 단축키를 입력하세요",
+    "capture_wgc_constant": "Windows Graphics Capture (고정)",
+    "amd_section_title": "AMD AMF 인코더",
+    "qsv_section_title": "Intel Quick Sync 인코더",
+    "vt_section_title": "VideoToolbox 인코더",
+    "vaapi_section_title": "VA-API 인코더",
+    "vulkan_section_title": "Vulkan 인코더",
+    "sw_section_title": "소프트웨어 인코더",
+    "dd_validation_resolution_or_blank": "형식이 맞지 않아요. 가로x세로(예: {example}, x 또는 ×)로 쓰거나 비워 두세요.",
+    "dd_validation_positive_or_blank": "형식이 맞지 않아요. 0보다 큰 숫자를 쓰거나 비워 두세요.",
+    "dd_validation_mixed_final_required": "섞어 바꾸기에는 '최종' 칸을 하나 이상 채워 주세요.",
+    "dd_validation_resolution": "형식이 맞지 않아요. 가로x세로로 써 주세요. 예: {example} (x 또는 ×)",
+    "dd_validation_refresh_rate": "주사율이 맞지 않아요. 60이나 59.94처럼 0보다 큰 숫자를 써 주세요.",
+    "dd_manual_enforcement_notice": "직접 넣은 값은 그 항목의 바꿔 맞추기보다 우선해요. '클라이언트에 맞춤'으로 둔 값은 규칙을 그대로 따르지만, 클라이언트의 화면 방식 덮어쓰기가 켜져 있으면 모든 바꿔 맞추기를 건너뛰고 직접 넣은 값보다도 우선해요.",
+    "auto_capture_sink": "소리 가져올 장치 자동 선택",
+    "enable_discovery": "네트워크에서 찾기 허용",
+    "enable_input_only_mode": "입력 전용 모드 켜기",
+    "enable_pairing": "클라이언트 짝 맺기 허용",
+    "envvar_compatibility_mode": "환경 변수 호환 모드",
+    "fallback_mode": "대체 화면 방식",
+    "forward_rumble": "게임패드 진동 전달",
+    "hide_tray_controls": "트레이 메뉴 숨기기",
+    "ignore_encoder_probe_failure": "인코더 점검 실패 무시",
+    "keep_sink_default": "오디오 장치를 기본으로 유지",
+    "limit_framerate": "프레임 수 제한",
+    "nvenc_temporal_aq": "NVIDIA 시간 AQ",
+    "pacing_max_bitrate_kbps": "전송 간격용 최대 비트레이트(Kbps)",
+    "packetsize": "네트워크 패킷 크기"
+  },
+  "service_startup": {
+    "title": "Windows 시작 시 실행",
+    "description": "설치된 서비스가 Windows와 함께 자동으로 켜질지 정해요. 끄면 '수동'이 되어 필요할 때 직접 켤 수 있어요. 다음 시작부터 적용되고, 지금 스트리밍은 그대로 이어져요.",
+    "automatic": "Windows와 함께 자동 시작",
+    "mode": "서비스 시작 방식",
+    "manual": "수동",
+    "disabled": "꺼짐",
+    "unknown": "알 수 없음",
+    "saved": "시작 방식을 저장했어요. 지금 서비스와 스트리밍은 그대로 이어져요.",
+    "unavailable": "서비스 시작 방식을 읽거나 저장하지 못했어요. 새로 고친 뒤 다시 해 보세요.",
+    "automatic_mode": "자동"
+  },
+  "apps": {
+    "dualsense_haptics": "DualSense 파형 진동",
+    "dualsense_haptics_desc": "설치할 때 고를 수 있는 DualSense USB 오디오·진동 구성 요소와 파형 진동을 지원하는 Artemide가 필요해요. Windows 게임에는 유선 USB DualSense로 보여서 게임 본래의 진동을 그대로 보낼 수 있어요. 실행 파일, Steam, Playnite, 바탕화면 스트리밍을 지원해요. 드라이버가 없으면 실행되지 않아요. 바꾼 뒤에는 스트리밍을 새로 시작하세요.",
+    "playnite_badge": "Playnite",
+    "steam_badge": "Steam",
+    "framegen": {
+      "vrs": "VRS",
+      "subtitle": "Apollide가 프레임 생성을 조율하는 방식을 선택하고 매끄러운 재생에 필요한 캡처 안전장치를 확인하세요.",
+      "tag_virtual_active": "Apollide 가상 디스플레이 사용 중",
+      "kind_hint": "없음은 Apollide를 관여시키지 않으며, 게임 제공은 게임 내 프레임 생성을 신뢰하고, Lossless Scaling은 LSFG를 감싸며, NVIDIA Smooth Motion은 실행할 때마다 드라이버를 구성합니다.",
+      "lossless_subtitle": "Apollide의 튜닝된 프로필 또는 Lossless Scaling 기본값을 사용한 다음 런타임 목표를 세밀하게 조정하세요.",
+      "profile_hint": "권장은 Apollide의 지연 시간 중심 템플릿을 그대로 따릅니다. 사용자 지정은 Lossless Scaling 내에서 직접 관리하는 프로필을 실행합니다.",
+      "frame_targets_hint": "Apollide는 스트리밍 클라이언트가 요청한 FPS를 상속받아 Lossless Scaling에 자동으로 전달합니다. RTSS를 사용할 수 있는 경우 더 안정적인 페이싱을 위해 해당 요청값의 절반으로 제한합니다.",
+      "rtss_limit_hint": "비워 두면 Apollide는 기본적으로 클라이언트 요청값의 절반을 사용합니다. RTSS가 설치되어 실행 중이어야 합니다.",
+      "flow_scale_hint": "프레임 블렌딩 강도 (0–100). Apollide는 균형 잡힌 기본값으로 50%를 권장합니다.",
+      "health_rtss_hooks": "RTSS 후크가 감지되었습니다. Apollide가 프레임 제한기를 제어할 수 있습니다.",
+      "health_rtss_no_hooks": "RTSS가 설치되어 있지만 후크가 감지되지 않았습니다. RTSS를 실행하고 Apollide 프로필이 활성화되어 있는지 확인하세요.",
+      "health_display_virtual_label": "Apollide 가상 디스플레이",
+      "health_display_maybe_low": "현재 새로 고침 빈도를 읽을 수 없지만, 디스플레이가 필요한 240 Hz에 도달하지 못할 수 있습니다. 아래 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하거나 스트림을 더 높은 새로 고침 빈도의 모니터로 옮기세요.",
+      "health_display_unavailable_240": "디스플레이 새로 고침 정보를 사용할 수 없습니다. 아래 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하거나 프레임 생성을 위해 240 Hz 디스플레이로 전환하세요.",
+      "health_display_no_devices": "Apollide의 도우미가 디스플레이 장치를 반환하지 않았습니다. 프레임 생성이 새로 고침 변경을 적용하지 못할 수 있습니다.",
+      "health_suggestion_target": "위의 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하거나, {fps} FPS 스트림이 매끄럽게 유지되도록 Display Device Step 1을 가상 디스플레이를 대상으로 구성하세요.",
+      "lossless_unmanaged_warning": "이 애플리케이션은 Playnite에서 관리하지 않습니다. Apollide은 실행 중인 게임 실행 파일을 식별하고 Lossless Scaling 프로필을 자동으로 적용하려 하지만, 감지는 최선의 노력으로 수행되므로 항상 성공하지 않을 수 있습니다. 더 안정적인 결과를 위해 Playnite 통합을 구성하세요.",
+      "health_display_120_only_current": "현재 재생 빈도는 {hz} Hz입니다. 최대 120 FPS 스트림은 지원됩니다. 144 FPS 스트림에만 Apollide 가상 디스플레이 또는 더 높은 재생 빈도의 디스플레이가 필요합니다.",
+      "health_display_120_only_supported": "디스플레이는 최대 {hz} Hz를 지원합니다. 최대 120 FPS 스트림은 지원됩니다. 144 FPS 스트림에만 Apollide 가상 디스플레이 또는 더 높은 재생 빈도의 디스플레이가 필요합니다.",
+      "health_display_switch_when_stream_starts": "디스플레이 장치 1단계에서 해당 모니터를 활성 상태로 유지하면 스트림이 시작될 때 Apollide은 {hz} Hz로 전환할 수 있습니다.",
+      "health_display_double_120": "디스플레이는 최대 {hz} Hz를 지원합니다. Apollide은 120 FPS 스트림을 두 배로 늘릴 수 있습니다.",
+      "health_display_switch_smooth": "현재 재생 빈도는 {currentHz} Hz입니다. Apollide은 프레임 생성을 부드럽게 유지하기 위해 스트림 중에 {targetHz} Hz로 전환할 수 있습니다.",
+      "health_display_enforce_or_virtual": "디스플레이는 최대 {hz} Hz를 지원합니다. 더 높은 재생 빈도를 적용하도록 디스플레이 장치 1단계를 구성하거나 아래의 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하세요.",
+      "health_display_target_needs_virtual": "현재 재생 빈도는 {hz} Hz입니다. 최대 {fps} FPS를 대상으로 하는 스트림에는 Apollide 가상 디스플레이 또는 더 높은 재생 빈도의 디스플레이가 필요합니다.",
+      "health_display_120_stutter": "현재 재생 빈도는 {hz} Hz입니다. 120 FPS 프레임 생성은 더 높은 재생 빈도의 디스플레이가 없으면 끊길 수 있습니다. 아래의 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하거나 스트림을 더 높은 재생 빈도의 모니터로 옮기세요.",
+      "health_display_switch_if_active": "디스플레이 장치 1단계에서 해당 모니터만 활성 상태로 유지하면 Apollide은 최대 {hz} Hz로 전환할 수 있습니다.",
+      "health_display_tops_out": "디스플레이의 최대 재생 빈도는 {hz} Hz입니다. 아래의 디스플레이 재정의를 사용하여 Apollide 가상 디스플레이로 전환하거나 프레임 생성을 위해 240 Hz 디스플레이로 전환하세요.",
+      "health_display_switch_if_configured": "디스플레이 장치 1단계에서 구성된 경우 Apollide은 최대 {hz} Hz로 전환할 수 있습니다."
+    },
+    "overrides": {
+      "type": {
+        "json": "JSON"
+      }
+    },
+    "image_desc": "클라이언트로 전송할 애플리케이션 아이콘/사진/이미지 경로입니다. 이미지는 PNG 파일이어야 합니다. 설정하지 않으면 Apollide은 기본 상자 이미지를 전송합니다.",
+    "working_dir_desc": "프로세스에 전달할 작업 디렉터리입니다. 예를 들어 일부 애플리케이션은 작업 디렉터리를 사용하여 구성 파일을 검색합니다. 이 옵션을 설정하지 않으면 기본적으로 Apollide은 다음 명령의 상위 디렉터리로 설정됩니다.",
+    "cmd_runtime_desc": "Apollide은 이 프로세스를 기다립니다. 프로세스가 닫히면 스트림이 종료됩니다.",
+    "detached_cmd_runtime_desc": "기본 명령 전에 실행됩니다. 이 명령이 종료되어도 Apollide은 계속됩니다.",
+    "image_storage_desc": "선택 사항이며 저장만 되고 Apollide이 가져오지 않습니다."
+  },
+  "index": {
+    "display_recovery": {
+      "title": "화면 되살리기",
+      "description": "스트리밍 뒤 PC 화면이 계속 꺼져 있으면, 가상 화면을 끝내고 실제 모니터를 되살려 봐요.",
+      "action": "가상 화면 끝내기",
+      "working": "화면 되살리는 중…",
+      "introduction_title": "PC 화면 되살리는 법을 알아 두세요",
+      "introduction": "첫 스트리밍 전에 이 단추를 기억해 두세요. 가상 화면이 멈추거나 저장한 화면 배치로 돌아가지 못하면, 다른 기기에서 이 화면을 열고 '가상 화면 끝내기'를 누르세요. Apollide가 가상 화면을 없애고 연결된 실제 모니터를 켜 볼 거예요.",
+      "dismiss": "알겠어요",
+      "confirm_title": "가상 화면을 끝내고 모니터를 되살릴까요?",
+      "confirm_description": "Apollide의 가상 화면을 모두 바로 끝내요. 가상 화면을 쓰던 스트리밍은 영상이 끊겨요. 먼저 저장한 화면 배치로 되돌리고, 안 되면 연결된 실제 모니터를 켜 봐요. 실제 모니터를 연결하고 전원을 켜 두세요. 새 스트리밍을 시작하면 가상 화면이 다시 만들어질 수 있어요.",
+      "failed": "가상 화면을 끝냈는지 확인하지 못했어요. 기록을 보고 다시 해 보세요.",
+      "restored": "가상 화면을 끝내고 저장한 화면 배치로 되돌렸어요.",
+      "recovered": "가상 화면을 끝내고 실제 모니터를 켰어요. 저장한 배치로는 돌아가지 않았을 수 있어요.",
+      "without_restore": "가상 화면은 끝냈지만 실제 모니터가 켜졌는지 확인하지 못했어요. 모니터 연결과 전원을 확인하고 다시 해 보세요.",
+      "requested": "가상 화면을 끝내고 실제 모니터 되살리기를 요청했어요. PC 화면을 확인해 보세요."
+    },
+    "description": "Apollide은 Moonlight의 게임 스트리밍 프로그램입니다.",
+    "installed_version_not_stable": "Apollide의 정식 출시 이전 버전을 실행 중입니다. 버그나 기타 문제가 발생할 수 있습니다. 문제가 발생하면 신고해 주세요. Apollide을 더 나은 소프트웨어로 만드는 데 도움을 주셔서 감사합니다!",
+    "version_dirty": "Apollide이 더 나은 소프트웨어가 될 수 있도록 도와주셔서 감사합니다!",
+    "version_latest": "최신 버전의 Apollide을 실행 중입니다.",
+    "welcome": "반가워요, Apollide!"
+  },
+  "navbar": {
+    "playnite": "Playnite"
+  },
+  "webrtc": {
+    "hdr": "HDR",
+    "touch_input_hint": "터치: 톡 누르면 왼쪽 클릭, 한 손가락으로 밀면 끌기예요. 다른 손가락은 무시해요."
+  },
+  "host": {
+    "cpu": "CPU",
+    "gpu": "GPU",
+    "ram": "RAM",
+    "vram": "VRAM"
+  },
+  "playnite": {
+    "monitor_profiles_retained": "직접 만든 모니터 프로필은 남아 있어요. 없애려면 하나씩 지워 주세요.",
+    "desc": "Apollide은(는) Playnite 라이브러리를 동기화하여 설치된 게임이 자동으로 표시되도록 할 수 있습니다. 먼저 Playnite을 설치하고 실행한 후 Windows로 시작하도록 구성합니다. 그런 다음 아래의 Apollide 플러그인을 설치하여 통합을 활성화하세요.",
+    "limited_tooltip": "Playnite이 닫혀 있는 동안에는 게임을 자동 동기화할 수 없습니다. Apollide에 추가된 기존 게임은 계속 작동합니다. Playnite을 실행하면 동기화가 자동으로 다시 시작됩니다.",
+    "install_button": "Apollide 플러그인 설치",
+    "reinstall_button": "Apollide 플러그인 재설치",
+    "sync_all_installed_desc": "최근 및 카테고리 선택과 함께 설치된 모든 Playnite 게임을 Apollide에 추가합니다.",
+    "policy_explainer": "Apollide이 오래된 자동 동기화 게임을 제거하는 방법을 선택하세요.",
+    "remove_uninstalled_desc": "활성화되면 Apollide은(는) Playnite에서 제거되는 즉시 자동 동기화된 게임을 제거합니다.",
+    "summary_all_installed": "설치된 모든 Playnite 게임은 Apollide에 보관됩니다.",
+    "purge_apps_body": "자동으로 동기화된 게임과 Playnite (Fullscreen) 런처를 포함하여 Apollide에서 모든 Playnite 항목을 제거합니다.",
+    "missing_plugin_message": "{details}이(가) 감지되었지만 Playnite 플러그인이 더 이상 설치되어 있지 않습니다. 플러그인을 다시 설치하여 통합을 복원하거나 Playnite 게임을 정리하여 Apollide에서 모든 Playnite 항목을 제거하세요.",
+    "fullscreen_entry_desc": "활성화하면 Apollide이 Playnite를 전체 화면 데스크톱 모드로 여는 실행 항목을 추가합니다."
+  },
+  "pin": {
+    "otp_passphrase": "PIN",
+    "display_mode_override_desc": "Apollide이 이 클라이언트에 대해 이 해상도와 새로 고침 빈도를 사용하도록 강제합니다(형식: 1920x1080x60). 클라이언트의 요청을 사용하려면 공백으로 남겨두세요.",
+    "otp_msg": "Apollide과(와) 페어링하려면 Moonlight 클라이언트에 이 PIN을 입력하세요."
+  },
+  "troubleshooting": {
+    "logs_source_sunshine": "Apollide",
+    "logs_source_playnite": "Playnite",
+    "dd_maintenance_disabled": "화면 관리 기능을 쓰려면 화면 자동 설정이나 가상 화면이 필요해요. 설정에서 둘 중 하나를 켜고 저장한 뒤 이 상태를 새로 고치세요.",
+    "dd_session_recovery_status": "접속 복구: 현재 스냅샷 {current}, 이전 스냅샷 {previous}. 복구 작업: {task}. 도우미 엔진: {engine}.",
+    "dd_recovery_present": "있음",
+    "dd_recovery_absent": "없음",
+    "dd_restore_task_enabled": "켜짐",
+    "dd_restore_task_disabled": "사용자가 꺼 둠",
+    "dd_restore_task_missing": "등록 안 됨",
+    "dd_restore_task_unavailable": "상태 알 수 없음",
+    "dd_maintenance_unavailable": "화면 관리 상태를 알 수 없어요. 복구 기능을 쓰기 전에 상태를 새로 고치세요.",
+    "dd_golden_help": "현재 Windows 디스플레이 레이아웃(켜져 있는 화면, 기본 디스플레이, 해상도, HDR)의 스냅샷을 저장하세요. Apollide은(예를 들어 재부팅 후 또는 로그인 화면에서) 모니터 설정이 유지되지 않는 경우 이를 사용합니다. 이렇게 하면 기본 디스플레이가 꺼진 상태에서 PC으로 돌아올 가능성이 줄어듭니다.",
+    "logs_desc": "Apollide이 업로드한 로그 보기",
+    "collect_playnite_logs_desc": "Apollide 로그, Playnite/plugin 로그 및 디스플레이 도우미 로그를 내보냅니다.",
+    "export_crash_bundle_desc": "가장 최근의 Apollide 크래시 덤프와 함께 로그를 다운로드하세요.",
+    "restart_sunshine": "Apollide 다시 시작",
+    "restart_sunshine_desc": "Apollide이 제대로 작동하지 않는다면 다시 시작해 보세요. 실행 중인 모든 세션이 종료됩니다.",
+    "restart_sunshine_success": "Apollide이 다시 시작됩니다."
+  },
+  "rtss": {
+    "install_path_placeholder": "C:\\Program Files (x86)\\RivaTuner Statistics Server",
+    "sync_limiter_reflex_short": "NVIDIA Reflex",
+    "desc": "Apollide은 RTSS(권장) 또는 NVIDIA 제어판(실험적)을 통해 전역 프레임 제한을 적용한 다음 스트리밍이 중지되면 원래 드라이버 설정을 복원할 수 있습니다.",
+    "frame_limiter_disable_vsync_desc": "활성화되면 Apollide은 스트림 기간 동안 NVIDIA 드라이버 VSYNC 설정을 끄기로 설정하고 나중에 이전 값을 복원합니다. NVIDIA 재정의를 사용할 수 없는 경우 Apollide은 최선의 대체 방법으로 디스플레이가 가장 높은 새로 고침 빈도로 실행되도록 강제합니다.",
+    "enable_frame_limiter_desc": "활성화되면 Apollide은 각 스트림 기간 동안 선택한 공급자를 사용하여 전역 프레임 제한을 적용한 다음 나중에 이전 드라이버 설정을 복원합니다.",
+    "sync_limiter_desc": "고급 사용자에게만 해당됩니다. Apollide은 이를 RTSS에 반영합니다. 변경하기 전에 아래 비교를 참조하세요.",
+    "status_bootstrap": "RTSS이 감지되었습니다. Apollide은 다음 스트림에서 RTSS 구성을 새로 고칩니다.",
+    "status_bootstrap_hint": "Apollide은 RTSS 구성을 자동으로 관리합니다. 조치가 필요하지 않습니다.",
+    "status_autolaunch_hint": "스트리밍이 시작되면 Apollide이(가) 자동으로 RTSS을(를) 실행합니다."
+  },
+  "frameLimiter": {
+    "limitPlaceholder": "0",
+    "syncLimiter": {
+      "reflex": "NVIDIA Reflex"
+    },
+    "rtssPathPlaceholder": "C:\\Program Files (x86)\\RivaTuner Statistics Server",
+    "virtual": {
+      "modeVrr": "VRR — 항상 1000 Hz, 1 ms 안에 프레임 캡처",
+      "summaryVrr": "가상 화면이 늘 1000 Hz로 돌아서, 게임 프레임이 그려진 뒤 1 ms 안에 캡처되고 VRR 클라이언트에 정확한 타이밍이 전달돼요. 게임 프레임은 스트리밍 FPS로 제한돼요.",
+      "summaryEnabled": "더 높은 재생률은 Apollide이 게임을 더 부드럽게 캡처하는 데 도움이 됩니다. 게임이 활성화된 동안 디스플레이는 4× 재생률을 사용하고, 스트림 FPS를 바꾸지 않은 채 바탕 화면에서는 1×로 돌아갑니다.",
+      "why": "Apollide는 가상 화면을 스트림 새로 고침 빈도의 4×로 실행하고 Windows Graphics Capture(WGC)로 캡처합니다. 이 새로 고침 여유 덕분에 WGC는 프레임 생성 게임(DLSS/FSR 프레임 생성, Lossless Scaling, Smooth Motion)을 지터, 스터터, 추가 지연 없이 — 그리고 이전 Apollide 버전에서 필요했던 수동 캡처 수정 설정 없이 — 캡처합니다.",
+      "autoHeading": "Apollide는 스트림 시작 시 이를 자동으로 처리합니다:"
+    },
+    "enableHint": "Apollide은 스트림 시작 시 선택한 리미터 공급자를 적용하고 스트림이 끝나면 이전 드라이버 설정을 복원합니다.",
+    "autoVirtualFramegenHint": "가상 화면으로 스트리밍할 때 Apollide는 디스플레이를 요청된 새로 고침 빈도의 4×로 실행하고, NVIDIA Reflex로 게임을 스트림의 FPS로 제한합니다 — RTSS가 설치되어 있으면 RTSS를 통해, 그렇지 않으면 NVIDIA 드라이버를 통해 적용됩니다. 제한기를 완전히 수동으로 두려면 이 옵션을 끄세요.",
+    "vsyncUllmHintNv": "Apollide은 스트림 중에 NVIDIA 드라이버 VSYNC 설정을 끄기로 강제 설정하고 나중에 복원합니다. VSYNC을 전역적으로 활성화하지만 이를 사용하지 않고 Apollide 세션을 원하는 경우 이를 사용하세요.",
+    "vsyncUllmHintGeneric": "Apollide은 최선의 VSYNC 해결 방법으로 스트림 중에 사용 가능한 가장 높은 새로 고침 빈도로 디스플레이를 실행합니다. NVIDIA 재정의는 이 시스템에서 사용할 수 없습니다.",
+    "status": {
+      "rtssBootstrap": "RTSS이 감지되었습니다. Apollide은 스트리밍이 시작되면 RTSS 구성을 새로 고칩니다.",
+      "rtssBootstrapHint": "Apollide은 RTSS 구성을 자동으로 관리합니다. 조치가 필요하지 않습니다.",
+      "rtssAutolaunchHint": "Apollide은 스트림이 시작되면 자동으로 RTSS을 실행합니다."
+    },
+    "noticeCopy": "Apollide는 스트림 시작 시 선택한 제한기를 적용하고 스트림이 종료되면 드라이버 설정을 복원합니다. RTSS는 물리 화면에서 가장 일관된 페이싱을 제공하며, NVIDIA 드라이버 제한기는 대체 수단입니다.",
+    "syncLimiterHintVirtual": "가상 화면에서는 Apollide가 NVIDIA Reflex를 자동으로 선택(RTSS를 통해 적용)하므로, 이 선택은 물리 화면 스트림에만 영향을 줍니다.",
+    "rtssMissingNvFallback": "RTSS가 설치되어 있지 않아 Apollide는 대신 NVIDIA 드라이버를 통해 프레임 제한을 적용합니다. 스트리밍은 계속 작동하지만, RTSS의 Reflex 제한기가 프레임을 더 일관되게 페이싱합니다 — 가장 매끄러운 스트림을 위해 RTSS를 설치하거나 아래에서 경로를 설정하세요."
+  },
+  "changelog": {
+    "source_github": "GitHub",
+    "description": "설치된 Apollide 빌드({version}) 및 인근 릴리스에 대한 릴리스 노트입니다."
+  },
+  "stats": {
+    "current": "현재",
+    "peak": "최고"
+  },
+  "offline": {
+    "title": "Apollide에 대한 연결이 끊어졌습니다.",
+    "description": "웹 인터페이스와 Apollide 서비스의 연결이 끊어졌습니다.",
+    "close_hint": "Apollide을(를) 의도적으로 중지한 경우 이 탭을 닫아도 됩니다.",
+    "output_name_desc_linux": "Apollide 시작 중에 감지된 디스플레이 목록이 표시됩니다. 참고: 괄호 안에 id 값을 사용해야 합니다. 아래는 예시입니다. 실제 출력은 문제 해결 탭에서 확인할 수 있습니다.",
+    "output_name_desc_macos": "Apollide 시작 중에 감지된 디스플레이 목록이 표시됩니다. 참고: 괄호 안에 id 값을 사용해야 합니다. 아래는 예시입니다. 실제 출력은 문제 해결 탭에서 확인할 수 있습니다.",
+    "output_name_desc_unix": "Apollide 시작 중에 감지된 디스플레이 목록이 표시됩니다. 참고: 괄호 안에 id 값을 사용해야 합니다. 아래는 예시입니다. 실제 출력은 문제 해결 탭에서 확인할 수 있습니다."
+  },
+  "clients": {
+    "virtual_display_scale_desc": "기존 설정 유지(기본값)를 선택하면 선택한 배율이 이후 스트리밍에도 유지됩니다. Windows에서 가상 디스플레이에 연결한 뒤 설정 > 시스템 > 디스플레이에서 배율을 선택하세요. 클라이언트 해상도를 변경하지 않고 Apollide에서 백분율 또는 권장(해상도 기반)을 선택할 수도 있습니다.",
+    "confirm_remove_message_named": "이렇게 하면 Apollide에서 {name}의 페어링이 해제됩니다. 연결하려면 다시 페어링해야 합니다."
+  },
+  "resource_card": {
+    "resources_desc": "Apollide을 위한 리소스!"
+  },
+  "welcome": {
+    "create_creds_alert": "Apollide의 웹 UI에 액세스하려면 아래 자격 증명이 필요합니다. 다시는 볼 수 없으니 안전하게 보관하세요!\n(잊어버리면 이 화면을 또 볼 수 있을꺼에요!)",
+    "greeting": "Apollide에 오신 것을 환영합니다!"
+  },
+  "auth": {
+    "sessions_description": "활성 Apollide 세션이 있는 장치. 원격으로 로그아웃하려면 항목을 제거하세요."
+  },
+  "client_card": {
+    "clients_desc": "Apollide에 연결하려면 Moonlight 호환 클라이언트를 다운로드하세요.",
+    "generic_moonlight_clients_desc": "일반 Moonlight 클라이언트는 작동할 수 있지만 Apollide에는 Artemis 클라이언트가 권장됩니다."
+  },
+  "logout": {
+    "logged_out_desc": "Apollide에서 로그아웃되었습니다."
+  }
+}
