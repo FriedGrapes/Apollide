@@ -6351,7 +6351,9 @@ launch_session->exact_target_hold.reset();
           launch_session->height,
           launch_session->fps,
           no_active_sessions,
-          is_input_only
+          is_input_only,
+          active_game.client_uuid,
+          launch_session->client_name
         );
       }
     }
