@@ -241,6 +241,14 @@ namespace nvhttp {
   nlohmann::json get_remote_display_layout();
   bool set_remote_display_layout(const nlohmann::json &layout, std::string &error);
 
+  // Apollide: Kiln work monitor — a stream-less virtual monitor beside the user's screen,
+  // owned by Kiln on this PC through the Remote Monitor coordinator (see kiln_monitor_math.h).
+  nlohmann::json kiln_monitor_create(int width, int height, int fps, std::string &error);
+  nlohmann::json kiln_monitor_release(std::string &error);
+  nlohmann::json kiln_monitor_status();
+  /** Device id of the live Kiln monitor, or empty. */
+  std::string kiln_monitor_device_id();
+
   /**
    * @brief Record a client's last seen time (seconds since epoch).
    */
