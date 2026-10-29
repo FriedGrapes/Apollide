@@ -21,6 +21,8 @@
   #include "src/platform/windows/virtual_display_refresh_policy.h"
   #include "src/process.h"
   #include "src/remote_display_topology.h"
+  #include "src/apollide/kiln_monitor_math.h"
+  #include "src/nvhttp.h"
   #include "src/rtsp.h"
 
   #include <algorithm>
@@ -738,7 +740,8 @@ namespace display_helper_integration::helpers {
     }
 
     if (!topology_overridden && layout_flags.arrangement == display_helper_integration::VirtualDisplayArrangement::Exclusive && topology.topology.empty() && !default_device_id.empty()) {
-      topology.topology = {{default_device_id}};
+      // Apollide: a live Kiln work monitor stays as its own extended group (kiln_monitor_math.h)
+      topology.topology = apollide::kiln_monitor::exclusive_topology(default_device_id, nvhttp::kiln_monitor_device_id());
     }
 
     if (layout_flags.arrangement == display_helper_integration::VirtualDisplayArrangement::Exclusive) {
