@@ -5086,6 +5086,56 @@ namespace confighttp {
    * @brief Terminate all managed virtual displays, overriding active ownership.
    * @api_examples{/api/display/terminate_virtual| POST| {"status":true}}
    */
+  // Apollide: Kiln work monitor (this PC only, API token required)
+  bool kiln_monitor_gate(resp_https_t response, req_https_t request) {
+    const bool loopback = request->remote_endpoint().address().is_loopback();
+    if (!loopback) {
+      bad_request(response, request, "The Kiln monitor is only available from this PC");
+      return false;
+    }
+    return authenticate(response, request);
+  }
+
+  void postKilnMonitor(resp_https_t response, req_https_t request) {
+    if (!kiln_monitor_gate(response, request)) return;
+    print_req(request);
+    int width = 1920, height = 1080, fps = 30;
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    if (const auto body = ss.str(); !body.empty()) {
+      try {
+        const auto in = nlohmann::json::parse(body);
+        width = in.value("width", width);
+        height = in.value("height", height);
+        fps = in.value("fps", fps);
+      } catch (...) {
+        bad_request(response, request, "Invalid JSON");
+        return;
+      }
+    }
+    std::string error;
+    auto out = nvhttp::kiln_monitor_create(width, height, fps, error);
+    if (!error.empty()) {
+      bad_request(response, request, error);
+      return;
+    }
+    send_response(response, out, "no-store");
+  }
+
+  void deleteKilnMonitor(resp_https_t response, req_https_t request) {
+    if (!kiln_monitor_gate(response, request)) return;
+    print_req(request);
+    std::string error;
+    auto out = nvhttp::kiln_monitor_release(error);
+    if (!error.empty()) out["error"] = error;
+    send_response(response, out, "no-store");
+  }
+
+  void getKilnMonitor(resp_https_t response, req_https_t request) {
+    if (!kiln_monitor_gate(response, request)) return;
+    send_response(response, nvhttp::kiln_monitor_status(), "no-store");
+  }
+
   void postTerminateVirtualDisplay(resp_https_t response, req_https_t request) {
     if (!check_content_type(response, request, "application/json")) {
       return;
@@ -6547,6 +6597,9 @@ namespace confighttp {
     register_api_route("^/api/host/info$", "GET", getHostInfo);
     register_api_route("^/api/rtsp/sessions$", "GET", listRTSPSessions);
     register_blocking_api_route("^/api/webrtc/capabilities$", "GET", getWebRTCCapabilities);
+    register_blocking_api_route("^/api/kiln/monitor$", "POST", postKilnMonitor);
+    register_blocking_api_route("^/api/kiln/monitor$", "DELETE", deleteKilnMonitor);
+    register_blocking_api_route("^/api/kiln/monitor$", "GET", getKilnMonitor);
     register_api_route("^/api/webrtc/sessions$", "GET", listWebRTCSessions);
     register_api_route("^/api/history/sessions$", "GET", listSessionHistory);
     register_api_route("^/api/history/sessions/active$", "GET", getActiveSessionHistory);
