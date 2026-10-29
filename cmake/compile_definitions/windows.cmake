@@ -276,6 +276,7 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/src/apollide/notify_relay.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/notify_relay.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/resume_mode_math.h"
+        "${CMAKE_SOURCE_DIR}/src/apollide/kiln_monitor_math.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/resume_mode.h"
         "${CMAKE_SOURCE_DIR}/src/apollide/resume_mode.cpp"
         "${CMAKE_SOURCE_DIR}/src/apollide/clipboard_open.h"
