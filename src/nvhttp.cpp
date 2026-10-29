@@ -87,6 +87,7 @@
   #include "platform/windows/display_target_borrow.h"
   #include "platform/windows/display_helper_request_policy.h"
   #include "platform/windows/display_helper_request_helpers.h"
+  #include "src/apollide/kiln_monitor_math.h"
   #include "platform/windows/misc.h"
   #include "platform/windows/virtual_display.h"
   #include "platform/windows/virtual_display_cleanup.h"
@@ -8070,4 +8071,103 @@ launch_session->exact_target_hold.reset();
 
     return removed && save_state();
   }
+  // ---------------------------------------------------------------- Apollide: Kiln work monitor
+#ifdef _WIN32
+  namespace {
+    std::mutex kiln_monitor_mutex;
+    std::uint64_t kiln_monitor_generation = 0;  // grows per create in this process (the coordinator refuses older ones)
+    bool kiln_monitor_owned = false;
+
+    nlohmann::json kiln_monitor_describe_locked() {
+      nlohmann::json out {{"on", false}};
+      if (!kiln_monitor_owned) return out;
+      const auto state = remote_display_topology::instance().snapshot(apollide::kiln_monitor::owner_id, kiln_monitor_generation);
+      out["on"] = state.accepted;
+      out["ready"] = state.ready;
+      out["retryable"] = state.retryable;
+      if (!state.error.empty()) out["warning"] = state.error;
+      const auto device = VDISPLAY::resolveActiveVirtualDisplayDeviceIdForStableId(apollide::kiln_monitor::owner_id, {}, {}, false);
+      if (!device) return out;
+      out["device_id"] = *device;
+      if (const auto devices = display_helper_integration::enumerate_devices(display_device::DeviceEnumerationDetail::Minimal)) {
+        for (const auto &d : *devices) {
+          if (!remote_device_id_equals(d.m_device_id, *device) || !d.m_info) continue;
+          out["display_name"] = d.m_display_name;  // \\.\DISPLAYn
+          out["x"] = d.m_info->m_origin_point.m_x;
+          out["y"] = d.m_info->m_origin_point.m_y;
+          out["width"] = d.m_info->m_resolution.m_width;
+          out["height"] = d.m_info->m_resolution.m_height;
+          out["primary"] = d.m_info->m_primary;
+          out["desktop"] = true;  // Windows lists it as an active desktop output
+          break;
+        }
+      }
+      if (!out.contains("desktop")) out["desktop"] = false;
+      return out;
+    }
+  }  // namespace
+
+  nlohmann::json kiln_monitor_create(int width, int height, int fps, std::string &error) {
+    const apollide::kiln_monitor::mode_t want {width, height, fps};
+    if (!apollide::kiln_monitor::mode_valid(want)) {
+      error = "invalid mode";
+      return nullptr;
+    }
+    std::lock_guard launch_lock {launch_request_mutex};
+    std::unique_lock lifecycle_lock {stream_lifecycle_mutex()};
+    std::lock_guard lock {kiln_monitor_mutex};
+    refresh_remote_monitor_baseline(has_stream_session_activity());
+    const remote_display_topology::mode_t mode {.width = width, .height = height, .refresh_hz = fps, .hdr = false};
+    const auto state = remote_display_topology::instance().activate_or_resume(
+      apollide::kiln_monitor::owner_id, apollide::kiln_monitor::owner_label, mode, ++kiln_monitor_generation
+    );
+    if (!state.accepted) {
+      error = state.error.empty() ? "the display coordinator refused the Kiln monitor" : state.error;
+      return nullptr;
+    }
+    kiln_monitor_owned = true;
+    BOOST_LOG(info) << "Apollide: Kiln work monitor " << width << 'x' << height << '@' << fps
+                    << " (ready=" << (state.ready ? "true" : "false") << ")";
+    return kiln_monitor_describe_locked();
+  }
+
+  nlohmann::json kiln_monitor_release(std::string &error) {
+    {
+      std::lock_guard launch_lock {launch_request_mutex};
+      std::unique_lock lifecycle_lock {stream_lifecycle_mutex()};
+      std::lock_guard lock {kiln_monitor_mutex};
+      if (kiln_monitor_owned) {
+        refresh_remote_monitor_baseline(has_stream_session_activity());
+        if (!remote_display_topology::instance().explicit_release(apollide::kiln_monitor::owner_id, kiln_monitor_generation, "Kiln")) {
+          error = "the Kiln monitor could not be removed yet; try again";
+          return kiln_monitor_describe_locked();
+        }
+        kiln_monitor_owned = false;
+        BOOST_LOG(info) << "Apollide: Kiln work monitor released";
+      }
+    }
+    cleanup_virtual_display_if_idle();  // a restore deferred for the monitor may run now (takes the lifecycle gate itself)
+    return {{"on", false}};
+  }
+
+  nlohmann::json kiln_monitor_status() {
+    std::lock_guard lock {kiln_monitor_mutex};
+    return kiln_monitor_describe_locked();
+  }
+
+  std::string kiln_monitor_device_id() {
+    std::lock_guard lock {kiln_monitor_mutex};
+    if (!kiln_monitor_owned) return {};
+    const auto device = VDISPLAY::resolveActiveVirtualDisplayDeviceIdForStableId(apollide::kiln_monitor::owner_id, {}, {}, false);
+    return device ? *device : std::string {};
+  }
+#else
+  nlohmann::json kiln_monitor_create(int, int, int, std::string &error) {
+    error = "the Kiln monitor is Windows only";
+    return nullptr;
+  }
+  nlohmann::json kiln_monitor_release(std::string &) { return {{"on", false}}; }
+  nlohmann::json kiln_monitor_status() { return {{"on", false}}; }
+  std::string kiln_monitor_device_id() { return {}; }
+#endif
 }  // namespace nvhttp
