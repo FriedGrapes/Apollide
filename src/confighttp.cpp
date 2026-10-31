@@ -52,6 +52,7 @@
 #include "src/apollide/auto_update.h"
 #include "src/apollide/update_link.h"
 #include "src/apollide/notify_relay.h"
+#include "src/apollide/kiln_pair_math.h"
 #include "confighttp.h"
 #include "crypto.h"
 #include "file_handler.h"
@@ -5136,6 +5137,183 @@ namespace confighttp {
     send_response(response, nvhttp::kiln_monitor_status(), "no-store");
   }
 
+  // Apollide: one-tap Kiln link — Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair,
+  // Kiln picks the key up once. One Kiln key at a time: picking a new one up revokes the previous one.
+  std::mutex kiln_pair_mutex;
+  apollide::kiln_pair::book_t kiln_pair_book;
+  std::string kiln_pair_new_hash;  ///< hash of the key made for the current request, until Kiln picks it up
+
+  std::filesystem::path kiln_pair_hash_file() {
+    return platf::appdata() / "apollide_kiln_token_hash.txt";
+  }
+
+  bool kiln_pair_from_this_pc(resp_https_t response, req_https_t request) {
+    if (!request->remote_endpoint().address().is_loopback()) {
+      bad_request(response, request, "Kiln links are only asked from this PC");
+      return false;
+    }
+    return true;
+  }
+
+  std::string kiln_pair_body_code(req_https_t request) {
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    try {
+      const auto in = nlohmann::json::parse(ss.str());
+      if (in.contains("code") && in["code"].is_string()) {
+        return in["code"].get<std::string>();
+      }
+    } catch (...) {
+    }
+    return {};
+  }
+
+  void postKilnPairRequest(resp_https_t response, req_https_t request) {
+    if (!kiln_pair_from_this_pc(response, request)) {
+      return;
+    }
+    const auto id = crypto::rand_alphabet(32, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"sv);
+    const auto code = crypto::rand_alphabet(4, "0123456789"sv);
+    std::string stale_hash;
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      kiln_pair_book.start(id, code, apollide::kiln_pair::pair_clock::now());
+      stale_hash = std::exchange(kiln_pair_new_hash, std::string {});
+    }
+    if (!stale_hash.empty()) {
+      api_token_manager.revoke_api_token_by_hash(stale_hash);  // made for an older request Kiln never collected
+    }
+    BOOST_LOG(info) << "Apollide Kiln link: Kiln asked for a key; waiting for approval on the web page (code " << code << ')';
+    const nlohmann::json out {
+      {"id", id},
+      {"code", code},
+      {"path", "/v2/kiln-pair"},
+      {"expires_in", std::chrono::duration_cast<std::chrono::seconds>(apollide::kiln_pair::request_life).count()},
+    };
+    send_response(response, out, "no-store");
+  }
+
+  void getKilnPairPoll(resp_https_t response, req_https_t request) {
+    if (!kiln_pair_from_this_pc(response, request)) {
+      return;
+    }
+    const std::string id = request->path_match[1];
+    std::string token;
+    std::string new_hash;
+    apollide::kiln_pair::state_e state;
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      state = kiln_pair_book.poll(id, apollide::kiln_pair::pair_clock::now(), token);
+      if (state == apollide::kiln_pair::state_e::approved) {
+        new_hash = std::exchange(kiln_pair_new_hash, std::string {});
+      }
+    }
+    if (!token.empty() && !new_hash.empty()) {
+      std::string old_hash;
+      {
+        std::ifstream in {kiln_pair_hash_file()};
+        std::getline(in, old_hash);
+      }
+      if (!old_hash.empty() && old_hash != new_hash) {
+        api_token_manager.revoke_api_token_by_hash(old_hash);
+      }
+      std::ofstream out {kiln_pair_hash_file(), std::ios::trunc};
+      out << new_hash << '\n';
+      BOOST_LOG(info) << "Apollide Kiln link: Kiln picked its key up" << (old_hash.empty() ? "" : "; the previous Kiln key is revoked");
+    }
+    nlohmann::json out {{"state", apollide::kiln_pair::state_name(state)}};
+    if (!token.empty()) {
+      out["token"] = token;
+    }
+    send_response(response, out, "no-store");
+  }
+
+  void getKilnPairPending(resp_https_t response, req_https_t request) {
+    if (!authenticate(response, request)) {
+      return;
+    }
+    nlohmann::json out {{"pending", false}};
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      const auto now = apollide::kiln_pair::pair_clock::now();
+      if (const auto code = kiln_pair_book.pending_code(now)) {
+        out["pending"] = true;
+        out["code"] = *code;
+        out["expires_in"] = kiln_pair_book.seconds_left(now);
+      }
+    }
+    send_response(response, out, "no-store");
+  }
+
+  void postKilnPairApprove(resp_https_t response, req_https_t request) {
+    if (!authenticate(response, request)) {
+      return;
+    }
+    const auto code = kiln_pair_body_code(request);
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      const auto pending = kiln_pair_book.pending_code(apollide::kiln_pair::pair_clock::now());
+      if (!pending || code.empty() || *pending != code) {
+        bad_request(response, request, "This Kiln request is gone or its number differs");
+        return;
+      }
+    }
+
+    nlohmann::json scopes = nlohmann::json::array();
+    for (const auto &s : apollide::kiln_pair::kiln_scopes()) {
+      scopes.push_back({{"path", s.path}, {"methods", s.methods}});
+    }
+    std::set<std::string> before;
+    for (const auto &t : api_token_manager.get_api_tokens_list()) {
+      before.insert(t.value("hash", std::string {}));
+    }
+    const auto token = api_token_manager.create_api_token(scopes, config::sunshine.username);
+    if (!token) {
+      bad_request(response, request, "Could not make the Kiln key");
+      return;
+    }
+    std::string new_hash;
+    for (const auto &t : api_token_manager.get_api_tokens_list()) {
+      if (const auto hash = t.value("hash", std::string {}); !before.contains(hash)) {
+        new_hash = hash;
+      }
+    }
+
+    bool approved = false;
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      approved = kiln_pair_book.approve(code, apollide::kiln_pair::pair_clock::now(), *token);
+      if (approved) {
+        kiln_pair_new_hash = new_hash;
+      }
+    }
+    if (!approved) {
+      if (!new_hash.empty()) {
+        api_token_manager.revoke_api_token_by_hash(new_hash);
+      }
+      bad_request(response, request, "This Kiln request is gone or its number differs");
+      return;
+    }
+    BOOST_LOG(info) << "Apollide Kiln link: approved on the web page; Kiln picks the key up next";
+    send_response(response, nlohmann::json {{"status", true}}, "no-store");
+  }
+
+  void postKilnPairDeny(resp_https_t response, req_https_t request) {
+    if (!authenticate(response, request)) {
+      return;
+    }
+    const auto code = kiln_pair_body_code(request);
+    bool denied = false;
+    {
+      std::scoped_lock lock(kiln_pair_mutex);
+      denied = kiln_pair_book.deny(code, apollide::kiln_pair::pair_clock::now());
+    }
+    if (denied) {
+      BOOST_LOG(info) << "Apollide Kiln link: refused on the web page";
+    }
+    send_response(response, nlohmann::json {{"status", denied}}, "no-store");
+  }
+
   void postTerminateVirtualDisplay(resp_https_t response, req_https_t request) {
     if (!check_content_type(response, request, "application/json")) {
       return;
@@ -6600,6 +6778,12 @@ namespace confighttp {
     register_blocking_api_route("^/api/kiln/monitor$", "POST", postKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "DELETE", deleteKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "GET", getKilnMonitor);
+    // Apollide: one-tap Kiln link (Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair)
+    register_api_route("^/api/kiln/pair$", "POST", postKilnPairRequest);
+    register_api_route("^/api/kiln/pair$", "GET", getKilnPairPending);
+    register_api_route("^/api/kiln/pair/approve$", "POST", postKilnPairApprove);
+    register_api_route("^/api/kiln/pair/deny$", "POST", postKilnPairDeny);
+    register_api_route("^/api/kiln/pair/([A-Za-z0-9]{32})$", "GET", getKilnPairPoll);
     register_api_route("^/api/webrtc/sessions$", "GET", listWebRTCSessions);
     register_api_route("^/api/history/sessions$", "GET", listSessionHistory);
     register_api_route("^/api/history/sessions/active$", "GET", getActiveSessionHistory);
