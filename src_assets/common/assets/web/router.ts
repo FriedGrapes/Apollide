@@ -3,6 +3,7 @@ import OverviewView from '@/views/OverviewView.vue';
 
 const ApplicationView = () => import('@/views/ApplicationView.vue');
 const ApiTokensView = () => import('@/views/ApiTokensView.vue');
+const KilnPairView = () => import('@/views/KilnPairView.vue');
 const DevicesView = () => import('@/views/DevicesView.vue');
 const IntegrationsView = () => import('@/views/IntegrationsView.vue');
 const LibraryView = () => import('@/views/LibraryView.vue');
@@ -82,6 +83,13 @@ const router = createRouter({
       name: 'api-tokens',
       component: ApiTokensView,
       meta: { titleKey: 'ui.nav.api_tokens' },
+    },
+    // Apollide: Kiln's [H1 화면 연결] opens this page to approve the one-tap link
+    {
+      path: '/kiln-pair',
+      name: 'kiln-pair',
+      component: KilnPairView,
+      meta: { titleKey: 'ui.nav.kiln_pair' },
     },
     {
       path: '/logs',
