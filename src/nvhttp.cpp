@@ -6357,6 +6357,23 @@ launch_session->exact_target_hold.reset();
           launch_session->client_name
         );
       }
+      // Apollide: joining skips the display setup, so lay the displays out again if something in
+      // between (a browser stream ending) turned other monitors back on. 11-02: the dummy HDMI was
+      // on, the lock screen showed only there and the resuming Surface got a black picture.
+      if (joining_existing_game_output && !secondary_game_client) {
+        auto layout_output = config::runtime_output_name_override();
+        if (!layout_output || layout_output->empty()) {
+          layout_output = resume_output;
+        }
+        if (layout_output) {
+          (void) apollide::resume_mode::restore_exclusive_layout(
+            *layout_output,
+            nvhttp::kiln_monitor_device_id(),
+            no_active_sessions,
+            is_input_only
+          );
+        }
+      }
     }
 #elif defined(__linux__)
     platf::linux_display::prepared_display_t prepared;
