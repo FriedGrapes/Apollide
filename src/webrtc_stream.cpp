@@ -76,6 +76,8 @@
 
 #ifdef _WIN32
   #include "remote_display_topology.h"
+  #include "src/apollide/resume_mode.h"
+  #include "src/apollide/resume_mode_math.h"
   #include "src/platform/common.h"
   #include "src/platform/windows/display_helper_integration.h"
   #include "src/platform/windows/display_helper_request_policy.h"
@@ -3466,6 +3468,33 @@ namespace webrtc_stream {
           allow_display_changes,
           pending_output_override_lease
         );
+        // Apollide: a browser resume gets the pane's own mode on the paused virtual display (made
+        // again when the display does not list it). Without this Kiln's H1 screen stayed in the
+        // paused display's 1920x1080 whatever shape it asked for (11-03, portrait and fit).
+        if (apollide::resume_mode::should_match_webrtc_resume(
+              resume_only,
+              rtsp_active,
+              launch_session->virtual_display && !launch_session->virtual_display_device_id.empty(),
+              options.width.value_or(0),
+              options.height.value_or(0)
+            )) {
+          if (auto matched = apollide::resume_mode::match_webrtc_resume(
+                launch_session->virtual_display_device_id,
+                launch_session->width,
+                launch_session->height,
+                launch_session->fps,
+                launch_session->unique_id,
+                launch_session->client_name
+              )) {
+            launch_session->virtual_display_device_id = *matched;
+            launch_session->virtual_display_ready_since = std::chrono::steady_clock::now();
+            launch_session->virtual_display_needs_resume_apply = true;
+            if (pending_output_override_lease) {
+              (void) config::clear_runtime_output_name_override_if_lease(*pending_output_override_lease);
+            }
+            pending_output_override_lease = config::set_runtime_output_name_override_with_lease(*matched);
+          }
+        }
         if (webrtc_capture.stream_start_params) {
           webrtc_capture.stream_start_params->uses_virtual_display = launch_session->virtual_display;
         }
