@@ -34,7 +34,7 @@ async function check(forced = false): Promise<void> {
     const config = await apiGet<Record<string, unknown>>('/api/config', {
       signal: controller.signal,
     });
-    const interval = Number(config.update_check_interval ?? 86400);
+    const interval = Number(config.update_check_interval ?? 3600);
     nextCheck = Number.isFinite(interval) && interval >= 0 ? interval * 1000 : 86400000;
     if (nextCheck === 0 && !forced) {
       failed.value = false;

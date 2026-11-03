@@ -43,7 +43,7 @@ export const extendedDefaults: Record<string, unknown> = {
   sw_tune: 'zerolatency',
   min_threads: 2,
   locale: 'en',
-  update_check_interval: 86400,
+  update_check_interval: 3600,
   session_token_ttl_seconds: 86400,
   remember_me_refresh_token_ttl_seconds: 604800,
   back_button_timeout: -1,

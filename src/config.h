@@ -518,7 +518,7 @@ namespace config {
     std::chrono::seconds session_token_ttl;  ///< Session token time-to-live (seconds)
     std::chrono::seconds remember_me_refresh_token_ttl;  ///< Trusted device (remember-me) refresh TTL
     // Interval in seconds between automatic update checks (0 disables periodic checks)
-    int update_check_interval_seconds {86400};
+    int update_check_interval_seconds {3600};  // Apollide: hourly (was a day)
     bool session_history_enabled {true};  ///< Persist stream/session history to SQLite
     int session_history_ttl_days {0};  ///< Delete ended sessions older than this many days (0 disables age pruning)
     int session_history_db_size_limit_mb {0};  ///< Approximate live DB quota in MiB (0 disables size pruning)
