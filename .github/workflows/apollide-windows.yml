@@ -1,0 +1,54 @@
+---
+# Apollide: backup Windows build on GitHub, started by hand from the Actions tab on an apollide/<version> branch.
+# Releases are built on H1 by `tools/apollide.py release` (WebRTC/PyroWave off) and uploaded as
+# Apollide_vX.Y.Z.msi; this workflow only builds, with Vibepollo's own ci-windows.yml unchanged.
+# The product version is the Apollide version from the branch name (apollide/0.2.0-a1 -> 0.2.0).
+name: Apollide Windows
+permissions: {}
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  version:
+    name: Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      - name: Resolve Apollide version from the branch
+        id: resolve
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          name="${REF_NAME#apollide/}"
+          if [[ ! "$name" =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
+            echo "::error::branch must be apollide/X.Y.Z or apollide/X.Y.Z-<test>: $REF_NAME"
+            exit 1
+          fi
+          echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          echo "Apollide ${BASH_REMATCH[1]}"
+
+  build-windows:
+    name: Windows
+    needs: version
+    permissions:
+      actions: read
+      contents: read
+    uses: ./.github/workflows/ci-windows.yml
+    with:
+      use_self_hosted: false
+      build_only: true
+      build_tests: false
+      release_commit: ${{ github.sha }}
+      release_version: ${{ needs.version.outputs.version }}
+      release_artifact_retention_days: 14
+      symbol_product_name: Vibepollo
+      symbol_release_prefix: apollide
+      publish_symbols: false
+      require_truehdr_runtime: true
