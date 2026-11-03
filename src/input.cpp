@@ -24,6 +24,7 @@ extern "C" {
 #include "config.h"
 #include "globals.h"
 #include "input.h"
+#include "src/apollide/auto_update.h"
 #include "input_geometry_policy.h"
 #include "logging.h"
 #include "mouse_input.h"
@@ -2090,6 +2091,13 @@ namespace input {
     const auto packet = validate_packet(input_data);
     if (!packet) {
       return;
+    }
+    // Apollide: someone is using the stream (Moonlight and browser input both come here); the
+    // night update waits for 30 minutes without it. Pad battery, motion and arrival reports are
+    // sent on their own, so they do not count.
+    if (packet->magic != SS_CONTROLLER_BATTERY_MAGIC && packet->magic != SS_CONTROLLER_MOTION_MAGIC &&
+        packet->magic != SS_CONTROLLER_ARRIVAL_MAGIC) {
+      apollide::auto_update::note_input();
     }
 
     // Have some input permission

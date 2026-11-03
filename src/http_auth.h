@@ -131,6 +131,11 @@ namespace confighttp {
      */
     bool revoke_api_token_by_hash(const std::string &hash);
     /**
+     * @brief Apollide: give every token that already has `has_path` the scope `path` too (saved).
+     * @return Number of tokens that gained something.
+     */
+    std::size_t widen_tokens_with_scope(const std::string &has_path, const std::string &path, const std::set<std::string, std::less<>> &methods);
+    /**
      * @brief Persist tokens to backing storage.
      */
     void save_api_tokens() const;

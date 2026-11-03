@@ -50,6 +50,7 @@
 #include "host_stream_control.h"
 #include "update.h"
 #include "src/apollide/auto_update.h"
+#include "src/apollide/update_policy.h"
 #include "src/apollide/update_link.h"
 #include "src/apollide/notify_relay.h"
 #include "src/apollide/kiln_pair_math.h"
@@ -5137,6 +5138,72 @@ namespace confighttp {
     send_response(response, nvhttp::kiln_monitor_status(), "no-store");
   }
 
+  // Apollide: update state and buttons for Kiln (this PC only; a check needs no token, the rest does)
+  nlohmann::json kiln_update_status() {
+    const auto st = apollide::auto_update::status();
+    static constexpr const char *names[] = {"latest", "available", "downloading", "installing"};
+    const auto index = static_cast<int>(st.state);
+    return {
+      {"current", st.current},
+      {"latest", st.latest},
+      {"state", index >= 0 && index < 4 ? names[index] : "latest"},
+      {"watching", apollide::auto_update::watching()},
+      {"ask", apollide::auto_update::ask()},
+      {"later", apollide::auto_update::later_chosen()},
+      {"night", "04:00-06:00"},
+      {"night_idle_min", 30},
+    };
+  }
+
+  void kiln_update(resp_https_t response, req_https_t request, std::string action) {
+    using namespace apollide::update_policy;
+    const auto route = parse_route(action);
+    const bool loopback = request->remote_endpoint().address().is_loopback();
+    if (!loopback || route == route_e::unknown) {
+      bad_request(response, request, loopback ? "Unknown action" : "Kiln update is only available from this PC");
+      return;
+    }
+    if (!route_allowed(loopback, check_auth(request).ok, route) && !authenticate(response, request)) {
+      return;
+    }
+    auto out = kiln_update_status();
+    switch (route) {
+      case route_e::check:
+        out["ok"] = apollide::auto_update::request_check();
+        break;
+      case route_e::install:
+        out["ok"] = apollide::auto_update::install_now();
+        break;
+      case route_e::later:
+        out["ok"] = apollide::auto_update::choose_later();
+        out["later"] = apollide::auto_update::later_chosen();
+        out["ask"] = apollide::auto_update::ask();
+        break;
+      default:
+        break;
+    }
+    send_response(response, out, "no-store");
+  }
+
+  void getKilnUpdate(resp_https_t response, req_https_t request) {
+    kiln_update(response, request, "status");
+  }
+
+  void postKilnUpdate(resp_https_t response, req_https_t request) {
+    std::string action;
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    if (const auto body = ss.str(); !body.empty()) {
+      try {
+        action = nlohmann::json::parse(body).value("action", std::string {});
+      } catch (...) {
+        bad_request(response, request, "Invalid JSON");
+        return;
+      }
+    }
+    kiln_update(response, request, action.empty() ? "unknown-empty" : action);
+  }
+
   // Apollide: one-tap Kiln link — Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair,
   // Kiln picks the key up once. One Kiln key at a time: picking a new one up revokes the previous one.
   std::mutex kiln_pair_mutex;
@@ -6778,6 +6845,8 @@ namespace confighttp {
     register_blocking_api_route("^/api/kiln/monitor$", "POST", postKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "DELETE", deleteKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "GET", getKilnMonitor);
+    register_api_route("^/api/kiln/update$", "GET", getKilnUpdate);
+    register_api_route("^/api/kiln/update$", "POST", postKilnUpdate);
     // Apollide: one-tap Kiln link (Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair)
     register_api_route("^/api/kiln/pair$", "POST", postKilnPairRequest);
     register_api_route("^/api/kiln/pair$", "GET", getKilnPairPending);
@@ -6874,6 +6943,11 @@ namespace confighttp {
       }
     };
     api_token_manager.load_api_tokens();
+    // Apollide 0.3.6: Kiln keys (they hold the work-monitor scope) also get the update buttons,
+    // so a Kiln linked before this version need not be linked again
+    if (const auto widened = api_token_manager.widen_tokens_with_scope("/api/kiln/monitor", "/api/kiln/update", {"GET", "POST"})) {
+      BOOST_LOG(info) << "Apollide Kiln link: " << widened << " Kiln key(s) may now use the update buttons";
+    }
     session_token_manager.load_session_tokens();
     std::thread tcp {accept_and_run, &server};
 
