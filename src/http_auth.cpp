@@ -330,6 +330,28 @@ namespace confighttp {
     return erased;
   }
 
+  std::size_t ApiTokenManager::widen_tokens_with_scope(const std::string &has_path, const std::string &path, const std::set<std::string, std::less<>> &methods) {
+    std::size_t widened = 0;
+    {
+      std::scoped_lock lock(_mutex);
+      for (auto &[hash, info] : _api_tokens) {
+        if (!info.path_methods.contains(has_path)) {
+          continue;
+        }
+        auto &have = info.path_methods[path];
+        const auto before = have.size();
+        have.insert(methods.begin(), methods.end());
+        if (have.size() != before) {
+          ++widened;
+        }
+      }
+    }
+    if (widened > 0) {
+      save_api_tokens();
+    }
+    return widened;
+  }
+
   void ApiTokenManager::save_api_tokens() const {
     const auto state_path = authentication_state_path();
 
