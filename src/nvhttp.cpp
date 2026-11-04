@@ -1558,14 +1558,19 @@ namespace nvhttp {
         );
         if (!reservation.accepted) {
           launch_session->normal_vdd_capacity_rejected = true;
+          launch_session->normal_vdd_refusal_message = reservation.refusal_message;
           launch_session->virtual_display_failed = true;
           if (include_identity_log_fields) {
             BOOST_LOG(warning) << "Rejecting per-client virtual display for client '" << launch_session->client_uuid
-                               << "' because the virtual display client limit has been reached.";
+                               << "': " << reservation.refusal_message;
           } else {
-            BOOST_LOG(warning) << "Rejecting per-client virtual display because the virtual display client limit has been reached.";
+            BOOST_LOG(warning) << "Rejecting per-client virtual display: " << reservation.refusal_message;
           }
           return false;
+        }
+        if (reservation.took_own_seat_back) {
+          BOOST_LOG(info) << "Apollide display seat: '" << launch_session->client_name
+                          << "' took its own virtual display back while a browser view still shows it.";
         }
         launch_session->normal_vdd_identity_token = reservation.token;
         launch_session->normal_vdd_identity_newly_reserved = reservation.newly_reserved;
@@ -5528,7 +5533,8 @@ launch_session->exact_target_hold.reset();
       }
       if (launch_session->normal_vdd_capacity_rejected) {
         tree.put("root.<xmlattr>.status_code", 409);
-        tree.put("root.<xmlattr>.status_message", "Virtual display client limit reached");
+        tree.put("root.<xmlattr>.status_message", launch_session->normal_vdd_refusal_message.empty() ?
+          std::string {"Virtual display client limit reached"} : launch_session->normal_vdd_refusal_message);
         tree.put("root.gamesession", 0);
         return;
       }
@@ -6330,7 +6336,8 @@ launch_session->exact_target_hold.reset();
     if (launch_session->normal_vdd_capacity_rejected) {
       tree.put("root.resume", 0);
       tree.put("root.<xmlattr>.status_code", 409);
-      tree.put("root.<xmlattr>.status_message", "Virtual display client limit reached");
+      tree.put("root.<xmlattr>.status_message", launch_session->normal_vdd_refusal_message.empty() ?
+        std::string {"Virtual display client limit reached"} : launch_session->normal_vdd_refusal_message);
       return;
     }
     // Apollide: a client resuming a paused session gets its own mode on the display that is
