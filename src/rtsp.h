@@ -133,6 +133,7 @@ namespace rtsp_stream {
     bool virtual_display;
     uint32_t scale_factor = 100;
     bool normal_vdd_capacity_rejected = false;
+    std::string normal_vdd_refusal_message;  ///< Apollide: why the seat was refused, for the 409
     bool normal_vdd_identity_newly_reserved = false;
     std::uint64_t normal_vdd_identity_token = 0;
     // Linux resumes retain the running app's display owner across TLS clients.
