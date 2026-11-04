@@ -90,6 +90,9 @@ namespace remote_display_topology {
     bool accepted = false;
     bool newly_reserved = false;
     std::uint64_t token = 0;
+    // Apollide: why a reservation was refused and who holds the seats, for the client's 409
+    std::string refusal_message;
+    bool took_own_seat_back = false;
   };
 
   // Validates the persisted wire contract without mutating coordinator state.
