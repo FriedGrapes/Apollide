@@ -1,5 +1,6 @@
 #include "remote_display_topology.h"
 #include "display_target_lease.h"
+#include "src/apollide/display_seat_math.h"
 
 #include <algorithm>
 #include <set>
@@ -261,8 +262,44 @@ namespace remote_display_topology {
     auto target_mutation = display_target::leases().begin_mutation();
     if (!target_mutation) return {};
     std::lock_guard lock(mutex_);
-    if (display_mutation_deferred_locked()) return {};
-    if (client_uuid.empty() || (!clients_.contains(client_uuid) && clients_.size() >= client_identity_capacity_locked())) return {};
+    // Apollide: the client's own ending seat that a browser capture still shows is given back
+    // (same token and display) instead of refusing every launch until the browser views close.
+    if (const auto own = clients_.find(client_uuid); own != clients_.end() &&
+        apollide::display_seat::take_own_seat_back(
+          own->second.normal_game,
+          own->second.normal_release_pending,
+          own->second.normal_capture_references.size(),
+          display_target::leases().protected_output() || shutdown_pending_
+        )) {
+      auto &state = own->second;
+      state.label = label;
+      state.normal_requested_mode = mode;
+      if (!state.remote_monitor) state.effective_mode = mode;
+      state.normal_release_pending = false;
+      normal_game_reservation_t taken_back {true, false, state.normal_game_token};
+      taken_back.took_own_seat_back = true;
+      return taken_back;
+    }
+    const auto refuse = [&](apollide::display_seat::refusal_e why) {
+      std::vector<apollide::display_seat::holder_t> holders;
+      for (const auto &[uuid, s] : clients_) {
+        if (!s.normal_game && !s.remote_monitor) continue;
+        holders.push_back({s.label, s.normal_release_pending && !s.normal_capture_references.empty()});
+      }
+      normal_game_reservation_t refused;
+      refused.refusal_message = apollide::display_seat::refusal_message(
+        why, apollide::display_seat::describe_holders(holders), clients_.size(), client_identity_capacity_locked());
+      return refused;
+    };
+    if (display_mutation_deferred_locked()) {
+      const bool held_by_capture = !display_target::leases().protected_output() && !shutdown_pending_;
+      return refuse(held_by_capture ? apollide::display_seat::refusal_e::held_by_capture :
+                                      apollide::display_seat::refusal_e::busy);
+    }
+    if (client_uuid.empty()) return {};
+    if (!clients_.contains(client_uuid) && clients_.size() >= client_identity_capacity_locked()) {
+      return refuse(apollide::display_seat::refusal_e::capacity);
+    }
     auto [state_it, inserted] = clients_.try_emplace(client_uuid);
     auto &state = state_it->second;
     if (inserted) state.placement_order = ++next_placement_order_;

@@ -73,6 +73,7 @@
 #include "video.h"
 #include "video_colorspace.h"
 #include "webrtc_stream.h"
+#include "src/apollide/webrtc_join_math.h"
 
 #ifdef _WIN32
   #include "remote_display_topology.h"
@@ -3185,6 +3186,38 @@ namespace webrtc_stream {
       return key;
     }
 
+    // Apollide: which capture setting keeps a new viewer from joining (current / requested)
+    std::string describe_capture_key_differences(
+      const WebRtcCaptureConfigKey &now,
+      const WebRtcCaptureConfigKey &asked
+    ) {
+      const auto app = [](const WebRtcCaptureConfigKey &k) {
+        if (!k.app_uuid.empty()) {
+          return std::string {"uuid "} + k.app_uuid;
+        }
+        return k.legacy_app_id > 0 ? std::string {"id "} + std::to_string(k.legacy_app_id) : std::string {"desktop"};
+      };
+      const auto num = [](auto v) { return std::to_string(v); };
+      const auto flag = [](bool v) { return std::string {v ? "true" : "false"}; };
+      using apollide::webrtc_join::codec_name;
+      auto out = apollide::webrtc_join::describe_differences({
+        {"app", app(now), app(asked)},
+        {"size", num(now.width) + "x" + num(now.height), num(asked.width) + "x" + num(asked.height)},
+        {"fps", num(now.framerate), num(asked.framerate)},
+        {"bitrate_kbps", num(now.bitrate), num(asked.bitrate)},
+        {"codec", codec_name(now.video_format), codec_name(asked.video_format)},
+        {"dynamic_range", num(now.dynamic_range), num(asked.dynamic_range)},
+        {"chroma", num(now.chroma_sampling_type), num(asked.chroma_sampling_type)},
+        {"prefer_sdr_10bit", flag(now.prefer_sdr_10bit), flag(asked.prefer_sdr_10bit)},
+        {"force_sdr", flag(now.force_sdr), flag(asked.force_sdr)},
+        {"rtx_hdr", flag(now.rtx_hdr_active) + "/" + num(now.rtx_hdr_peak_nits),
+         flag(asked.rtx_hdr_active) + "/" + num(asked.rtx_hdr_peak_nits)},
+        {"audio_channels", num(now.audio_channels), num(asked.audio_channels)},
+        {"host_audio", flag(now.host_audio), flag(asked.host_audio)},
+      });
+      return out.empty() ? std::string {"no listed field differs"} : out;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     void acquire_webrtc_frame_limiter_locked(const WebRtcStreamStartParams &start_params) {
       const auto saturating_millihz = [](int fps) -> int {
@@ -3290,11 +3323,14 @@ namespace webrtc_stream {
       }
       const int requested_app_id = requested_app_ctx ? (int) util::from_view(requested_app_ctx->id) : raw_requested_app_id;
       const bool resume_only = options.resume.value_or(false);
+      // Apollide: a live browser capture can outlive its app (another client quit it), and a new
+      // viewer of that picture must still be able to join it (11-04 Kiln '새 창으로').
+      const bool joinable_capture_active = webrtc_capture.active.load(std::memory_order_acquire);
 
       if (resume_only) {
         // proc_t::terminate() leaves the app id at -1 and nothing resets it to 0, so any
         // non-positive id means nothing is running.
-        if (current_app_id <= 0) {
+        if (apollide::webrtc_join::resume_has_nothing_to_join(current_app_id, joinable_capture_active)) {
           return std::string {"No running app to resume"};
         }
         if (requested_app_id > 0 && requested_app_id != current_app_id) {
@@ -3381,6 +3417,16 @@ namespace webrtc_stream {
                                              video_config.prefer_sdr_10bit &&
                                              !video_config.force_sdr;
       auto desired_key = build_capture_config_key(effective_app_id, video_config, options);
+      // Apollide: a request naming no app joins whatever app the live capture shows — also after
+      // that app ended under it (its key keeps the old app's uuid, the request would have none).
+      if (webrtc_capture.config_key &&
+          apollide::webrtc_join::adopt_active_app_identity(
+            requested_app_id,
+            webrtc_capture.active.load(std::memory_order_acquire)
+          )) {
+        desired_key.app_uuid = webrtc_capture.config_key->app_uuid;
+        desired_key.legacy_app_id = webrtc_capture.config_key->legacy_app_id;
+      }
 
       if (
         webrtc_capture.active.load(std::memory_order_acquire) &&
@@ -3395,11 +3441,15 @@ namespace webrtc_stream {
       }
 
       if (webrtc_capture.active.load(std::memory_order_acquire)) {
-        BOOST_LOG(warning) << "WebRTC: rejected session with capture settings that differ from an active capture";
+        const auto differences = webrtc_capture.config_key ?
+                                   describe_capture_key_differences(*webrtc_capture.config_key, desired_key) :
+                                   std::string {"the running capture has no recorded settings"};
+        BOOST_LOG(warning) << "WebRTC: rejected session with capture settings that differ from an active capture ("
+                           << differences << ')';
         return std::string {
-          "Another WebRTC capture is active with different video or audio settings. "
-          "Disconnect it before switching codec, resolution, frame rate, bitrate, HDR, or audio mode."
-        };
+          "Another WebRTC capture is active with different video or audio settings ("
+        } + differences + "). "
+          "Disconnect it before switching codec, resolution, frame rate, bitrate, HDR, or audio mode.";
       }
 
       webrtc_capture.stream_start_params = std::move(stream_start_params);
