@@ -74,6 +74,7 @@
 #include "video_colorspace.h"
 #include "webrtc_stream.h"
 #include "src/apollide/webrtc_join_math.h"
+#include "src/apollide/webrtc_offer_watch_math.h"
 
 #ifdef _WIN32
   #include "remote_display_topology.h"
@@ -5963,6 +5964,26 @@ namespace webrtc_stream {
     if (first_session) {
       stream::session::start_shared_platform_if_needed();
     }
+    // Apollide: a caller that gave up while the capture was still starting never sends an
+    // offer, and its session would hold the one shared capture (and refuse every other
+    // size) until someone deleted it. Close it if no offer has arrived by the deadline.
+    task_pool.pushDelayed([session_id = snapshot.id]() {
+      apollide::webrtc_offer_watch::look_t look;
+      {
+        std::lock_guard lg {session_mutex};
+        if (auto it = sessions.find(session_id); it != sessions.end()) {
+          look.found = true;
+          look.has_remote_offer = it->second.state.has_remote_offer;
+        }
+      }
+      if (!apollide::webrtc_offer_watch::should_close(look)) {
+        return;
+      }
+      BOOST_LOG(warning) << "Apollide WebRTC: closing session " << session_id << " - no offer within "
+                         << apollide::webrtc_offer_watch::offer_deadline.count()
+                         << " s (the viewer gave up while it was being made), so it frees the capture";
+      close_session(session_id);
+    }, apollide::webrtc_offer_watch::offer_deadline);
     BOOST_LOG(debug) << "WebRTC: create_session exit id=" << snapshot.id;
     return snapshot;
   }
