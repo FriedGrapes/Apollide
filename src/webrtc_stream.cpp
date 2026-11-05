@@ -1183,6 +1183,14 @@ namespace webrtc_stream {
     }
 
     std::optional<short> map_dom_code_to_vk(std::string_view code, std::string_view key) {
+      // Apollide: Korean IME keys. Browsers report the Han/Yeong key as code "Lang1" (key "HangulMode")
+      // and the Hanja key as "Lang2" ("HanjaMode"); some keyboards only give the key name, so check both.
+      if (code == "Lang1" || key == "HangulMode") {
+        return 0x15;  // VK_HANGUL
+      }
+      if (code == "Lang2" || key == "HanjaMode") {
+        return 0x19;  // VK_HANJA
+      }
       if (code.size() == 4 && code.rfind("Key", 0) == 0) {
         char letter = static_cast<char>(std::toupper(static_cast<unsigned char>(code[3])));
         return static_cast<short>(letter);
