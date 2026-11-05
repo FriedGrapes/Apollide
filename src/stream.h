@@ -26,6 +26,7 @@
 #include "video.h"
 #include "stream_protocol.h"
 #include "remote_session.h"
+#include "src/apollide/kiln_viewers_math.h"
 
 namespace rtsp_stream {
   struct launch_session_t;
@@ -174,6 +175,9 @@ namespace stream {
   };
 
   std::vector<session_info_t> get_all_session_info();
+
+  /// Apollide: RTSP streams with the paired device's uuid and role, for Kiln's who-is-watching route.
+  std::vector<apollide::kiln_viewers::stream_t> apollide_viewer_streams();
 
   void request_idr_for_all_sessions();
 
