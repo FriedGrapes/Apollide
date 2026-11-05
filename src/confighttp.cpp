@@ -5214,6 +5214,115 @@ namespace confighttp {
     kiln_update(response, request, action.empty() ? "unknown-empty" : action);
   }
 
+  // Apollide 0.3.9: who watches H1's picture, and ending those streams (pairing stays), so Kiln's
+  // [H1을 이 창 모양으로] can warn "that connection will end" and then resize. This PC only.
+  std::vector<apollide::kiln_viewers::viewer_t> kiln_viewers_now() {
+    std::vector<apollide::kiln_viewers::paired_t> paired;
+    for (const auto &c : nvhttp::get_all_clients()) {
+      paired.push_back({c.value("uuid", std::string {}), c.value("name", std::string {})});
+    }
+    const auto guard = proc::proc.active_session_guard();
+    const apollide::kiln_viewers::app_t app {
+      .running = guard.has_active_app && proc::proc.current_app_id() > 0,
+      .client_uuid = guard.client_uuid,
+      .name = proc::proc.get_last_run_app_name(),
+    };
+    return apollide::kiln_viewers::list_viewers(stream::apollide_viewer_streams(), paired, app);
+  }
+
+  bool kiln_viewers_from_this_pc(resp_https_t response, req_https_t request) {
+    if (!request->remote_endpoint().address().is_loopback()) {
+      bad_request(response, request, "Kiln viewers are only available from this PC");
+      return false;
+    }
+    return authenticate(response, request);
+  }
+
+  void getKilnViewers(resp_https_t response, req_https_t request) {
+    if (!kiln_viewers_from_this_pc(response, request)) {
+      return;
+    }
+    nlohmann::json out;
+    out["status"] = true;
+    out["viewers"] = nlohmann::json::array();
+    for (const auto &v : kiln_viewers_now()) {
+      nlohmann::json j {
+        {"uuid", v.uuid},
+        {"name", v.name},
+        {"kind", v.kind},
+        {"role", v.role},
+        {"paused", v.paused},
+      };
+      if (!v.paused) {
+        j["width"] = v.width;
+        j["height"] = v.height;
+        j["fps"] = v.fps;
+      }
+      if (!v.app.empty()) {
+        j["app"] = v.app;
+      }
+      out["viewers"].push_back(std::move(j));
+    }
+    out["browser"] = nlohmann::json::array();
+    for (const auto &s : webrtc_stream::list_sessions()) {
+      out["browser"].push_back({
+        {"id", s.id},
+        {"width", s.width.value_or(0)},
+        {"height", s.height.value_or(0)},
+        {"connected", s.has_remote_offer},
+      });
+    }
+    send_response(response, out, "no-store");
+  }
+
+  void postKilnViewersDisconnect(resp_https_t response, req_https_t request) {
+    if (!kiln_viewers_from_this_pc(response, request)) {
+      return;
+    }
+    apollide::kiln_viewers::ask_t ask;
+    std::stringstream ss;
+    ss << request->content.rdbuf();
+    try {
+      const auto in = nlohmann::json::parse(ss.str());
+      ask.all = in.value("all", false);
+      if (in.contains("uuids") && in["uuids"].is_array()) {
+        for (const auto &u : in["uuids"]) {
+          if (u.is_string()) {
+            ask.uuids.push_back(u.get<std::string>());
+          }
+        }
+      }
+    } catch (...) {
+      bad_request(response, request, "Invalid JSON");
+      return;
+    }
+    const auto viewers = kiln_viewers_now();
+    const auto pick = apollide::kiln_viewers::pick_targets(ask, viewers);
+    if (pick.bad) {
+      bad_request(response, request, "Give uuids or all");
+      return;
+    }
+    nlohmann::json out;
+    out["disconnected"] = nlohmann::json::array();
+    out["failed"] = nlohmann::json::array();
+    out["not_streaming"] = pick.unknown;
+    for (const auto &uuid : pick.uuids) {
+      std::string name = uuid;
+      for (const auto &v : viewers) {
+        if (v.uuid == uuid) {
+          name = v.name;
+          break;
+        }
+      }
+      const bool ok = nvhttp::disconnect_client(uuid);
+      BOOST_LOG(info) << "Apollide Kiln viewers: " << (ok ? "ended" : "could not end") << " the stream of '" << name
+                      << "' so Kiln can resize H1's picture (pairing kept)";
+      out[ok ? "disconnected" : "failed"].push_back(name);
+    }
+    out["status"] = true;
+    send_response(response, out, "no-store");
+  }
+
   // Apollide: one-tap Kiln link — Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair,
   // Kiln picks the key up once. One Kiln key at a time: picking a new one up revokes the previous one.
   std::mutex kiln_pair_mutex;
@@ -6855,6 +6964,8 @@ namespace confighttp {
     register_blocking_api_route("^/api/kiln/monitor$", "POST", postKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "DELETE", deleteKilnMonitor);
     register_blocking_api_route("^/api/kiln/monitor$", "GET", getKilnMonitor);
+    register_api_route("^/api/kiln/viewers$", "GET", getKilnViewers);
+    register_blocking_api_route("^/api/kiln/viewers/disconnect$", "POST", postKilnViewersDisconnect);
     register_api_route("^/api/kiln/update$", "GET", getKilnUpdate);
     register_api_route("^/api/kiln/update$", "POST", postKilnUpdate);
     // Apollide: one-tap Kiln link (Kiln asks from this PC, a signed-in person approves on /v2/kiln-pair)
@@ -6957,6 +7068,13 @@ namespace confighttp {
     // so a Kiln linked before this version need not be linked again
     if (const auto widened = api_token_manager.widen_tokens_with_scope("/api/kiln/monitor", "/api/kiln/update", {"GET", "POST"})) {
       BOOST_LOG(info) << "Apollide Kiln link: " << widened << " Kiln key(s) may now use the update buttons";
+    }
+    // Apollide 0.3.9: and see who watches / end those streams for [H1을 이 창 모양으로]
+    const auto viewers_widened = api_token_manager.widen_tokens_with_scope("/api/kiln/monitor", "/api/kiln/viewers", {"GET"});
+    const auto disconnect_widened = api_token_manager.widen_tokens_with_scope("/api/kiln/monitor", "/api/kiln/viewers/disconnect", {"POST"});
+    if (viewers_widened || disconnect_widened) {
+      BOOST_LOG(info) << "Apollide Kiln link: " << std::max(viewers_widened, disconnect_widened)
+                      << " Kiln key(s) may now see who watches and end those streams";
     }
     session_token_manager.load_session_tokens();
     std::thread tcp {accept_and_run, &server};

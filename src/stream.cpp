@@ -943,6 +943,27 @@ namespace stream {
     return result;
   }
 
+  std::vector<apollide::kiln_viewers::stream_t> apollide_viewer_streams() {
+    std::vector<apollide::kiln_viewers::stream_t> result;
+    for (auto &session : rtsp_stream::get_sessions_snapshot()) {
+      if (!session) continue;
+      apollide::kiln_viewers::stream_t s;
+      {
+        std::lock_guard lg {session->metadata_mutex};
+        s.client_uuid = session->device_uuid;
+        s.device_name = !session->history_device_name.empty() ? session->history_device_name : session->device_name;
+      }
+      s.width = session->config.monitor.width;
+      s.height = session->config.monitor.height;
+      s.fps = session->stream_fps;
+      s.role = session->remote_role == remote_session::role_e::monitor ? "monitor" : "game";
+      s.input_only = session->input_only || session->remote_role == remote_session::role_e::input;
+      s.state = state_name(session->state.load(std::memory_order_relaxed));
+      result.push_back(std::move(s));
+    }
+    return result;
+  }
+
 #ifdef _WIN32
   struct deferred_stream_start_t {
     std::optional<framegen::stream_start_policy_t> policy;
