@@ -4111,6 +4111,16 @@ namespace confighttp {
     }
 
     BOOST_LOG(debug) << "WebRTC: creating session";
+    // Apollide: remaking the virtual display can take longer than a caller waits; say so in
+    // the log, because such a caller hangs up and never sends its offer (closed after 25 s).
+    const auto create_started = std::chrono::steady_clock::now();
+    auto log_slow_create = util::fail_guard([&]() {
+      const auto took = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - create_started);
+      if (took >= std::chrono::seconds {10}) {
+        BOOST_LOG(warning) << "Apollide WebRTC: making the session took " << took.count() / 1000.0
+                           << " s (virtual display / capture start) - callers waiting less than that will give up";
+      }
+    });
     std::optional<std::string> capture_start_error;
 #ifdef _WIN32
     {
