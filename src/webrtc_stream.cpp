@@ -158,6 +158,10 @@ namespace webrtc_stream {
     constexpr int kWebrtcBitrateDecreaseMinimumKbps = 20;
     constexpr int kWebrtcBitrateIncreaseMinimumKbps = 100;
     constexpr int kWebrtcBitrateChangePercent = 5;
+    // Apollide: the congestion controller may not push the shared encoder below this floor
+    // (or the session's configured bitrate, if lower). Without it a brief estimate dip took
+    // 1600x900@60 text down to 232 kbps and it stayed blocky for the whole session.
+    constexpr int kWebrtcBitrateFloorKbps = 4000;
     constexpr auto kWebrtcLatencyResyncMinInterval = std::chrono::milliseconds {1000};
     constexpr std::size_t kVideoInflightFramesMin = 2;
     constexpr std::size_t kVideoInflightFramesMax = 6;
@@ -2052,7 +2056,7 @@ namespace webrtc_stream {
         const int configured = std::max(1, session.video_config.bitrate);
         const int target = std::clamp(
           session.congestion_target_bitrate_kbps.value_or(configured),
-          1,
+          std::min(kWebrtcBitrateFloorKbps, configured),
           configured
         );
         aggregate_bitrate_kbps = aggregate_bitrate_kbps
@@ -2134,7 +2138,7 @@ namespace webrtc_stream {
         const int configured_bitrate_kbps = std::max(1, current->second.video_config.bitrate);
         current->second.congestion_target_bitrate_kbps = std::clamp(
           requested_bitrate_kbps,
-          1,
+          std::min(kWebrtcBitrateFloorKbps, configured_bitrate_kbps),
           configured_bitrate_kbps
         );
         aggregate_bitrate_kbps = aggregate_webrtc_encoder_bitrate_locked();
