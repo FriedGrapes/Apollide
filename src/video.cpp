@@ -56,6 +56,7 @@ extern "C" {
 #include "video_encoder_probe_policy.h"
 #include "video_policy.h"
 #include "webrtc_stream.h"
+#include "src/apollide/webrtc_fps_step_math.h"
 
 #if defined(__linux__) && defined(SUNSHINE_BUILD_CUDA)
   #include "platform/linux/cuda.h"
@@ -5332,6 +5333,7 @@ namespace video {
     auto hdr_event = mail->event<hdr_info_t>(mail::hdr);
     auto invalidate_ref_frames_events = mail->event<std::pair<int64_t, int64_t>>(mail::invalidate_ref_frames);
     auto bitrate_events = mail->event<int>(mail::dynamic_bitrate);
+    std::optional<std::chrono::steady_clock::time_point> last_real_encode;  // Apollide: frame-rate step
 
     {
       // Load a dummy image into the AVFrame to ensure we have something to encode
@@ -5632,6 +5634,19 @@ namespace video {
           }
           ++loop_stats.converted;
 
+          // Apollide: while a browser viewer's link stays slow, leave out every other frame so
+          // each sent frame gets twice the bits (webrtc_fps_step_math.h). The frame is already
+          // converted, so the minimum-FPS timeout still sends it if nothing newer comes.
+          if (!placeholder_input && !bootstrap_state.current_input_placeholder && !requested_idr_frame &&
+              last_real_encode &&
+              apollide::webrtc_fps_step::skip_frame(
+                apollide::webrtc_fps_step::halved_now.load(std::memory_order_acquire),
+                std::chrono::steady_clock::now() - *last_real_encode,
+                std::chrono::duration_cast<std::chrono::steady_clock::duration>(encode_frame_threshold))) {
+            ++loop_stats.repeated_inputs;
+            continue;
+          }
+
 #ifdef SUNSHINE_ENABLE_NV_TRUEHDR
           if (refresh_rtx_hdr_metadata_if_needed(
                 config,
@@ -5692,6 +5707,9 @@ namespace video {
         break;
       }
       ++loop_stats.encoded;
+      if (!placeholder_input) {
+        last_real_encode = std::chrono::steady_clock::now();
+      }
 
       // A dropped submission leaves a hole in the wire frameIndex sequence, which
       // the client reads as loss. Reusing the index instead is NOT safe: several

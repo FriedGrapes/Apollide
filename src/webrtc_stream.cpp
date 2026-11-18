@@ -57,6 +57,7 @@
 #include "globals.h"
 #include "host_stats.h"
 #include "hdr_request_policy.h"
+#include "src/apollide/webrtc_fps_step_math.h"
 #include "httpcommon.h"
 #include "input.h"
 #include "logging.h"
@@ -158,10 +159,16 @@ namespace webrtc_stream {
     constexpr int kWebrtcBitrateDecreaseMinimumKbps = 20;
     constexpr int kWebrtcBitrateIncreaseMinimumKbps = 100;
     constexpr int kWebrtcBitrateChangePercent = 5;
-    // Apollide: the congestion controller may not push the shared encoder below this floor
-    // (or the session's configured bitrate, if lower). Without it a brief estimate dip took
-    // 1600x900@60 text down to 232 kbps and it stayed blocky for the whole session.
-    constexpr int kWebrtcBitrateFloorKbps = 4000;
+    // Apollide: frame-rate step for slow browser links (webrtc_fps_step_math.h). Its own lock:
+    // the rate update holds session_mutex when it takes this, capture start/stop do not.
+    std::mutex webrtc_fps_mutex;
+    apollide::webrtc_fps_step::state_t webrtc_fps_state;
+
+    void reset_webrtc_fps_step() {
+      std::lock_guard lock {webrtc_fps_mutex};
+      webrtc_fps_state = {};
+      apollide::webrtc_fps_step::halved_now.store(false, std::memory_order_release);
+    }
     constexpr auto kWebrtcLatencyResyncMinInterval = std::chrono::milliseconds {1000};
     constexpr std::size_t kVideoInflightFramesMin = 2;
     constexpr std::size_t kVideoInflightFramesMax = 6;
@@ -2056,7 +2063,7 @@ namespace webrtc_stream {
         const int configured = std::max(1, session.video_config.bitrate);
         const int target = std::clamp(
           session.congestion_target_bitrate_kbps.value_or(configured),
-          std::min(kWebrtcBitrateFloorKbps, configured),
+          apollide::webrtc_fps_step::floor_for(configured),
           configured
         );
         aggregate_bitrate_kbps = aggregate_bitrate_kbps
@@ -2138,10 +2145,29 @@ namespace webrtc_stream {
         const int configured_bitrate_kbps = std::max(1, current->second.video_config.bitrate);
         current->second.congestion_target_bitrate_kbps = std::clamp(
           requested_bitrate_kbps,
-          std::min(kWebrtcBitrateFloorKbps, configured_bitrate_kbps),
+          apollide::webrtc_fps_step::floor_for(configured_bitrate_kbps),
           configured_bitrate_kbps
         );
         aggregate_bitrate_kbps = aggregate_webrtc_encoder_bitrate_locked();
+        if (aggregate_bitrate_kbps) {
+          // Apollide: a link that stays slow gets half the frames at twice the bits each
+          namespace fps_step = apollide::webrtc_fps_step;
+          int min_configured_kbps = configured_bitrate_kbps;
+          for (const auto &[_, session] : sessions) {
+            if (session.state.video && session.peer) {
+              min_configured_kbps = std::min(min_configured_kbps, std::max(1, session.video_config.bitrate));
+            }
+          }
+          std::lock_guard fps_lock {webrtc_fps_mutex};
+          if (fps_step::step(webrtc_fps_state, std::chrono::steady_clock::now(), *aggregate_bitrate_kbps)) {
+            fps_step::halved_now.store(webrtc_fps_state.halved, std::memory_order_release);
+            BOOST_LOG(info) << "Apollide: browser link "sv
+                            << (webrtc_fps_state.halved ? "stays slow"sv : "recovered"sv) << " ("sv
+                            << *aggregate_bitrate_kbps << " kbps) - sending "sv
+                            << (webrtc_fps_state.halved ? "every other frame"sv : "every frame"sv);
+          }
+          aggregate_bitrate_kbps = fps_step::encoder_kbps(webrtc_fps_state.halved, *aggregate_bitrate_kbps, min_configured_kbps);
+        }
       }
 
       if (!aggregate_bitrate_kbps || !context->active.load(std::memory_order_acquire)) {
@@ -3710,6 +3736,7 @@ namespace webrtc_stream {
         webrtc_capture.app_id = effective_app_id > 0 ? std::optional<int> {effective_app_id} : std::nullopt;
         webrtc_capture.config_key = desired_key;
         webrtc_capture.published_bitrate_kbps.reset();
+        reset_webrtc_fps_step();
 #if defined(_WIN32) || defined(__linux__)
         if (pending_output_override_lease) {
           webrtc_capture.output_override_lease = pending_output_override_lease;
@@ -3856,6 +3883,7 @@ namespace webrtc_stream {
         webrtc_capture.config_key.reset();
         webrtc_capture.stream_start_params.reset();
         webrtc_capture.published_bitrate_kbps.reset();
+        reset_webrtc_fps_step();
 
         const bool rtsp_owns_runtime =
           rtsp_sessions_active.load(std::memory_order_acquire) ||
